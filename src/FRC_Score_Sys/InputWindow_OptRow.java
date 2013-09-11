@@ -1,4 +1,4 @@
-package FRC_Score_Sys.ScoreInputParts;
+package FRC_Score_Sys;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -8,9 +8,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.event.EventListenerList;
 
-public class OptRow extends JPanel implements ActionListener {
+public class InputWindow_OptRow extends JPanel implements ActionListener {
 	/**
 	 * 
 	 */
@@ -26,7 +25,7 @@ public class OptRow extends JPanel implements ActionListener {
 		}
 	};
 	
-	public OptRow(String Title){
+	public InputWindow_OptRow(String Title){
 		this.setLayout(new GridLayout(0, 3, 0, 0));
 		JLabel lblTitle = new JLabel(Title);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);

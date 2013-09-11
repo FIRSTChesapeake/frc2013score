@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import javax.swing.event.EventListenerList;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
 
@@ -20,8 +19,8 @@ public class InputWindow extends JFrame {
 		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 		this.dispatchEvent(wev);
 	}
-	ScorePanel RedPanel;
-	ScorePanel BluePanel;
+	Inputwindow_ScorePanel RedPanel;
+	Inputwindow_ScorePanel BluePanel;
 	
 	String MatchNumber = "Unk";
 	
@@ -53,9 +52,9 @@ public class InputWindow extends JFrame {
 		
 		// MAIN PANEL WHERE SCORES TALLY
 		JPanel MainPanel = new JPanel();
-		BluePanel = new ScorePanel(color_blue, BlueTeams);
+		BluePanel = new Inputwindow_ScorePanel(color_blue, BlueTeams);
 		MainPanel.add(BluePanel);
-		RedPanel = new ScorePanel(color_red, RedTeams);
+		RedPanel = new Inputwindow_ScorePanel(color_red, RedTeams);
 		MainPanel.add(RedPanel);
 		
 		GridBagConstraints gbc_MainPanel = new GridBagConstraints();

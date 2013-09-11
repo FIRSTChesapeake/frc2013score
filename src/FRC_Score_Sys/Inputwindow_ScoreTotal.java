@@ -1,6 +1,6 @@
-package FRC_Score_Sys.ScoreInputParts;
+package FRC_Score_Sys;
 
-public class ScoreTotal {
+public class Inputwindow_ScoreTotal {
 	public int RawAuto=0;
 	public int RawTele=0;
 	public int ClimbPoints=0;

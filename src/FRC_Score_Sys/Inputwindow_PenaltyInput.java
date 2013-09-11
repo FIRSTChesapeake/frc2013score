@@ -1,14 +1,11 @@
-package FRC_Score_Sys.ScoreInputParts;
+package FRC_Score_Sys;
 
 import java.awt.GridLayout;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.EventListenerList;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class PenaltyInput extends JPanel{
+public class Inputwindow_PenaltyInput extends JPanel{
 		public DocumentListener dl = new DocumentListener() {
 			  public void changedUpdate(DocumentEvent e) {
 			    // Nothing?
@@ -29,7 +26,7 @@ public class PenaltyInput extends JPanel{
 	JTextField fouls;
 	JTextField tfouls;
 	
-	public PenaltyInput(){
+	public Inputwindow_PenaltyInput(){
 		this.setLayout(new GridLayout(0, 2, 0, 0));
 		fouls = new JTextField();
 		tfouls = new JTextField();

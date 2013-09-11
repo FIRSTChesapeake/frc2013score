@@ -5,13 +5,7 @@ import java.awt.GridLayout;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 
-import FRC_Score_Sys.ScoreInputParts.OptRow;
-import FRC_Score_Sys.ScoreInputParts.PanelTotal;
-import FRC_Score_Sys.ScoreInputParts.PenaltyInput;
-import FRC_Score_Sys.ScoreInputParts.SectionHeader;
-import FRC_Score_Sys.ScoreInputParts.SingleScoreRow;
-
-public class ScorePanel extends JPanel {
+public class Inputwindow_ScorePanel extends JPanel {
 	/**
 	 * 
 	 */
@@ -21,32 +15,32 @@ public class ScorePanel extends JPanel {
 	private int FinalScore = 0;
 	
 	// Input Objects
-	SingleScoreRow Low;
-	SingleScoreRow Mid;
-	SingleScoreRow Hig;
-	SingleScoreRow Pyr;
+	Inputwindow_SingleScoreRow Low;
+	Inputwindow_SingleScoreRow Mid;
+	Inputwindow_SingleScoreRow Hig;
+	Inputwindow_SingleScoreRow Pyr;
 	
-	OptRow R1;
-	OptRow R2;
-	OptRow R3;
+	InputWindow_OptRow R1;
+	InputWindow_OptRow R2;
+	InputWindow_OptRow R3;
 	
-	PenaltyInput PenRow;
+	Inputwindow_PenaltyInput PenRow;
 	
-	PanelTotal TotPanel;
+	Inputwindow_PanelTotal TotPanel;
 	
-	public ScorePanel(Color new_color, int[] teams){
+	public Inputwindow_ScorePanel(Color new_color, int[] teams){
 		this.setLayout(new GridLayout(0, 1, 0, 0));
 		this.setBackground(new_color);
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		// Header 1
 		String[] heads1 = {"", "Auto", "Tele", "Total"};
-		SectionHeader Sect1 = new SectionHeader("Disk Points",heads1);
+		Inputwindow_SectionHeader Sect1 = new Inputwindow_SectionHeader("Disk Points",heads1);
 		this.add(Sect1);
 		// Score Rows
-		Low = new SingleScoreRow("Low",1,true);
-		Mid = new SingleScoreRow("Mid",2,true);
-		Hig = new SingleScoreRow("High",3,true);
-		Pyr = new SingleScoreRow("Pyramid",5,false);
+		Low = new Inputwindow_SingleScoreRow("Low",1,true);
+		Mid = new Inputwindow_SingleScoreRow("Mid",2,true);
+		Hig = new Inputwindow_SingleScoreRow("High",3,true);
+		Pyr = new Inputwindow_SingleScoreRow("Pyramid",5,false);
 		
 		Low.setBackground(new_color);
 		Mid.setBackground(new_color);
@@ -60,12 +54,12 @@ public class ScorePanel extends JPanel {
 		// DQ/Climb Rows
 		// Header 2
 		String[] heads2 = {"Robot", "Climb", "DQ'ed?"};
-		SectionHeader Sect2 = new SectionHeader("Robot Options",heads2);
+		Inputwindow_SectionHeader Sect2 = new Inputwindow_SectionHeader("Robot Options",heads2);
 		this.add(Sect2);
 		
-		R1 = new OptRow(String.valueOf(teams[0]));
-		R2 = new OptRow(String.valueOf(teams[1]));
-		R3 = new OptRow(String.valueOf(teams[2]));
+		R1 = new InputWindow_OptRow(String.valueOf(teams[0]));
+		R2 = new InputWindow_OptRow(String.valueOf(teams[1]));
+		R3 = new InputWindow_OptRow(String.valueOf(teams[2]));
 		R1.setBackground(new_color);
 		R2.setBackground(new_color);
 		R3.setBackground(new_color);
@@ -77,16 +71,16 @@ public class ScorePanel extends JPanel {
 		// Penalties Row
 		// Header 3
 		String[] heads3 = {"Fouls", "T-Fouls"};
-		SectionHeader Sect3 = new SectionHeader("Penalties",heads3);
+		Inputwindow_SectionHeader Sect3 = new Inputwindow_SectionHeader("Penalties",heads3);
 		this.add(Sect3);
-		PenRow = new PenaltyInput();
+		PenRow = new Inputwindow_PenaltyInput();
 		this.add(PenRow);
 		// Total Rows
 		// Header 4
 		String[] heads4 = {"Score","Fouls","Final"};
-		SectionHeader Sect4 = new SectionHeader("Score Roundup",heads4);
+		Inputwindow_SectionHeader Sect4 = new Inputwindow_SectionHeader("Score Roundup",heads4);
 		this.add(Sect4);
-		TotPanel = new PanelTotal();
+		TotPanel = new Inputwindow_PanelTotal();
 		this.add(TotPanel);
 		FinalScore = TotPanel.GetFinal(TotalScore,0);
 	}

@@ -50,6 +50,8 @@ public class AboutWindow extends JFrame {
 		tree.setRootVisible(false);
 		tree.setModel(new DefaultTreeModel(
 			new DefaultMutableTreeNode("Changelog") {
+				private static final long serialVersionUID = 1L;
+
 				{
 					DefaultMutableTreeNode node_1;
 				node_1 = new DefaultMutableTreeNode("V 1.2.3a");

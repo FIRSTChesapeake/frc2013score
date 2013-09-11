@@ -1,4 +1,4 @@
-package FRC_Score_Sys.ScoreInputParts;
+package FRC_Score_Sys;
 
 import javax.swing.JPanel;
 
@@ -8,11 +8,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.event.EventListenerList;
 
-public class SingleScoreRow extends JPanel {
+public class Inputwindow_SingleScoreRow extends JPanel {
 	/**
 	 * 
 	 */
@@ -37,7 +34,7 @@ public class SingleScoreRow extends JPanel {
 	JTextField Tele = new JTextField();
 	JLabel Total = new JLabel("0");
 	
-	public SingleScoreRow(String lblText, int Worth, boolean hasAuto){
+	public Inputwindow_SingleScoreRow(String lblText, int Worth, boolean hasAuto){
 		iLabel = lblText;
 		iWorth = Worth;
 		this.setLayout(new GridLayout(0, 4, 0, 0));
