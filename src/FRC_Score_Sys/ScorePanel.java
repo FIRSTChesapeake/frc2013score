@@ -36,7 +36,7 @@ public class ScorePanel extends JPanel {
 			}
 		}
 	};
-///// SEND THE MESSAGE HOME
+///// SEND THE MESSAGE HOME PLEASE
 	/// EVENT CODE
 		protected EventListenerList listenerList = new EventListenerList();
 		public void addMyEventListener(MyEventListener listener) {
