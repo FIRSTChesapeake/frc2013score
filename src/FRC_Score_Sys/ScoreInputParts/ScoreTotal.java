@@ -1,4 +1,4 @@
-package FRC_Score_Sys;
+package FRC_Score_Sys.ScoreInputParts;
 
 public class ScoreTotal {
 	public int RawAuto=0;

@@ -1,4 +1,4 @@
-package FRC_Score_Sys;
+package FRC_Score_Sys.ScoreInputParts;
 
 import java.awt.GridLayout;
 import javax.swing.*;
