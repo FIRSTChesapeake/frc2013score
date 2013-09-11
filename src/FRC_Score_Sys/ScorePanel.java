@@ -28,6 +28,38 @@ public class ScorePanel extends JPanel {
 	PenaltyInput PenRow;
 	
 	PanelTotal TotPanel;
+<<<<<<< HEAD
+=======
+	
+	public MyEventListener EventHand = new MyEventListener() {
+		public void myEventOccurred(MessageCap evt) {
+			if(evt.Msg == "refresh"){
+				fireMyEvent(evt);
+			}
+		}
+	};
+///// SEND THE MESSAGE HOME PLEASE
+	/// EVENT CODE
+		protected EventListenerList listenerList = new EventListenerList();
+		public void addMyEventListener(MyEventListener listener) {
+			listenerList.add(MyEventListener.class, listener);
+		}
+		public void removeMyEventListener(MyEventListener listener) {
+			listenerList.remove(MyEventListener.class, listener);
+		}
+		public void fireMyEvent(MessageCap evt) {
+			Object[] listeners = listenerList.getListenerList();
+			for (int i = 0; i < listeners.length; i = i+2) {
+				if (listeners[i] == MyEventListener.class) {
+					((MyEventListener) listeners[i+1]).myEventOccurred(evt);
+				}
+			}
+		}
+		
+		/// END EVENT CODE
+	
+	
+>>>>>>> 8cf9a721dfcfe848a9601f37183bf8f26d42a120
 	public ScorePanel(Color new_color, int[] teams){
 		this.setLayout(new GridLayout(0, 1, 0, 0));
 		this.setBackground(new_color);
