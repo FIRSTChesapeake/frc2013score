@@ -52,7 +52,7 @@ public class AboutWindow extends JFrame {
 			new DefaultMutableTreeNode("Changelog") {
 				{
 					DefaultMutableTreeNode node_1;
-				node_1 = new DefaultMutableTreeNode("V 1.2.3");
+				node_1 = new DefaultMutableTreeNode("V 1.2.3a");
 					node_1.add(new DefaultMutableTreeNode("Implemented the editing functions required to edit matches for the listing"));
 					node_1.add(new DefaultMutableTreeNode("Extended the implementation of real-time calculations using Event Handling."));
 				add(node_1);
