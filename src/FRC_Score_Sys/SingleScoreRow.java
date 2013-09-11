@@ -20,13 +20,6 @@ public class SingleScoreRow extends JPanel {
 
 	String iLabel = "";
 	int iWorth = 0;
-	/// LISTENING TO THE TEXT BOXES
-	public ActionListener al = new ActionListener(){
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			GetScore(-2);
-		}
-	};
 	public DocumentListener dl = new DocumentListener() {
 		  public void changedUpdate(DocumentEvent e) {
 		    // Nothing?
@@ -38,26 +31,6 @@ public class SingleScoreRow extends JPanel {
 			  GetScore(-2);
 		  }
 	};
-	///// SEND THE MESSAGE HOME
-	/// EVENT CODE
-		protected EventListenerList listenerList = new EventListenerList();
-		public void addMyEventListener(MyEventListener listener) {
-			listenerList.add(MyEventListener.class, listener);
-		}
-		public void removeMyEventListener(MyEventListener listener) {
-			listenerList.remove(MyEventListener.class, listener);
-		}
-		public void fireMyEvent(MessageCap evt) {
-			Object[] listeners = listenerList.getListenerList();
-			for (int i = 0; i < listeners.length; i = i+2) {
-				if (listeners[i] == MyEventListener.class) {
-					((MyEventListener) listeners[i+1]).myEventOccurred(evt);
-				}
-			}
-		}
-		
-		/// END EVENT CODE
-	
 	
 	
 	JTextField Auto = new JTextField();
@@ -74,8 +47,6 @@ public class SingleScoreRow extends JPanel {
 		
 		Total.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		Auto.addActionListener(al);
-		Tele.addActionListener(al);
 		Auto.getDocument().addDocumentListener(dl);
 		Tele.getDocument().addDocumentListener(dl);
 		
@@ -105,7 +76,7 @@ public class SingleScoreRow extends JPanel {
 		Total.setText(String.valueOf(tot));
 		switch(type){
 			case -2:
-				fireMyEvent(new MessageCap(this,"refresh","We've been changed."));
+				//TOD: Let parent know we've changed.
 			case 1:
 				ret = a;
 				break;

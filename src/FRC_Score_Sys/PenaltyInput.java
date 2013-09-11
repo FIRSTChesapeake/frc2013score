@@ -9,39 +9,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PenaltyInput extends JPanel{
-	
-	///// SEND THE MESSAGE HOME
-	/// EVENT CODE
-		protected EventListenerList listenerList = new EventListenerList();
-		public void addMyEventListener(MyEventListener listener) {
-			listenerList.add(MyEventListener.class, listener);
-		}
-		public void removeMyEventListener(MyEventListener listener) {
-			listenerList.remove(MyEventListener.class, listener);
-		}
-		public void fireMyEvent(MessageCap evt) {
-			Object[] listeners = listenerList.getListenerList();
-			for (int i = 0; i < listeners.length; i = i+2) {
-				if (listeners[i] == MyEventListener.class) {
-					((MyEventListener) listeners[i+1]).myEventOccurred(evt);
-				}
-			}
-		}
-		public ActionListener al = new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				fireMyEvent(new MessageCap(this, "refresh","Iv'e Changed!"));
-			}
-		};
 		public DocumentListener dl = new DocumentListener() {
 			  public void changedUpdate(DocumentEvent e) {
 			    // Nothing?
 			  }
 			  public void removeUpdate(DocumentEvent e) {
-				  fireMyEvent(new MessageCap(this, "refresh","Iv'e Changed!"));
+				  //TODO: Alert parent we've changed
 			  }
 			  public void insertUpdate(DocumentEvent e) {
-				  fireMyEvent(new MessageCap(this, "refresh","Iv'e Changed!"));
+				  //TODO: Alert Parent we've changed
 			  }
 		};
 		/// END EVENT CODE
@@ -57,8 +33,6 @@ public class PenaltyInput extends JPanel{
 		this.setLayout(new GridLayout(0, 2, 0, 0));
 		fouls = new JTextField();
 		tfouls = new JTextField();
-		fouls.addActionListener(al);
-		tfouls.addActionListener(al);
 		fouls.getDocument().addDocumentListener(dl);
 		tfouls.getDocument().addDocumentListener(dl);
 		this.add(fouls);

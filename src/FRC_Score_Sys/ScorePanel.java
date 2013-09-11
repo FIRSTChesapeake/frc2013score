@@ -28,35 +28,6 @@ public class ScorePanel extends JPanel {
 	PenaltyInput PenRow;
 	
 	PanelTotal TotPanel;
-	
-	public MyEventListener EventHand = new MyEventListener() {
-		public void myEventOccurred(MessageCap evt) {
-			if(evt.Msg == "refresh"){
-				fireMyEvent(evt);
-			}
-		}
-	};
-///// SEND THE MESSAGE HOME
-	/// EVENT CODE
-		protected EventListenerList listenerList = new EventListenerList();
-		public void addMyEventListener(MyEventListener listener) {
-			listenerList.add(MyEventListener.class, listener);
-		}
-		public void removeMyEventListener(MyEventListener listener) {
-			listenerList.remove(MyEventListener.class, listener);
-		}
-		public void fireMyEvent(MessageCap evt) {
-			Object[] listeners = listenerList.getListenerList();
-			for (int i = 0; i < listeners.length; i = i+2) {
-				if (listeners[i] == MyEventListener.class) {
-					((MyEventListener) listeners[i+1]).myEventOccurred(evt);
-				}
-			}
-		}
-		
-		/// END EVENT CODE
-	
-	
 	public ScorePanel(Color new_color, int[] teams){
 		this.setLayout(new GridLayout(0, 1, 0, 0));
 		this.setBackground(new_color);
@@ -76,11 +47,6 @@ public class ScorePanel extends JPanel {
 		Hig.setBackground(new_color);
 		Pyr.setBackground(new_color);
 		
-		Low.addMyEventListener(EventHand);
-		Mid.addMyEventListener(EventHand);
-		Hig.addMyEventListener(EventHand);
-		Pyr.addMyEventListener(EventHand);
-		
 		this.add(Low);
 		this.add(Mid);
 		this.add(Hig);
@@ -97,9 +63,6 @@ public class ScorePanel extends JPanel {
 		R1.setBackground(new_color);
 		R2.setBackground(new_color);
 		R3.setBackground(new_color);
-		R1.addMyEventListener(EventHand);
-		R2.addMyEventListener(EventHand);
-		R3.addMyEventListener(EventHand);
 		
 		this.add(R1);
 		this.add(R2);
@@ -111,7 +74,6 @@ public class ScorePanel extends JPanel {
 		SectionHeader Sect3 = new SectionHeader("Penalties",heads3);
 		this.add(Sect3);
 		PenRow = new PenaltyInput();
-		PenRow.addMyEventListener(EventHand);
 		this.add(PenRow);
 		// Total Rows
 		// Header 4

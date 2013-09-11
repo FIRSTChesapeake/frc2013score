@@ -22,7 +22,7 @@ public class OptRow extends JPanel implements ActionListener {
 	public ActionListener al = new ActionListener(){
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			fireMyEvent(new MessageCap(this, "refresh", "I have been changed!"));
+			// TODO: Let parent know we've refreshed.
 		}
 	};
 	
@@ -39,26 +39,6 @@ public class OptRow extends JPanel implements ActionListener {
 		DQ.addActionListener(al);
 		this.add(DQ);
 	}
-
-	///// SEND THE MESSAGE HOME
-	/// EVENT CODE
-		protected EventListenerList listenerList = new EventListenerList();
-		public void addMyEventListener(MyEventListener listener) {
-			listenerList.add(MyEventListener.class, listener);
-		}
-		public void removeMyEventListener(MyEventListener listener) {
-			listenerList.remove(MyEventListener.class, listener);
-		}
-		public void fireMyEvent(MessageCap evt) {
-			Object[] listeners = listenerList.getListenerList();
-			for (int i = 0; i < listeners.length; i = i+2) {
-				if (listeners[i] == MyEventListener.class) {
-					((MyEventListener) listeners[i+1]).myEventOccurred(evt);
-				}
-			}
-		}
-		
-		/// END EVENT CODE
 	
 	public int GetClimb(){
 		int a = 0;

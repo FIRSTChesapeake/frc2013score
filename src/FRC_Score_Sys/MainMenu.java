@@ -20,23 +20,9 @@ public class MainMenu extends JFrame {
 
 	InputWindow inputw;
 	
-	private MyEventListener EventHandle = new MyEventListener() {
-		public void myEventOccurred(MessageCap evt) {
-			switch(evt.Msg){
-			case "closing":	
-				if(evt.getSource().equals(inputw)){
-					System.out.println("Input Window just told the main routine it's closing. DIE WINDOW DIE!!");
-					inputw = null;
-				}
-			break;
-			}
-		}
-	};
-	
 	private void EditMatch(String matchNumber){
 		if(inputw == null){
 			inputw = new InputWindow(matchNumber);
-			inputw.addMyEventListener(EventHandle);
 			inputw.pack();
 			inputw.setLocationRelativeTo(null);
 			inputw.setVisible(true);

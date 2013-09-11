@@ -15,36 +15,6 @@ import java.awt.event.WindowAdapter;
 
 public class InputWindow extends JFrame {
 	private static final long serialVersionUID = 1;
-
-	/// EVENT CODE
-	protected EventListenerList listenerList = new EventListenerList();
-	public void addMyEventListener(MyEventListener listener) {
-		listenerList.add(MyEventListener.class, listener);
-	}
-	public void removeMyEventListener(MyEventListener listener) {
-		listenerList.remove(MyEventListener.class, listener);
-	}
-	public void fireMyEvent(MessageCap evt) {
-		Object[] listeners = listenerList.getListenerList();
-		for (int i = 0; i < listeners.length; i = i+2) {
-			if (listeners[i] == MyEventListener.class) {
-				((MyEventListener) listeners[i+1]).myEventOccurred(evt);
-			}
-		}
-	}
-	
-	public MyEventListener EventHand = new MyEventListener(){
-		@Override
-		public void myEventOccurred(MessageCap evt) {
-			switch(evt.Msg){
-			case "refresh":
-				DoCalc();
-			}
-		}
-		
-	};
-	
-	/// END EVENT CODE
 	
 	public void pullThePlug() {
 		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
@@ -66,7 +36,7 @@ public class InputWindow extends JFrame {
 	InputWindow(String MatchNumber){
 		this.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
-				fireMyEvent(new MessageCap(this, "closing", "This window is closing."));
+				//TODO: When the window is closing, tell parent.
 			} 
 		});
 		System.out.println("Input Window for Match #"+MatchNumber+" Starting.");
@@ -84,10 +54,8 @@ public class InputWindow extends JFrame {
 		// MAIN PANEL WHERE SCORES TALLY
 		JPanel MainPanel = new JPanel();
 		BluePanel = new ScorePanel(color_blue, BlueTeams);
-		BluePanel.addMyEventListener(EventHand);
 		MainPanel.add(BluePanel);
 		RedPanel = new ScorePanel(color_red, RedTeams);
-		RedPanel.addMyEventListener(EventHand);
 		MainPanel.add(RedPanel);
 		
 		GridBagConstraints gbc_MainPanel = new GridBagConstraints();
