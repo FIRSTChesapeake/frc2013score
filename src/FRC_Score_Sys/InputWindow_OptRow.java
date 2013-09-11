@@ -16,8 +16,8 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1;
 	private Inputwindow_ScorePanel myParent;
 	
-	JComboBox Climb = new JComboBox();
-	JCheckBox DQ = new JCheckBox();
+	JComboBox<Integer> Climb;
+	JCheckBox DQ;
 	
 	public ActionListener al = new ActionListener(){
 		@Override
@@ -32,10 +32,14 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 		JLabel lblTitle = new JLabel(Title);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(lblTitle);
-		String[] Opts = {"0", "1", "2", "3"};
-		Climb = new JComboBox(Opts);
+		Climb = new JComboBox<Integer>();
+		Climb.addItem(0);
+		Climb.addItem(1);
+		Climb.addItem(2);
+		Climb.addItem(3);
 		Climb.addActionListener(al);
 		this.add(Climb);
+		DQ = new JCheckBox();
 		DQ.setHorizontalAlignment(SwingConstants.CENTER);
 		DQ.addActionListener(al);
 		this.add(DQ);
@@ -45,7 +49,8 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 		int a = 0;
 		try{
 			if(!DQ.isSelected()) {
-				a = Integer.parseInt((String)Climb.getSelectedItem())*10;
+				a = (Integer)Climb.getSelectedItem();
+				a = a*10;
 				System.out.println("OptRow Found No DQ, Climb of "+Climb.getSelectedItem());
 			} else {
 				System.out.println("OptRow Found Robot DQ. Using Zero.");

@@ -1,47 +1,43 @@
 package FRC_Score_Sys;
 
-import java.util.Scanner;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.io.File;
 
-public class Main {
-	static String AppVersion = "1.2.2 (2013-09-10)"; 
+public class Main { 
 
 	static PrintStream out;
-	
-	static Scanner in = new Scanner(System.in);
-	public static String Ask(String Prompt){
-		System.out.print(Prompt+": ");
-		String Ans = in.nextLine();
-		return Ans;
-	}
+	static MainMenu MM;
+	static SqlDB SqlTalk;
 	
 	public static void main(String[] args) {
 		System.out.println("You've started Matt's 2013 FRC Scoring App Version: 1.2.3");
-		boolean shh = false;
+		System.out.println("Report Issues at: https://bitbucket.org/crazysane/frc2013score/issues");
+		boolean verbose = false;
 		for(String item : args){
 			switch(item){
-			case "shh":
-				shh = true;
+			case "-loud":
+				verbose = true;
+				break;
 			}
 		}
 		
-		if(shh){
+		if(!verbose){
 			try{
 				File file = new File("logfile.txt");
 				out = new PrintStream(file);
-				System.out.println("Told to SHH by command line arg. So I guess I have to. Check logfile.txt for verbose data.");
+				System.out.println("Moving output to logfile. Add '-loud' arguement to override.");
 				System.setOut(out);
-			} catch (FileNotFoundException e){
-				System.out.println("Tried to go to quiet logging but there was a file problem; so you're stuck with me. :P");
+			} catch (Exception e){
+				System.out.println("Tried to go to quiet logging but there was a problem; so you're stuck with me. :P");
+				System.out.println( e.getClass().getName() + ": " + e.getMessage() );
 			}
 		}
-		System.out.println("-  If you find my console output annoying, add 'shh' as a command line arguement.");
-		System.out.println("   Errors will still print here, however.");
-		System.out.println("   This option will likely become default at some point.");
+		SqlTalk = new SqlDB();
+		
+		System.out.println("Creating Communications Handler to tie it all together!");
+		SubSysCommHandler CH = new SubSysCommHandler(SqlTalk); 
 		System.out.println("Opening Main menu.");
-		MainMenu MM = new MainMenu();
+		MM = new MainMenu(CH);
 		//MM.pack();
 		MM.setLocationRelativeTo(null);
 		MM.setVisible(true);

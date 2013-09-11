@@ -18,11 +18,13 @@ import javax.swing.JScrollPane;
 
 public class MainMenu extends JFrame {
 
+	SubSysCommHandler CommHandle;
+	
 	InputWindow inputw;
 	
 	private void EditMatch(String matchNumber){
 		if(inputw == null){
-			inputw = new InputWindow(matchNumber);
+			inputw = new InputWindow(this,matchNumber);
 			inputw.pack();
 			inputw.setLocationRelativeTo(null);
 			inputw.setVisible(true);
@@ -33,14 +35,34 @@ public class MainMenu extends JFrame {
 	
 	private static final long serialVersionUID = 1;
 	JTree MatchList;
-	
-	public MainMenu() {
+
+	// handle como from child windows.
+	public void RecvChildWindowMsg(Object child, String Msg, Object Datagram){
+		if(child instanceof InputWindow){
+			switch(Msg){
+				case "score_save":
+					//	TODO: Recast the Datagram to a score class and write to DB
+					break;
+				case "im_closing":
+					System.out.println("InputWindow said it's closing. DIE WINDOW DIE!");
+					inputw = null;
+					break;
+				default:
+					System.out.println("InputWindow said something we didn't understand? German Perhaps?");
+					break;
+			}
+		} else {
+			System.out.println("No child recognized? Hmm...");
+		}
+	}
+	public MainMenu(SubSysCommHandler CH) {
+		CommHandle = CH;
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
-				System.out.println("Main Window is closing. That's all she wrote folks.");
-				System.exit(0); 
+				System.out.println("Main Window is closing. Let's tell the Comm Handler to close everything out.");
+				CommHandle.RequestAppQuit();
 			}
 		});
 		setTitle("2013 FRC Scoring Application");

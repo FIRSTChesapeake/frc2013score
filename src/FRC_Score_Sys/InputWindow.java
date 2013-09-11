@@ -14,11 +14,8 @@ import java.awt.event.WindowAdapter;
 
 public class InputWindow extends JFrame {
 	private static final long serialVersionUID = 1;
+	private MainMenu myParent;
 	
-	public void pullThePlug() {
-		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
-		this.dispatchEvent(wev);
-	}
 	Inputwindow_ScorePanel RedPanel;
 	Inputwindow_ScorePanel BluePanel;
 	
@@ -31,11 +28,20 @@ public class InputWindow extends JFrame {
 	Color color_yellow = new Color(242, 255, 0);
 	
 	
+	public void pullThePlug() {
+		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
+		this.dispatchEvent(wev);
+	}
 	
-	InputWindow(String MatchNumber){
+	private void TellParent(String Msg, Object Datagram){
+		myParent.RecvChildWindowMsg(this, Msg, Datagram);
+	}
+	
+	InputWindow(MainMenu parent, String MatchNumber){
+		this.myParent = parent;
 		this.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
-				//TODO: When the window is closing, tell parent.
+				TellParent("im_closing",null);
 			} 
 		});
 		System.out.println("Input Window for Match #"+MatchNumber+" Starting.");

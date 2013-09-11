@@ -1,7 +1,4 @@
 /**
- * 
- */
-/**
  * @author Matthew Glennon (c) 2013
  * @
  */
