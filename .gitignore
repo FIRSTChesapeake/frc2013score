@@ -6,3 +6,4 @@ logfile.txt
 out/
 .project
 .classpath
+.settings
