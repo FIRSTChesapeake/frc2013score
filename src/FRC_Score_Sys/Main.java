@@ -18,7 +18,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println("You've started Matt's 2013 FRC Scoring App Version: 1.2.1");
+		System.out.println("You've started Matt's 2013 FRC Scoring App Version: 1.2.3");
 		boolean shh = false;
 		for(String item : args){
 			switch(item){
