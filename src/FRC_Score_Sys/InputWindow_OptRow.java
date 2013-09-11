@@ -51,7 +51,7 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 			if(!DQ.isSelected()) {
 				a = (Integer)Climb.getSelectedItem();
 				a = a*10;
-				System.out.println("OptRow Found No DQ, Climb of "+Climb.getSelectedItem());
+				System.out.println("OptRow Found No DQ, Climb of "+String.valueOf(Climb.getSelectedItem()));
 			} else {
 				System.out.println("OptRow Found Robot DQ. Using Zero.");
 			}

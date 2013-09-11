@@ -25,10 +25,13 @@ public class SqlDB {
 			Class.forName("org.sqlite.JDBC");
 			System.out.println("Found. Connecting to Database..");
 			c = DriverManager.getConnection("jdbc:sqlite:"+DBfile);
-			if(doNew) GenerateNewDatabase();
+			if(doNew) if(!GenerateNewDatabase()){
+				System.out.println("DB Subsystem failed to create DB tables. This is fatal.");
+				System.exit(-1);
+			}
 			System.out.println("DB Subsystem up and running!");
 		} catch(Exception e) {
-			ExceptionHandler(e);
+			ExceptionHandler(e,true);
 		}
 	}
 	public void close(){
@@ -36,21 +39,23 @@ public class SqlDB {
 		try{
 			c.close();
 		} catch(Exception e) {
-			ExceptionHandler(e);
+			ExceptionHandler(e,false);
 		}
 	}
 	
-	public void PerformUpdateQuery(String q){
+	public int PerformUpdateQuery(String q){
 		try{
 			Statement st = c.createStatement();
-			st.executeUpdate(q);
+			int ret = st.executeUpdate(q);
 			st.close();
+			return ret;
 		} catch(Exception e){
-			ExceptionHandler(e);
+			ExceptionHandler(e,false);
+			return -1;
 		}
 	}
 	
-	private void GenerateNewDatabase(){
+	private boolean GenerateNewDatabase(){
 		System.out.println("Creating new database tables..");
 		String q = "CREATE TABLE MATCHES " +
 				"(ID		TEXT	PRIMARY KEY	NOT NULL," +
@@ -86,11 +91,17 @@ public class SqlDB {
 				"TFOULB		INT		NOT NULL," +
 				"ScoreR		INT		NOT NULL," +
 				"ScoreB		INT		NOT NULL)";
-		PerformUpdateQuery(q);
-		System.out.println("Done!");
+		int cre = PerformUpdateQuery(q);
+		if(cre != 0){
+			System.out.println("Table Create failed!");
+			return false;
+		} else {
+			System.out.println("Table Create successful!");
+			return true;
+		}
 	}
-	private void ExceptionHandler(Exception e){
+	private void ExceptionHandler(Exception e, boolean fatal){
 		System.out.println( e.getClass().getName() + ": " + e.getMessage() );
-		System.exit(0);
+		if(fatal) System.exit(-1);
 	}
 }
