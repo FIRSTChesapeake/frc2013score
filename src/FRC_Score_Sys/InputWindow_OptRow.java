@@ -14,6 +14,7 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1;
+	private Inputwindow_ScorePanel myParent;
 	
 	JComboBox Climb = new JComboBox();
 	JCheckBox DQ = new JCheckBox();
@@ -21,11 +22,12 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 	public ActionListener al = new ActionListener(){
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO: Let parent know we've refreshed.
+			myParent.ForwardRefresh();
 		}
 	};
 	
-	public InputWindow_OptRow(String Title){
+	public InputWindow_OptRow(Inputwindow_ScorePanel parent, String Title){
+		this.myParent = parent;
 		this.setLayout(new GridLayout(0, 3, 0, 0));
 		JLabel lblTitle = new JLabel(Title);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);

@@ -52,9 +52,9 @@ public class InputWindow extends JFrame {
 		
 		// MAIN PANEL WHERE SCORES TALLY
 		JPanel MainPanel = new JPanel();
-		BluePanel = new Inputwindow_ScorePanel(color_blue, BlueTeams);
+		BluePanel = new Inputwindow_ScorePanel(this,color_blue, BlueTeams);
 		MainPanel.add(BluePanel);
-		RedPanel = new Inputwindow_ScorePanel(color_red, RedTeams);
+		RedPanel = new Inputwindow_ScorePanel(this,color_red, RedTeams);
 		MainPanel.add(RedPanel);
 		
 		GridBagConstraints gbc_MainPanel = new GridBagConstraints();
@@ -126,12 +126,12 @@ public class InputWindow extends JFrame {
 		gbc_BtnsPanel.gridy = 1;
 		getContentPane().add(BtnsPanel, gbc_BtnsPanel);
 	}
-	private void DoCalc(){
+	public void DoCalc(){
 		System.out.println("Starting Calc Routine..");
 		int rPen = RedPanel.GetPenalties();
 		int bPen = BluePanel.GetPenalties();
-		int rFinal = RedPanel.RequestRefresh(bPen);
-		int bFinal = BluePanel.RequestRefresh(rPen);
+		int rFinal = RedPanel.DoRefresh(bPen);
+		int bFinal = BluePanel.DoRefresh(rPen);
 		CheckWinner(rFinal,bFinal);
 		System.out.println("FULL CALC REUTINE COMPLETE.");
 	}

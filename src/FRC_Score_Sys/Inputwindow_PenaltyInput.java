@@ -6,27 +6,27 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class Inputwindow_PenaltyInput extends JPanel{
-		public DocumentListener dl = new DocumentListener() {
-			  public void changedUpdate(DocumentEvent e) {
-			    // Nothing?
-			  }
-			  public void removeUpdate(DocumentEvent e) {
-				  //TODO: Alert parent we've changed
-			  }
-			  public void insertUpdate(DocumentEvent e) {
-				  //TODO: Alert Parent we've changed
-			  }
-		};
-		/// END EVENT CODE
-	
-	/**
-	 * 
-	 */
+		
 	private static final long serialVersionUID = 1;
 	JTextField fouls;
 	JTextField tfouls;
 	
-	public Inputwindow_PenaltyInput(){
+	private Inputwindow_ScorePanel myParent;
+	
+	public DocumentListener dl = new DocumentListener() {
+		  public void changedUpdate(DocumentEvent e) {
+		    // Nothing?
+		  }
+		  public void removeUpdate(DocumentEvent e) {
+			  myParent.ForwardRefresh();
+		  }
+		  public void insertUpdate(DocumentEvent e) {
+			  myParent.ForwardRefresh();
+		  }
+	};
+	
+	public Inputwindow_PenaltyInput(Inputwindow_ScorePanel parent){
+		this.myParent = parent; 
 		this.setLayout(new GridLayout(0, 2, 0, 0));
 		fouls = new JTextField();
 		tfouls = new JTextField();

@@ -17,15 +17,17 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 
 	String iLabel = "";
 	int iWorth = 0;
+	private Inputwindow_ScorePanel myParent;
+	
 	public DocumentListener dl = new DocumentListener() {
 		  public void changedUpdate(DocumentEvent e) {
 		    // Nothing?
 		  }
 		  public void removeUpdate(DocumentEvent e) {
-			  GetScore(-2);
+			  myParent.ForwardRefresh();
 		  }
 		  public void insertUpdate(DocumentEvent e) {
-			  GetScore(-2);
+			  myParent.ForwardRefresh();
 		  }
 	};
 	
@@ -34,7 +36,8 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 	JTextField Tele = new JTextField();
 	JLabel Total = new JLabel("0");
 	
-	public Inputwindow_SingleScoreRow(String lblText, int Worth, boolean hasAuto){
+	public Inputwindow_SingleScoreRow(Inputwindow_ScorePanel parent, String lblText, int Worth, boolean hasAuto){
+		this.myParent = parent;
 		iLabel = lblText;
 		iWorth = Worth;
 		this.setLayout(new GridLayout(0, 4, 0, 0));
@@ -72,8 +75,6 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 		int tot = a+t;
 		Total.setText(String.valueOf(tot));
 		switch(type){
-			case -2:
-				//TOD: Let parent know we've changed.
 			case 1:
 				ret = a;
 				break;

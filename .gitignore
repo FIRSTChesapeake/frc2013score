@@ -5,3 +5,4 @@ bin/
 logfile.txt
 out/
 .project
+.classpath
