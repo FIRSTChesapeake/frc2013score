@@ -8,3 +8,4 @@ out/
 .classpath
 .settings
 *.db
+do-git
