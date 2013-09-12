@@ -78,6 +78,9 @@ public class AboutWindow extends JFrame {
 
 				{
 					DefaultMutableTreeNode node_1;
+				node_1 = new DefaultMutableTreeNode("V 1.3.2");
+					node_1.add(new DefaultMutableTreeNode("Import Match List from MatchMaker.exe output implemented."));
+				add(node_1);
 				node_1 = new DefaultMutableTreeNode("V 1.3.1");
 					node_1.add(new DefaultMutableTreeNode("Converted from complicated Event Handling to simply passing parent references."));
 					node_1.add(new DefaultMutableTreeNode("Implemented SQL Lite DB."));

@@ -16,6 +16,8 @@ Any FRC affiliation can use this software.
 
 Latest release can be downloaded [here](https://bitbucket.org/crazysane/frc2013score/downloads).
 
+**The software is not yet fully functional**
+
 Grab the last commit using git:
 ```
 git clone https://bitbucket.org/crazysane/frc2013score.git

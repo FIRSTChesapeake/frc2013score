@@ -18,7 +18,7 @@ import javax.swing.JScrollPane;
 
 public class MainMenu extends JFrame {
 
-	SubSysCommHandler CommHandle;
+	public SubSysCommHandler CommHandle;
 	
 	InputWindow inputw;
 	
@@ -55,6 +55,12 @@ public class MainMenu extends JFrame {
 			System.out.println("No child recognized? Hmm...");
 		}
 	}
+	
+	public void TriggerImportFile(){
+		MatchReader rdr = new MatchReader(this);
+		int ret = rdr.DoFileLoad();
+	}
+	
 	public MainMenu(SubSysCommHandler CH) {
 		CommHandle = CH;
 		setResizable(false);
@@ -93,8 +99,9 @@ public class MainMenu extends JFrame {
 		});
 		// Import Button
 		JButton btnImportMatches = new JButton("Import Match List");
-		btnAbout.addActionListener(new ActionListener() {
+		btnImportMatches.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				TriggerImportFile();
 				
 			}
 		});

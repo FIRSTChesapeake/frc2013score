@@ -2,6 +2,8 @@ package FRC_Score_Sys;
 
 import java.io.File;
 import java.sql.*;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 
 
 public class SqlDB {
@@ -43,7 +45,43 @@ public class SqlDB {
 		}
 	}
 	
-	public int PerformUpdateQuery(String q){
+	public int AddMatchToDB(String[] matchInfo){
+		try{
+			PreparedStatement s = c.prepareStatement("INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)");
+			int i = 1;
+			boolean first = false;
+			for(String item : matchInfo){
+				System.out.print("Evaluating '"+item+"'.. ");
+				if(!first){			
+					System.out.println("Match ID");
+					s.setString(i, "QQ"+item);
+					first = true;
+				} else {
+					System.out.println("Data");
+					s.setInt(i, Integer.parseInt(item));
+				}
+				i = i + 1;
+			}
+			System.out.println(s.toString());
+			int ret = s.executeUpdate();
+			s.close();
+			return ret;
+		} catch (Exception e){
+			ExceptionHandler(e, false);
+			return -1;
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private int CountArray(Object[] Arr){
+		int i = 0;
+		for(Object item : Arr){
+			i = i +1;
+		}
+		return i;
+	}
+	
+	public int PerformInternalUpdateQuery(String q){
 		try{
 			Statement st = c.createStatement();
 			int ret = st.executeUpdate(q);
@@ -60,38 +98,38 @@ public class SqlDB {
 		String q = "CREATE TABLE MATCHES " +
 				"(ID		TEXT	PRIMARY KEY	NOT NULL," +
 				"RobotR1 	TEXT	NOT NULL," +
+				"SurR1		BOOLEAN	NOT NULL DEFAULT(0)," +
 				"RobotR2	TEXT	NOT NULL," +
+				"SurR2		BOOLEAN NOT NULL DEFAULT(0)," +
 				"RobotR3	TEXT	NOT NULL," +
+				"SurR3		BOOLEAN NOT NULL DEFAULT(0)," +
 				"RobotB1	TEXT	NOT NULL," +
+				"SurB1		BOOLEAN NOT NULL DEFAULT(0)," +
 				"RobotB2	TEXT	NOT NULL," +
+				"SurB2		BOOLEAN NOT NULL DEFAULT(0)," +
 				"RobotB3	TEXT	NOT NULL," +
-				"SurR1		BOOLEAN	NOT NULL," +
-				"SurR2		BOOLEAN NOT NULL," +
-				"SurR3		BOOLEAN NOT NULL," +
-				"SurB1		BOOLEAN NOT NULL," +
-				"SurB2		BOOLEAN NOT NULL," +
-				"SurB3		BOOLEAN NOT NULL," +
-				"DisksR		INT		NOT NULL," +
-				"DisksB		INT		NOT NULL," +
-				"ClimbR1	INT		NOT NULL," +
-				"ClimbR2	INT		NOT NULL," +
-				"ClimbR3	INT		NOT NULL," +
-				"ClimbB1	INT		NOT NULL," +
-				"ClimbB2	INT		NOT NULL," +
-				"ClimbB3	INT		NOT NULL," +
-				"DqR1		BOOLEAN	NOT NULL," +
-				"DqR2		BOOLEAN	NOT NULL," +
-				"DqR3		BOOLEAN	NOT NULL," +
-				"DqB1		BOOLEAN	NOT NULL," +
-				"DqB2		BOOLEAN	NOT NULL," +
-				"DqB3		BOOLEAN	NOT NULL," +
-				"FoulR		INT		NOT NULL," +
-				"FoulB		INT		NOT NULL," +
-				"TFoulR		INT		NOT NULL," +
-				"TFOULB		INT		NOT NULL," +
-				"ScoreR		INT		NOT NULL," +
-				"ScoreB		INT		NOT NULL)";
-		int cre = PerformUpdateQuery(q);
+				"SurB3		BOOLEAN NOT NULL DEFAULT(0)," +			
+				"DisksR		INT		NOT NULL DEFAULT(0)," +
+				"DisksB		INT		NOT NULL DEFAULT(0)," +
+				"ClimbR1	INT		NOT NULL DEFAULT(0)," +
+				"ClimbR2	INT		NOT NULL DEFAULT(0)," +
+				"ClimbR3	INT		NOT NULL DEFAULT(0)," +
+				"ClimbB1	INT		NOT NULL DEFAULT(0)," +
+				"ClimbB2	INT		NOT NULL DEFAULT(0)," +
+				"ClimbB3	INT		NOT NULL DEFAULT(0)," +
+				"DqR1		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"DqR2		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"DqR3		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"DqB1		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"DqB2		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"DqB3		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"FoulR		INT		NOT NULL DEFAULT(0)," +
+				"FoulB		INT		NOT NULL DEFAULT(0)," +
+				"TFoulR		INT		NOT NULL DEFAULT(0)," +
+				"TFOULB		INT		NOT NULL DEFAULT(0)," +
+				"ScoreR		INT		NOT NULL DEFAULT(0)," +
+				"ScoreB		INT		NOT NULL DEFAULT(0))";
+		int cre = PerformInternalUpdateQuery(q);
 		if(cre != 0){
 			System.out.println("Table Create failed!");
 			return false;

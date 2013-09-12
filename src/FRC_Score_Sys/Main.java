@@ -34,6 +34,9 @@ public class Main {
 		}
 		SqlTalk = new SqlDB();
 		
+		//ProgWindow pb = new ProgWindow();
+		//pb.go();
+		
 		System.out.println("Creating Communications Handler to tie it all together!");
 		SubSysCommHandler CH = new SubSysCommHandler(SqlTalk); 
 		System.out.println("Opening Main menu.");
