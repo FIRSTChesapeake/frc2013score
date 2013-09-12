@@ -14,8 +14,24 @@ As of the time of this commit, I've only completed avout 1/3 of the project.
 Keep an eye on the repsoitory - updates will be issued often.
 Any FRC affiliation can use this software.
 
+Downloading Release
+----
 Latest release can be downloaded [here](https://bitbucket.org/crazysane/frc2013score/downloads).
+There you will find a Zip of the latest release, as well as a copy of MatchMaker.
+Matchmaker is for Windows, but runs well in Wine (I've tried.)
+Note the options I've provided in the '.bat' file, this generates the data the way we need it.
+I will likely integrate this generator better into the application at some point (maybe?).
 
+if you're just testing, feel free to use the provided matches.txt file (provided with Matchmaker).
+The format of this file is, where SM is whether the team is a sourogate that match:
+```
+<match#> <R1> <R1_SM> <R1> <R1_SM> <R2> <R3_SM> <B1> <B1_SM> <B2> <B2_SM> <B3> <B3_SM>
+<match#> <R1> <R1_SM> <R1> <R1_SM> <R2> <R3_SM> <B1> <B1_SM> <B2> <B2_SM> <B3> <B3_SM>
+<match#> <R1> <R1_SM> <R1> <R1_SM> <R2> <R3_SM> <B1> <B1_SM> <B2> <B2_SM> <B3> <B3_SM>
+```
+
+Download Bleeding Edge
+----
 **The software is not yet fully functional**
 
 Grab the last commit using git:
