@@ -124,7 +124,7 @@ public class MainMenu extends JFrame {
 						DefaultMutableTreeNode SelectedMatch = (DefaultMutableTreeNode) MatchList.getLastSelectedPathComponent();
 						MatchListObj leaf = (MatchListObj) SelectedMatch.getUserObject();
 						System.out.println("Rcvd double click in match list on leaf '" + leaf.matchID + "'. Triggering edit function!");
-						MainMenu.this.EditMatch(leaf.matchID+"45");
+						MainMenu.this.EditMatch(leaf.matchID);
 					} catch (ClassCastException err) {
 						System.out.println("Rcvd double click in match list, but caught a Cast Error. Must not have been a match ref.");
 					} catch (NullPointerException err) {

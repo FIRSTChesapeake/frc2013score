@@ -144,6 +144,7 @@ public class InputWindow extends JFrame {
 		gbc_BtnsPanel.gridx = 0;
 		gbc_BtnsPanel.gridy = 1;
 		getContentPane().add(BtnsPanel, gbc_BtnsPanel);
+		loaded=true;
 		DoCalc();
 	}
 
