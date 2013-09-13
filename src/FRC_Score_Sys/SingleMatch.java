@@ -1,21 +1,34 @@
 package FRC_Score_Sys;
 
 public class SingleMatch {
-	public int MatchNumber = 0;
+	private boolean iHappy = false;
+	private String ID = "";
+	private String alColor = "";
+	public int Robot1 = 0;
+	public boolean Sur1 = false;
+	public int Robot2 = 0;
+	public boolean Sur2 = false;
+	public int Robot3 = 0;
+	public boolean Sur3 = false;	
+	public int Disks = 0;;
+	public int Climb1 = 0;
+	public int Climb2 = 0;
+	public int Climb3 = 0;
+	public boolean Dq1 = false;
+	public boolean Dq2 = false;
+	public boolean Dq3 = false;
+	public int Foul = 0;
+	public int TFoul = 0;
+	public int Score = 0;
+	public String MatchID(){ return ID; }
+	public String aColor(){ return alColor; }
+	public boolean isHappy(){ return iHappy; }
 	
-	public int R1 = 0;
-	public int R2 = 0;
-	public int R3 = 0;
+	public SingleMatch(){ }
 	
-	public int B1 = 0;
-	public int B2 = 0;
-	public int B3 = 0;
-	
-	public int R1S = 0;
-	public int R2S = 0;
-	public int R3S = 0;
-	
-	public int B1S = 0;
-	public int B2S = 0;
-	public int B3S = 0;
+	public SingleMatch(String inId, String inColor){
+		ID = inId;
+		alColor = inColor.toUpperCase();
+		iHappy = true;
+	}
 }

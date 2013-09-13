@@ -29,7 +29,7 @@ public class Inputwindow_ScorePanel extends JPanel {
 	
 	Inputwindow_PanelTotal TotPanel;
 	
-	public Inputwindow_ScorePanel(InputWindow parent, Color new_color, int[] teams){
+	public Inputwindow_ScorePanel(InputWindow parent, Color new_color, SingleMatch Match){
 		this.myParent = parent;
 		this.setLayout(new GridLayout(0, 1, 0, 0));
 		this.setBackground(new_color);
@@ -59,9 +59,9 @@ public class Inputwindow_ScorePanel extends JPanel {
 		Inputwindow_SectionHeader Sect2 = new Inputwindow_SectionHeader("Robot Options",heads2);
 		this.add(Sect2);
 		
-		R1 = new InputWindow_OptRow(this,String.valueOf(teams[0]));
-		R2 = new InputWindow_OptRow(this,String.valueOf(teams[1]));
-		R3 = new InputWindow_OptRow(this,String.valueOf(teams[2]));
+		R1 = new InputWindow_OptRow(this,String.valueOf(Match.Robot1));
+		R2 = new InputWindow_OptRow(this,String.valueOf(Match.Robot2));
+		R3 = new InputWindow_OptRow(this,String.valueOf(Match.Robot3));
 		R1.setBackground(new_color);
 		R2.setBackground(new_color);
 		R3.setBackground(new_color);

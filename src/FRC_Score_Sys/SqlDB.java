@@ -2,9 +2,8 @@ package FRC_Score_Sys;
 
 import java.io.File;
 import java.sql.*;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
-
+import java.util.List;
+import java.util.ArrayList;
 
 public class SqlDB {
 	
@@ -45,6 +44,67 @@ public class SqlDB {
 		}
 	}
 	
+	public List<String> FetchMatchList(String type){
+		System.out.println("Match List Fetch Requested for type "+type);
+		List<String> WholeList = new ArrayList<String>();
+		try{
+			PreparedStatement s = c.prepareStatement("SELECT id FROM MATCHES WHERE id LIKE ?");
+			s.setString(1, type+"%");
+			ResultSet rs = s.executeQuery();
+			while(rs.next()){
+				WholeList.add(rs.getString("id"));
+			}
+			
+		} catch (Exception e){
+			ExceptionHandler(e, false);
+		}
+		return WholeList;
+	}
+	
+	public List<SingleMatch> FetchMatch(String id){
+		System.out.println("Match Fetch Requested for id "+id);
+		List<SingleMatch> ScoreList = new ArrayList<SingleMatch>();
+		try{
+			PreparedStatement s = c.prepareStatement("SELECT * FROM MATCHES WHERE id = ? LIMIT 1");
+			s.setString(1, id);
+			ResultSet rs = s.executeQuery();
+			String[] clrs = {"R", "B"};
+			while(rs.next()){
+				for(String clr : clrs){
+					System.out.println("Gathering "+clr+"'s");
+					SingleMatch Scores = new SingleMatch(id, clr);
+					Scores.Robot1 = rs.getInt(clr+"1Robot");
+					Scores.Robot2 = rs.getInt(clr+"2Robot");
+					Scores.Robot3 = rs.getInt(clr+"3Robot");
+
+					Scores.Sur1 = rs.getBoolean(clr+"1Sur");
+					Scores.Sur2 = rs.getBoolean(clr+"2Sur");
+					Scores.Sur3 = rs.getBoolean(clr+"3Sur");
+
+					Scores.Climb1 = rs.getInt(clr+"1Climb");
+					Scores.Climb2 = rs.getInt(clr+"2Climb");
+					Scores.Climb3 = rs.getInt(clr+"3Climb");
+
+					Scores.Dq1 = rs.getBoolean(clr+"1Dq");
+					Scores.Dq2 = rs.getBoolean(clr+"2Dq");
+					Scores.Dq3 = rs.getBoolean(clr+"3Dq");
+
+					Scores.Disks = rs.getInt(clr+"Disks");
+
+					Scores.Foul = rs.getInt(clr+"Foul");
+					Scores.TFoul = rs.getInt(clr+"TFoul");
+
+					Scores.Score = rs.getInt(clr+"Score");
+					ScoreList.add(Scores);
+				}
+			}
+			
+		} catch (Exception e){
+			ExceptionHandler(e, false);
+		}
+		return ScoreList;
+	}
+	
 	public int AddMatchToDB(String[] matchInfo){
 		try{
 			PreparedStatement s = c.prepareStatement("INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)");
@@ -54,6 +114,7 @@ public class SqlDB {
 				System.out.print("Evaluating '"+item+"'.. ");
 				if(!first){			
 					System.out.println("Match ID");
+					item = PadString(item);
 					s.setString(i, "QQ"+item);
 					first = true;
 				} else {
@@ -62,7 +123,6 @@ public class SqlDB {
 				}
 				i = i + 1;
 			}
-			System.out.println(s.toString());
 			int ret = s.executeUpdate();
 			s.close();
 			return ret;
@@ -70,6 +130,13 @@ public class SqlDB {
 			ExceptionHandler(e, false);
 			return -1;
 		}
+	}
+	
+	private String PadString(String inStr){
+		if(inStr.length() >= 4) return inStr;
+		String out = inStr;
+		while(out.length() != 4) out = "0"+out;
+		return out;
 	}
 	
 	@SuppressWarnings("unused")
@@ -97,38 +164,38 @@ public class SqlDB {
 		System.out.println("Creating new database tables..");
 		String q = "CREATE TABLE MATCHES " +
 				"(ID		TEXT	PRIMARY KEY	NOT NULL," +
-				"RobotR1 	TEXT	NOT NULL," +
-				"SurR1		BOOLEAN	NOT NULL DEFAULT(0)," +
-				"RobotR2	TEXT	NOT NULL," +
-				"SurR2		BOOLEAN NOT NULL DEFAULT(0)," +
-				"RobotR3	TEXT	NOT NULL," +
-				"SurR3		BOOLEAN NOT NULL DEFAULT(0)," +
-				"RobotB1	TEXT	NOT NULL," +
-				"SurB1		BOOLEAN NOT NULL DEFAULT(0)," +
-				"RobotB2	TEXT	NOT NULL," +
-				"SurB2		BOOLEAN NOT NULL DEFAULT(0)," +
-				"RobotB3	TEXT	NOT NULL," +
-				"SurB3		BOOLEAN NOT NULL DEFAULT(0)," +			
-				"DisksR		INT		NOT NULL DEFAULT(0)," +
-				"DisksB		INT		NOT NULL DEFAULT(0)," +
-				"ClimbR1	INT		NOT NULL DEFAULT(0)," +
-				"ClimbR2	INT		NOT NULL DEFAULT(0)," +
-				"ClimbR3	INT		NOT NULL DEFAULT(0)," +
-				"ClimbB1	INT		NOT NULL DEFAULT(0)," +
-				"ClimbB2	INT		NOT NULL DEFAULT(0)," +
-				"ClimbB3	INT		NOT NULL DEFAULT(0)," +
-				"DqR1		BOOLEAN	NOT NULL DEFAULT(0)," +
-				"DqR2		BOOLEAN	NOT NULL DEFAULT(0)," +
-				"DqR3		BOOLEAN	NOT NULL DEFAULT(0)," +
-				"DqB1		BOOLEAN	NOT NULL DEFAULT(0)," +
-				"DqB2		BOOLEAN	NOT NULL DEFAULT(0)," +
-				"DqB3		BOOLEAN	NOT NULL DEFAULT(0)," +
-				"FoulR		INT		NOT NULL DEFAULT(0)," +
-				"FoulB		INT		NOT NULL DEFAULT(0)," +
-				"TFoulR		INT		NOT NULL DEFAULT(0)," +
-				"TFOULB		INT		NOT NULL DEFAULT(0)," +
-				"ScoreR		INT		NOT NULL DEFAULT(0)," +
-				"ScoreB		INT		NOT NULL DEFAULT(0))";
+				"R1Robot 	INT		NOT NULL," +
+				"R1Sur		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"R2Robot	INT		NOT NULL," +
+				"R2Sur		BOOLEAN NOT NULL DEFAULT(0)," +
+				"R3Robot	INT		NOT NULL," +
+				"R3Sur		BOOLEAN NOT NULL DEFAULT(0)," +
+				"B1Robot	INT		NOT NULL," +
+				"B1Sur		BOOLEAN NOT NULL DEFAULT(0)," +
+				"B2Robot	INT		NOT NULL," +
+				"B2Sur		BOOLEAN NOT NULL DEFAULT(0)," +
+				"B3Robot	INT		NOT NULL," +
+				"B3Sur		BOOLEAN NOT NULL DEFAULT(0)," +			
+				"RDisks		INT		NOT NULL DEFAULT(0)," +
+				"BDisks		INT		NOT NULL DEFAULT(0)," +
+				"R1Climb	INT		NOT NULL DEFAULT(0)," +
+				"R2Climb	INT		NOT NULL DEFAULT(0)," +
+				"R3Climb	INT		NOT NULL DEFAULT(0)," +
+				"B1Climb	INT		NOT NULL DEFAULT(0)," +
+				"B2Climb	INT		NOT NULL DEFAULT(0)," +
+				"B3Climb	INT		NOT NULL DEFAULT(0)," +
+				"R1Dq		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"R2Dq		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"R3Dq		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"B1Dq		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"B2Dq		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"B3Dq		BOOLEAN	NOT NULL DEFAULT(0)," +
+				"RFoul		INT		NOT NULL DEFAULT(0)," +
+				"BFoul		INT		NOT NULL DEFAULT(0)," +
+				"RTFoul		INT		NOT NULL DEFAULT(0)," +
+				"BTFoul		INT		NOT NULL DEFAULT(0)," +
+				"RScore		INT		NOT NULL DEFAULT(0)," +
+				"BScore		INT		NOT NULL DEFAULT(0))";
 		int cre = PerformInternalUpdateQuery(q);
 		if(cre != 0){
 			System.out.println("Table Create failed!");
@@ -139,7 +206,7 @@ public class SqlDB {
 		}
 	}
 	private void ExceptionHandler(Exception e, boolean fatal){
-		System.out.println( e.getClass().getName() + ": " + e.getMessage() );
+		System.out.println("SQL EXCEPTION: " + e.getClass().getName() + ": " + e.getMessage() );
 		if(fatal) System.exit(-1);
 	}
 }
