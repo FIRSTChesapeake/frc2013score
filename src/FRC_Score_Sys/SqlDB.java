@@ -11,8 +11,8 @@ import java.util.List;
 
 public class SqlDB {
 
-	private Connection c;
-	private String DBfile = "score_data.db";
+	private Connection	c;
+	private String		DBfile	= "score_data.db";
 
 	public SqlDB() {
 		System.out.println("Starting SQL Server..");
@@ -32,23 +32,23 @@ public class SqlDB {
 			c = DriverManager.getConnection("jdbc:sqlite:" + DBfile);
 			if (doNew) {
 				if (!GenerateNewDatabase()) {
-					System.out
-							.println("DB Subsystem failed to create DB tables. This is fatal.");
+					System.out.println("DB Subsystem failed to create DB tables. This is fatal.");
 					System.exit(-1);
 				}
 			}
 			System.out.println("DB Subsystem up and running!");
 		} catch (Exception e) {
-			ExceptionHandler(e, true);
+			ExceptionHandler("Constructor", e, true);
 		}
 	}
 
 	public int AddMatchToDB(String[] matchInfo) {
 		try {
 			PreparedStatement s = c
-					.prepareStatement("INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)");
+					.prepareStatement("INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)");
 			int i = 1;
 			boolean first = false;
+			System.out.println("==== AddingMatchToDB ====");
 			for (String item : matchInfo) {
 				System.out.print("Evaluating '" + item + "'.. ");
 				if (!first) {
@@ -66,8 +66,8 @@ public class SqlDB {
 			s.close();
 			return ret;
 		} catch (Exception e) {
-			ExceptionHandler(e, false);
-			return -1;
+			ExceptionHandler("AddMatchToDB Function", e, false);
+			return 0;
 		}
 	}
 
@@ -76,13 +76,12 @@ public class SqlDB {
 		try {
 			c.close();
 		} catch (Exception e) {
-			ExceptionHandler(e, false);
+			ExceptionHandler("Close function", e, false);
 		}
 	}
 
-	private void ExceptionHandler(Exception e, boolean fatal) {
-		System.out.println("SQL EXCEPTION: " + e.getClass().getName() + ": "
-				+ e.getMessage());
+	private void ExceptionHandler(String title, Exception e, boolean fatal) {
+		System.out.println("SQL EXCEPTION in `" + title + "` : " + e.getClass().getName() + ": " + e.getMessage());
 		if (fatal) {
 			System.exit(-1);
 		}
@@ -92,8 +91,7 @@ public class SqlDB {
 		System.out.println("Match Fetch Requested for id " + id);
 		List<SingleMatch> ScoreList = new ArrayList<SingleMatch>();
 		try {
-			PreparedStatement s = c
-					.prepareStatement("SELECT * FROM MATCHES WHERE id = ? LIMIT 1");
+			PreparedStatement s = c.prepareStatement("SELECT * FROM MATCHES WHERE id = ? LIMIT 1");
 			s.setString(1, id);
 			ResultSet rs = s.executeQuery();
 			String[] clrs = { "R", "B" };
@@ -129,81 +127,108 @@ public class SqlDB {
 					Scores.TFoul = rs.getInt(clr + "TFoul");
 
 					Scores.Score = rs.getInt(clr + "Score");
+
 					ScoreList.add(Scores);
 				}
 			}
 
 		} catch (Exception e) {
-			ExceptionHandler(e, false);
+			ExceptionHandler("FetchMatch Function", e, false);
 		}
+		System.out.println("Match Fetched. Here ya go!");
 		return ScoreList;
 	}
 
-	public List<String> FetchMatchList(String type) {
+	public List<MatchListObj> FetchMatchList(String type) {
 		System.out.println("Match List Fetch Requested for type " + type);
-		List<String> WholeList = new ArrayList<String>();
+		List<MatchListObj> WholeList = new ArrayList<MatchListObj>();
 		try {
-			PreparedStatement s = c
-					.prepareStatement("SELECT id FROM MATCHES WHERE id LIKE ?");
+			PreparedStatement s = c.prepareStatement("SELECT id,Saved,RScore,BScore FROM MATCHES WHERE id LIKE ?");
 			s.setString(1, type + "%");
 			ResultSet rs = s.executeQuery();
 			while (rs.next()) {
-				WholeList.add(rs.getString("id"));
+				MatchListObj MLO = new MatchListObj(rs.getString("ID"));
+				int BScore = rs.getInt("BScore");
+				int RScore = rs.getInt("RScore");
+				if (rs.getBoolean("Saved")) {
+					MLO.Played = true;
+					if (BScore == RScore) {
+						MLO.Clr = MLO.color_yellow;
+						MLO.Score = BScore + " to " + RScore;
+					}
+					if (BScore > RScore) {
+						MLO.Clr = MLO.color_blue;
+						MLO.Score = BScore + " to " + RScore;
+					}
+					if (BScore < RScore) {
+						MLO.Clr = MLO.color_red;
+						MLO.Score = RScore + " to " + BScore;
+					}
+				}
+				WholeList.add(MLO);
 			}
 
 		} catch (Exception e) {
-			ExceptionHandler(e, false);
+			ExceptionHandler("Fetch Match List Function", e, false);
 		}
 		return WholeList;
 	}
 
+	private String FormatSQLBuild(String PrevString, String field, String Type, String Clr) {
+		return FormatSQLBuild(PrevString, field, Type, Clr, "");
+
+	}
+
+	private String FormatSQLBuild(String PrevString, String field, String Type, String Clr, String Options) {
+		String out = PrevString;
+		out = out + " " + Clr + field;
+		out = out + " " + Type;
+		if (Options != "") {
+			out = out + " " + Options;
+		}
+		out = out + " NOT NULL,";
+		return out;
+	}
+
+	//@formatter:off
 	private boolean GenerateNewDatabase() {
 		System.out.println("Creating new database tables..");
-		String q = "CREATE TABLE MATCHES " + "(ID		TEXT	PRIMARY KEY	NOT NULL,"
-				+ "R1Robot 	INT		NOT NULL,"
-				+ "R1Sur		BOOLEAN	NOT NULL DEFAULT(0),"
-				+ "R2Robot	INT		NOT NULL,"
-				+ "R2Sur		BOOLEAN NOT NULL DEFAULT(0),"
-				+ "R3Robot	INT		NOT NULL,"
-				+ "R3Sur		BOOLEAN NOT NULL DEFAULT(0),"
-				+ "B1Robot	INT		NOT NULL,"
-				+ "B1Sur		BOOLEAN NOT NULL DEFAULT(0),"
-				+ "B2Robot	INT		NOT NULL,"
-				+ "B2Sur		BOOLEAN NOT NULL DEFAULT(0),"
-				+ "B3Robot	INT		NOT NULL,"
-				+ "B3Sur		BOOLEAN NOT NULL DEFAULT(0),"
-				+ "RDisksLA	INT		NOT NULL DEFAULT(0),"
-				+ "RDisksLT	INT		NOT NULL DEFAULT(0),"
-				+ "RDisksMA	INT		NOT NULL DEFAULT(0),"
-				+ "RDisksMT	INT		NOT NULL DEFAULT(0),"
-				+ "RDisksHA	INT		NOT NULL DEFAULT(0),"
-				+ "RDisksHT	INT		NOT NULL DEFAULT(0),"
-				+ "RDisksP	INT		NOT NULL DEFAULT(0),"
-				+ "BDisksLA	INT		NOT NULL DEFAULT(0),"
-				+ "BDisksLT	INT		NOT NULL DEFAULT(0),"
-				+ "BDisksMA	INT		NOT NULL DEFAULT(0),"
-				+ "BDisksMT	INT		NOT NULL DEFAULT(0),"
-				+ "BDisksHA	INT		NOT NULL DEFAULT(0),"
-				+ "BDisksHT	INT		NOT NULL DEFAULT(0),"
-				+ "BDisksP	INT		NOT NULL DEFAULT(0),"
-				+ "R1Climb	INT		NOT NULL DEFAULT(0),"
-				+ "R2Climb	INT		NOT NULL DEFAULT(0),"
-				+ "R3Climb	INT		NOT NULL DEFAULT(0),"
-				+ "B1Climb	INT		NOT NULL DEFAULT(0),"
-				+ "B2Climb	INT		NOT NULL DEFAULT(0),"
-				+ "B3Climb	INT		NOT NULL DEFAULT(0),"
-				+ "R1Dq		BOOLEAN	NOT NULL DEFAULT(0),"
-				+ "R2Dq		BOOLEAN	NOT NULL DEFAULT(0),"
-				+ "R3Dq		BOOLEAN	NOT NULL DEFAULT(0),"
-				+ "B1Dq		BOOLEAN	NOT NULL DEFAULT(0),"
-				+ "B2Dq		BOOLEAN	NOT NULL DEFAULT(0),"
-				+ "B3Dq		BOOLEAN	NOT NULL DEFAULT(0),"
-				+ "RFoul		INT		NOT NULL DEFAULT(0),"
-				+ "BFoul		INT		NOT NULL DEFAULT(0),"
-				+ "RTFoul		INT		NOT NULL DEFAULT(0),"
-				+ "BTFoul		INT		NOT NULL DEFAULT(0),"
-				+ "RScore		INT		NOT NULL DEFAULT(0),"
-				+ "BScore		INT		NOT NULL DEFAULT(0))";
+		String[] clrs = {"R", "B"};
+		
+		String q = "CREATE TABLE MATCHES (";
+		q = FormatSQLBuild(q, "ID", "TEXT", "", "PRIMARY KEY NOT NULL");
+		
+		for(String clr : clrs){
+			q = FormatSQLBuild(q, "1Robot",		"INT", clr);
+			q = FormatSQLBuild(q, "1Sur",		"BOOLEAN", clr);
+			q = FormatSQLBuild(q, "2Robot",		"INT", clr);
+			q = FormatSQLBuild(q, "2Sur",		"BOOLEAN", clr);
+			q = FormatSQLBuild(q, "3Robot",		"INT", clr);
+			q = FormatSQLBuild(q, "3Sur",		"BOOLEAN", clr);
+		}
+		
+		for(String clr : clrs){
+			q = FormatSQLBuild(q, "DisksLA",	"INT", clr);
+			q = FormatSQLBuild(q, "DisksLT",	"INT", clr);
+			q = FormatSQLBuild(q, "DisksMA",	"INT", clr);
+			q = FormatSQLBuild(q, "DisksMT",	"INT", clr);
+			q = FormatSQLBuild(q, "DisksHA",	"INT", clr);
+			q = FormatSQLBuild(q, "DisksHT",	"INT", clr);
+			q = FormatSQLBuild(q, "DisksP",		"INT", clr);
+			q = FormatSQLBuild(q, "1Climb",		"INT", clr);
+			q = FormatSQLBuild(q, "2Climb",		"INT", clr);
+			q = FormatSQLBuild(q, "3Climb",		"INT", clr);
+			q = FormatSQLBuild(q, "1Dq",		"BOOLEAN", clr);
+			q = FormatSQLBuild(q, "2Dq",		"BOOLEAN", clr);
+			q = FormatSQLBuild(q, "3Dq",		"BOOLEAN", clr);
+			q = FormatSQLBuild(q, "Foul",		"INT", clr);
+			q = FormatSQLBuild(q, "TFoul",		"INT", clr);
+			q = FormatSQLBuild(q, "Score",		"INT", clr);
+		}
+		q = FormatSQLBuild(q, "Saved", "BOOLEAN", "");
+		
+		q = q.substring(0, q.length() - 1);
+		q = q + ")";
 		int cre = PerformInternalUpdateQuery(q);
 		if (cre != 0) {
 			System.out.println("Table Create failed!");
@@ -213,7 +238,7 @@ public class SqlDB {
 			return true;
 		}
 	}
-
+	//@formatter:on
 	private String PadString(String inStr) {
 		if (inStr.length() >= 4) {
 			return inStr;
@@ -232,7 +257,7 @@ public class SqlDB {
 			st.close();
 			return ret;
 		} catch (Exception e) {
-			ExceptionHandler(e, false);
+			ExceptionHandler("PerformInternalUpdt Function", e, false);
 			return -1;
 		}
 	}

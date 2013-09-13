@@ -2,7 +2,7 @@ package FRC_Score_Sys;
 
 public class SubSysCommHandler {
 
-	public SqlDB SqlTalk;
+	public SqlDB	SqlTalk;
 
 	public SubSysCommHandler(SqlDB SqlComm) {
 		SqlTalk = SqlComm;

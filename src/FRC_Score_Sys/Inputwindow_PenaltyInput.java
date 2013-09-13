@@ -9,31 +9,30 @@ import javax.swing.event.DocumentListener;
 
 public class Inputwindow_PenaltyInput extends JPanel {
 
-	private static final long serialVersionUID = 1;
-	JTextField fouls;
-	JTextField tfouls;
+	private static final long		serialVersionUID	= 1;
+	JTextField						fouls;
+	JTextField						tfouls;
 
-	private Inputwindow_ScorePanel myParent;
+	private Inputwindow_ScorePanel	myParent;
 
-	public DocumentListener dl = new DocumentListener() {
-		@Override
-		public void changedUpdate(DocumentEvent e) {
-			// Nothing?
-		}
+	public DocumentListener			dl					= new DocumentListener() {
+															@Override
+															public void changedUpdate(DocumentEvent e) {
+																// Nothing?
+															}
 
-		@Override
-		public void insertUpdate(DocumentEvent e) {
-			myParent.ForwardRefresh();
-		}
+															@Override
+															public void insertUpdate(DocumentEvent e) {
+																myParent.ForwardRefresh();
+															}
 
-		@Override
-		public void removeUpdate(DocumentEvent e) {
-			myParent.ForwardRefresh();
-		}
-	};
+															@Override
+															public void removeUpdate(DocumentEvent e) {
+																myParent.ForwardRefresh();
+															}
+														};
 
-	public Inputwindow_PenaltyInput(Inputwindow_ScorePanel parent, int FoulVal,
-			int TFoulVal) {
+	public Inputwindow_PenaltyInput(Inputwindow_ScorePanel parent, int FoulVal, int TFoulVal) {
 		myParent = parent;
 		setLayout(new GridLayout(0, 2, 0, 0));
 		fouls = new JTextField();
@@ -59,8 +58,6 @@ public class Inputwindow_PenaltyInput extends JPanel {
 			ret = Integer.parseInt(field.getText());
 			return ret;
 		} catch (NumberFormatException e) {
-			// String className = this.getClass().getSimpleName();
-			// System.out.println("Number Format Exception.. Not a number in "+className+" Using 0.");
 			return 0;
 		}
 	}

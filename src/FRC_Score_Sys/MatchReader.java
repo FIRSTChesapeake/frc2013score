@@ -11,10 +11,10 @@ import javax.swing.JFileChooser;
 public class MatchReader {
 
 	class DataLoader implements Runnable {
-		public boolean DoneFlag = false;
-		public int max = -1;
-		public int now = 0;
-		private File f;
+		public boolean	DoneFlag	= false;
+		public int		max			= -1;
+		public int		tot			= 0;
+		private File	f;
 
 		public DataLoader(File file) {
 			f = file;
@@ -25,7 +25,7 @@ public class MatchReader {
 			try {
 				BufferedReader br = new BufferedReader(new FileReader(f));
 				String line;
-				int HighestRet = 0;
+				int RetAdd = 0;
 				List<String> WholeFile = new ArrayList<String>();
 				System.out.println("Reading File..");
 				while ((line = br.readLine()) != null) {
@@ -38,13 +38,21 @@ public class MatchReader {
 				for (String match : WholeFile) {
 					String[] spl = match.split(" ");
 					int ret = myParent.CommHandle.SqlTalk.AddMatchToDB(spl);
-					System.out.println(ret);
-					if (ret > HighestRet) {
-						HighestRet = ret;
-					}
-					now = now + 1;
+					System.out.println("= Result: " + ret);
+					RetAdd = RetAdd + ret;
+					tot = tot + 1;
 				}
 				DoneFlag = true;
+				int leftover = tot - RetAdd;
+				if (leftover == 1) {
+					System.out.println("All but 1 line was imported (" + RetAdd + " matches). This is normal if you didn't edit the file.");
+					System.out.println("(Usually a blank line at the bottom.)");
+				} else if (leftover == 0) {
+					System.out.println("All line were imported.");
+				} else {
+					System.out.println("Imported " + RetAdd + " lines out of " + tot + ".");
+					System.out.println("(Remember: There is usually a blank line at the bottom.)");
+				}
 			} catch (Exception e) {
 				ExceptionHandler(e, false);
 				DoneFlag = true;
@@ -52,7 +60,7 @@ public class MatchReader {
 		}
 	}
 
-	private MainMenu myParent;
+	private MainMenu	myParent;
 
 	public MatchReader(MainMenu parent) {
 		myParent = parent;

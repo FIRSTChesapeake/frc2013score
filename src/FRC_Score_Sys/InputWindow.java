@@ -18,19 +18,20 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 public class InputWindow extends JFrame {
-	private static final long serialVersionUID = 1;
-	private MainMenu myParent;
+	private static final long	serialVersionUID	= 1;
+	private MainMenu			myParent;
 
-	Inputwindow_ScorePanel RedPanel;
-	Inputwindow_ScorePanel BluePanel;
+	Inputwindow_ScorePanel		RedPanel;
+	Inputwindow_ScorePanel		BluePanel;
 
-	String MatchNumber = "Unk";
+	String						MatchNumber			= "Unk";
 
-	JTextField WinnerDisplay;
+	JTextField					WinnerDisplay;
 
-	Color color_red = new Color(255, 106, 0);
-	Color color_blue = new Color(30, 144, 255);
-	Color color_yellow = new Color(242, 255, 0);
+	Color						color_red			= new Color(255, 106, 0);
+	Color						color_blue			= new Color(30, 144, 255);
+	Color						color_yellow		= new Color(242, 255, 0);
+	boolean						loaded				= false;
 
 	InputWindow(MainMenu parent, String MatchNumber) {
 		myParent = parent;
@@ -40,8 +41,7 @@ public class InputWindow extends JFrame {
 				TellParent("im_closing", null);
 			}
 		});
-		System.out.println("Input Window for Match #" + MatchNumber
-				+ " Starting.");
+		System.out.println("Input Window for Match #" + MatchNumber + " Starting.");
 		setResizable(false);
 		setAlwaysOnTop(true);
 		setTitle("Input Match Results - Match " + MatchNumber);
@@ -49,12 +49,10 @@ public class InputWindow extends JFrame {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		getContentPane().setLayout(gridBagLayout);
 
-		// TODO: READ SQL AND GET TEAM#'s and Current score if any.
 		SingleMatch BlueMatch = new SingleMatch();
 		SingleMatch RedMatch = new SingleMatch();
 		try {
-			List<SingleMatch> DBScores = myParent.CommHandle.SqlTalk
-					.FetchMatch(MatchNumber);
+			List<SingleMatch> DBScores = myParent.CommHandle.SqlTalk.FetchMatch(MatchNumber);
 			if (DBScores.size() == 2) {
 				for (SingleMatch Match : DBScores) {
 					if (Match.aColor() == "R") {
@@ -96,16 +94,14 @@ public class InputWindow extends JFrame {
 			public void actionPerformed(ActionEvent ae) {
 				// BUTTON PRESSED
 				// Redo Calc to be sure we're up to date.
-				System.out
-						.println("Pending an Input Window Close let's do one more Calculate, in case something changed.");
+				System.out.println("Pending an Input Window Close let's do one more Calculate, in case something changed.");
 				DoCalc();
 				// Save
 				System.out.println("Requesting Save to DB...");
 				// TODO: WRITE TO DATABASE!
 				// TODO: Need to be sure this error checks so we know if it was
 				// actually written or not.
-				System.out
-						.println("Nothing was saved because this doesn't work yet.");
+				System.out.println("Nothing was saved because this doesn't work yet.");
 
 				// Close Window
 				System.out.println("Input Window Close request pending..");
@@ -147,6 +143,8 @@ public class InputWindow extends JFrame {
 		gbc_BtnsPanel.gridx = 0;
 		gbc_BtnsPanel.gridy = 1;
 		getContentPane().add(BtnsPanel, gbc_BtnsPanel);
+		loaded = true;
+		DoCalc();
 	}
 
 	private void CheckWinner(int Red, int Blue) {
@@ -169,13 +167,15 @@ public class InputWindow extends JFrame {
 	}
 
 	public void DoCalc() {
-		System.out.println("Starting Calc Routine..");
-		int rPen = RedPanel.GetPenalties();
-		int bPen = BluePanel.GetPenalties();
-		int rFinal = RedPanel.DoRefresh(bPen);
-		int bFinal = BluePanel.DoRefresh(rPen);
-		CheckWinner(rFinal, bFinal);
-		System.out.println("FULL CALC REUTINE COMPLETE.");
+		if (loaded) {
+			System.out.println("Starting Calc Routine..");
+			int rPen = RedPanel.GetPenalties();
+			int bPen = BluePanel.GetPenalties();
+			int rFinal = RedPanel.DoRefresh(bPen);
+			int bFinal = BluePanel.DoRefresh(rPen);
+			CheckWinner(rFinal, bFinal);
+			System.out.println("FULL CALC REUTINE COMPLETE.");
+		}
 	}
 
 	public void pullThePlug() {

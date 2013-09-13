@@ -1,6 +1,7 @@
 package FRC_Score_Sys;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,17 +18,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 
 public class MainMenu extends JFrame {
 
-	public SubSysCommHandler CommHandle;
+	public SubSysCommHandler	CommHandle;
 
-	InputWindow inputw;
+	InputWindow					inputw;
 
-	private static final long serialVersionUID = 1;
+	private static final long	serialVersionUID	= 1;
 
-	JTree MatchList;
+	JTree						MatchList;
 
 	public MainMenu(SubSysCommHandler CH) {
 		CommHandle = CH;
@@ -36,8 +38,7 @@ public class MainMenu extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				System.out
-						.println("Main Window is closing. Let's tell the Comm Handler to close everything out.");
+				System.out.println("Main Window is closing. Let's tell the Comm Handler to close everything out.");
 				CommHandle.RequestAppQuit();
 			}
 		});
@@ -90,30 +91,43 @@ public class MainMenu extends JFrame {
 		menu_panel.add(btnAbout);
 
 		MatchList = new JTree();
+		MatchList.setCellRenderer(new DefaultTreeCellRenderer() {
+			private static final long	serialVersionUID	= 1L;
+
+			@Override
+			public Component getTreeCellRendererComponent(JTree pTree, Object pValue, boolean pIsSelected, boolean pIsExpanded, boolean pIsLeaf, int pRow, boolean pHasFocus) {
+				try {
+					super.getTreeCellRendererComponent(pTree, pValue, pIsSelected, pIsExpanded, pIsLeaf, pRow, pHasFocus);
+
+					DefaultMutableTreeNode SelectedMatch = (DefaultMutableTreeNode) pValue;
+					MatchListObj MLO = (MatchListObj) SelectedMatch.getUserObject();
+					if (MLO.Played) {
+						setBackgroundNonSelectionColor(MLO.Clr);
+					} else {
+						setBackgroundNonSelectionColor(MLO.color_white);
+					}
+				} catch (ClassCastException err) {
+					// Nada
+					// } catch(Exception e) {
+
+				}
+				return (this);
+			}
+		});
 		MatchList.setToggleClickCount(1);
 		MatchList.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					try {
-						DefaultMutableTreeNode SelectedMatch = (DefaultMutableTreeNode) MatchList
-								.getLastSelectedPathComponent();
-						String leaf = String.valueOf(SelectedMatch);
-						if (SelectedMatch.isLeaf() && (leaf != "Matches")) {
-							System.out
-									.println("Rcvd double click in match list on leaf '"
-											+ leaf
-											+ "'. Triggering edit function!");
-							MainMenu.this.EditMatch(leaf);
-						} else {
-							System.out
-									.println("Rcvd double click in match list, but it was not a leaf. Ignored.");
-						}
+						DefaultMutableTreeNode SelectedMatch = (DefaultMutableTreeNode) MatchList.getLastSelectedPathComponent();
+						MatchListObj leaf = (MatchListObj) SelectedMatch.getUserObject();
+						System.out.println("Rcvd double click in match list on leaf '" + leaf.matchID + "'. Triggering edit function!");
+						MainMenu.this.EditMatch(leaf.matchID);
+					} catch (ClassCastException err) {
+						System.out.println("Rcvd double click in match list, but caught a Cast Error. Must not have been a match ref.");
 					} catch (NullPointerException err) {
-						System.out
-								.println("Rcvd double click in match list, but caught a Null Error. Was something selected? Ignored.");
-						System.out.println(err.getClass().getName() + ": "
-								+ err.getMessage());
+						System.out.println("Rcvd double click in match list, but caught a Null Error. Was something selected?");
 					}
 				}
 			}
@@ -136,9 +150,7 @@ public class MainMenu extends JFrame {
 		});
 		LoadMatchList();
 
-		JScrollPane MatchScroller = new JScrollPane(MatchList,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane MatchScroller = new JScrollPane(MatchList, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		getContentPane().add(MatchScroller, BorderLayout.CENTER);
 	}
@@ -150,24 +162,22 @@ public class MainMenu extends JFrame {
 			inputw.setLocationRelativeTo(null);
 			inputw.setVisible(true);
 		} else {
-			System.out
-					.println("Ignoring Edit Request - Edit already underway!");
+			System.out.println("Ignoring Edit Request - Edit already underway!");
 		}
 	}
 
 	private void LoadMatchList() {
-		MatchList.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(
-				"Matches") {
-			private static final long serialVersionUID = 1;
+		MatchList.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Matches") {
+			private static final long	serialVersionUID	= 1;
 
 			{
 				DefaultMutableTreeNode node;
 				node = new DefaultMutableTreeNode("Qualifications");
-				List<String> QualMatches = CommHandle.SqlTalk
-						.FetchMatchList("QQ");
+				List<MatchListObj> QualMatches = CommHandle.SqlTalk.FetchMatchList("QQ");
 				if (QualMatches.size() > 0) {
-					for (String item : QualMatches) {
-						node.add(new DefaultMutableTreeNode(item));
+					for (MatchListObj item : QualMatches) {
+						DefaultMutableTreeNode newMatch = new DefaultMutableTreeNode(item);
+						node.add(newMatch);
 					}
 					this.add(node);
 				} else {
@@ -187,18 +197,17 @@ public class MainMenu extends JFrame {
 	public void RecvChildWindowMsg(Object child, String Msg, Object Datagram) {
 		if (child instanceof InputWindow) {
 			switch (Msg) {
-			case "score_save":
-				// TODO: Recast the Datagram to a score class and write to DB
-				break;
-			case "im_closing":
-				System.out
-						.println("InputWindow said it's closing. DIE WINDOW DIE!");
-				inputw = null;
-				break;
-			default:
-				System.out
-						.println("InputWindow said something we didn't understand? German Perhaps?");
-				break;
+				case "score_save":
+					// TODO: Recast the Datagram to a score class and write to
+					// DB
+					break;
+				case "im_closing":
+					System.out.println("InputWindow said it's closing. DIE WINDOW DIE!");
+					inputw = null;
+					break;
+				default:
+					System.out.println("InputWindow said something we didn't understand? German Perhaps?");
+					break;
 			}
 		} else {
 			System.out.println("No child recognized? Hmm...");

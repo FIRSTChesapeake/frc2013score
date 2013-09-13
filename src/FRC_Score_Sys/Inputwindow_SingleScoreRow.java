@@ -13,35 +13,34 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1;
+	private static final long		serialVersionUID	= 1;
 
-	String iLabel = "";
-	int iWorth = 0;
-	private Inputwindow_ScorePanel myParent;
+	String							iLabel				= "";
+	int								iWorth				= 0;
+	private Inputwindow_ScorePanel	myParent;
 
-	public DocumentListener dl = new DocumentListener() {
-		@Override
-		public void changedUpdate(DocumentEvent e) {
-			// Nothing?
-		}
+	public DocumentListener			dl					= new DocumentListener() {
+															@Override
+															public void changedUpdate(DocumentEvent e) {
+																// Nothing?
+															}
 
-		@Override
-		public void insertUpdate(DocumentEvent e) {
-			myParent.ForwardRefresh();
-		}
+															@Override
+															public void insertUpdate(DocumentEvent e) {
+																myParent.ForwardRefresh();
+															}
 
-		@Override
-		public void removeUpdate(DocumentEvent e) {
-			myParent.ForwardRefresh();
-		}
-	};
+															@Override
+															public void removeUpdate(DocumentEvent e) {
+																myParent.ForwardRefresh();
+															}
+														};
 
-	JTextField Auto = new JTextField();
-	JTextField Tele = new JTextField();
-	JLabel Total = new JLabel("0");
+	JTextField						Auto				= new JTextField();
+	JTextField						Tele				= new JTextField();
+	JLabel							Total				= new JLabel("0");
 
-	public Inputwindow_SingleScoreRow(Inputwindow_ScorePanel parent,
-			String lblText, int Worth, boolean hasAuto, int TeleVal, int AutoVal) {
+	public Inputwindow_SingleScoreRow(Inputwindow_ScorePanel parent, String lblText, int Worth, boolean hasAuto, int TeleVal, int AutoVal) {
 		myParent = parent;
 		iLabel = lblText;
 		iWorth = Worth;
@@ -67,23 +66,22 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 	}
 
 	public int GetScore(int type) {
-		System.out
-				.println("SingleScoreRow received score request. Calculating!");
+		System.out.println("SingleScoreRow received score request. Calculating!");
 		int ret = 0;
 		int a = ParseField(Auto) * (iWorth * 2);
 		int t = ParseField(Tele) * (iWorth);
 		int tot = a + t;
 		Total.setText(String.valueOf(tot));
 		switch (type) {
-		case 1:
-			ret = a;
-			break;
-		case 2:
-			ret = t;
-			break;
-		case 3:
-			ret = tot;
-			break;
+			case 1:
+				ret = a;
+				break;
+			case 2:
+				ret = t;
+				break;
+			case 3:
+				ret = tot;
+				break;
 		}
 		return ret;
 	}
@@ -94,8 +92,6 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 			ret = Integer.parseInt(field.getText());
 			return ret;
 		} catch (NumberFormatException e) {
-			// String className = this.getClass().getSimpleName();
-			// System.out.println("Number Format Exception.. Not a number in "+className+" Labeled: '"+iLabel+"' Using 0.");
 			return 0;
 		}
 	}

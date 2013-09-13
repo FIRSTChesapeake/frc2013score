@@ -14,21 +14,20 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1;
-	private Inputwindow_ScorePanel myParent;
+	private static final long		serialVersionUID	= 1;
+	private Inputwindow_ScorePanel	myParent;
 
-	JComboBox<Integer> Climb;
-	JCheckBox DQ;
+	JComboBox<Integer>				Climb;
+	JCheckBox						DQ;
 
-	public ActionListener al = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			myParent.ForwardRefresh();
-		}
-	};
+	public ActionListener			al					= new ActionListener() {
+															@Override
+															public void actionPerformed(ActionEvent arg0) {
+																myParent.ForwardRefresh();
+															}
+														};
 
-	public InputWindow_OptRow(Inputwindow_ScorePanel parent, String Title,
-			int ClimbVal, boolean DqVal) {
+	public InputWindow_OptRow(Inputwindow_ScorePanel parent, String Title, int ClimbVal, boolean DqVal) {
 		myParent = parent;
 		setLayout(new GridLayout(0, 3, 0, 0));
 		JLabel lblTitle = new JLabel(Title);
@@ -60,14 +59,12 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 			if (!DQ.isSelected()) {
 				a = (Integer) Climb.getSelectedItem();
 				a = a * 10;
-				System.out.println("OptRow Found No DQ, Climb of "
-						+ String.valueOf(Climb.getSelectedItem()));
+				System.out.println("OptRow Found No DQ, Climb of " + String.valueOf(Climb.getSelectedItem()));
 			} else {
 				System.out.println("OptRow Found Robot DQ. Using Zero.");
 			}
 		} catch (NumberFormatException e) {
-			System.out
-					.println("OptRow failed to parse Climb Integer! Using Zero.");
+			System.out.println("OptRow failed to parse Climb Integer! Using Zero.");
 			a = 0;
 		}
 		return a;

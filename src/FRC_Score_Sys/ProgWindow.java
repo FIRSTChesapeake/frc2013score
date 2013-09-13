@@ -8,8 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
 public class ProgWindow extends JFrame {
-	private static final long serialVersionUID = 1L;
-	JProgressBar pb = new JProgressBar();
+	private static final long	serialVersionUID	= 1L;
+	JProgressBar				pb					= new JProgressBar();
 
 	public ProgWindow() {
 		setAlwaysOnTop(true);
