@@ -112,6 +112,8 @@ public class MainMenu extends JFrame {
 					} catch (NullPointerException err) {
 						System.out
 								.println("Rcvd double click in match list, but caught a Null Error. Was something selected? Ignored.");
+						System.out.println(err.getClass().getName() + ": "
+								+ err.getMessage());
 					}
 				}
 			}
