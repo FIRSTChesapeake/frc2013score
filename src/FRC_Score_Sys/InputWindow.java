@@ -62,10 +62,11 @@ public class InputWindow extends JFrame {
 						BlueMatch = Match;
 					}
 				}
-
 			} else {
-				System.out.println("We didn't get both sides of the score?");
-				pullThePlug();
+				// I'll disable the window here because apparently I can not trigger a close event from the constructor. XD
+				System.out.println("Malformed score data received. Likely the match doesn't exist. Disabling Window.");
+				this.setEnabled(false);
+				this.setTitle("Defunct Input Window. Match did not Exist. Please Close Me.");
 			}
 		} catch (Exception e) {
 			System.out.println("Unable to fetch match for DB");
@@ -77,7 +78,7 @@ public class InputWindow extends JFrame {
 		MainPanel.add(BluePanel);
 		RedPanel = new Inputwindow_ScorePanel(this, color_red, RedMatch);
 		MainPanel.add(RedPanel);
-
+		
 		GridBagConstraints gbc_MainPanel = new GridBagConstraints();
 		gbc_MainPanel.fill = GridBagConstraints.BOTH;
 		gbc_MainPanel.insets = new Insets(0, 0, 5, 0);
@@ -143,7 +144,6 @@ public class InputWindow extends JFrame {
 		gbc_BtnsPanel.gridx = 0;
 		gbc_BtnsPanel.gridy = 1;
 		getContentPane().add(BtnsPanel, gbc_BtnsPanel);
-		loaded = true;
 		DoCalc();
 	}
 

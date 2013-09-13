@@ -89,6 +89,7 @@ public class MainMenu extends JFrame {
 		menu_panel.add(btnImportMatches);
 		menu_panel.add(btnReloadMatches);
 		menu_panel.add(btnAbout);
+		menu_panel.add(btnQuit);
 
 		MatchList = new JTree();
 		MatchList.setCellRenderer(new DefaultTreeCellRenderer() {
@@ -123,7 +124,7 @@ public class MainMenu extends JFrame {
 						DefaultMutableTreeNode SelectedMatch = (DefaultMutableTreeNode) MatchList.getLastSelectedPathComponent();
 						MatchListObj leaf = (MatchListObj) SelectedMatch.getUserObject();
 						System.out.println("Rcvd double click in match list on leaf '" + leaf.matchID + "'. Triggering edit function!");
-						MainMenu.this.EditMatch(leaf.matchID);
+						MainMenu.this.EditMatch(leaf.matchID+"45");
 					} catch (ClassCastException err) {
 						System.out.println("Rcvd double click in match list, but caught a Cast Error. Must not have been a match ref.");
 					} catch (NullPointerException err) {
