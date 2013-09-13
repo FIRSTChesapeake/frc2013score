@@ -122,9 +122,9 @@ public class Inputwindow_ScorePanel extends JPanel {
 		A.DisksHA = Hig.GetAutoCount();
 		A.DisksHT = Hig.GetTeleCount();
 		A.DisksP = Pyr.GetTeleCount();
-		A.Climb1 = R1.GetClimb();
-		A.Climb2 = R2.GetClimb();
-		A.Climb3 = R3.GetClimb();
+		A.Climb1 = R1.GetRawClimb();
+		A.Climb2 = R2.GetRawClimb();
+		A.Climb3 = R3.GetRawClimb();
 		A.Dq1 = R1.isDQ();
 		A.Dq2 = R2.isDQ();
 		A.Dq3 = R3.isDQ();

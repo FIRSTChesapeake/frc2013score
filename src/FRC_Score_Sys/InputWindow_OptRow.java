@@ -69,7 +69,9 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 		}
 		return a;
 	}
-
+	public int GetRawClimb(){
+		return (Integer)Climb.getSelectedItem();
+	}
 	public boolean isDQ() {
 		return DQ.isSelected();
 	}
