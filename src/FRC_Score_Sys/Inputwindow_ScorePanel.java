@@ -16,6 +16,9 @@ public class Inputwindow_ScorePanel extends JPanel {
 	private int					TotalScore			= 0;
 	private int					FinalScore			= 0;
 
+	private String				matchID;
+	private String				myColor;
+
 	// Input Objects
 	Inputwindow_SingleScoreRow	Low;
 	Inputwindow_SingleScoreRow	Mid;
@@ -34,11 +37,15 @@ public class Inputwindow_ScorePanel extends JPanel {
 		myParent = parent;
 		setLayout(new GridLayout(0, 1, 0, 0));
 		setBackground(new_color);
+
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		// Header 1
 		String[] heads1 = { "", "Auto", "Tele", "Total" };
 		Inputwindow_SectionHeader Sect1 = new Inputwindow_SectionHeader("Disk Points", heads1);
 		this.add(Sect1);
+		matchID = Match.MatchID();
+		myColor = Match.aColor();
+
 		// Score Rows
 		Low = new Inputwindow_SingleScoreRow(this, "Low", 1, true, Match.DisksLA, Match.DisksLT);
 		Mid = new Inputwindow_SingleScoreRow(this, "Mid", 2, true, Match.DisksMA, Match.DisksMT);
@@ -104,6 +111,27 @@ public class Inputwindow_ScorePanel extends JPanel {
 
 	public int GetPenalties() {
 		return PenRow.GetPenalties();
+	}
+
+	public SingleMatch GetRawData() {
+		SingleMatch A = new SingleMatch(matchID, myColor);
+		A.DisksLA = Low.GetAutoCount();
+		A.DisksLT = Low.GetTeleCount();
+		A.DisksMA = Mid.GetAutoCount();
+		A.DisksMT = Mid.GetTeleCount();
+		A.DisksHA = Hig.GetAutoCount();
+		A.DisksHT = Hig.GetTeleCount();
+		A.DisksP = Pyr.GetTeleCount();
+		A.Climb1 = R1.GetClimb();
+		A.Climb2 = R2.GetClimb();
+		A.Climb3 = R3.GetClimb();
+		A.Dq1 = R1.isDQ();
+		A.Dq2 = R2.isDQ();
+		A.Dq3 = R3.isDQ();
+		A.Foul = PenRow.GetFoulCount();
+		A.TFoul = PenRow.GetTFoulCount();
+		A.Score = FinalScore;
+		return A;
 	}
 
 	public void RequestClear() {

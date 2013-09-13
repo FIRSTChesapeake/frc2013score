@@ -181,10 +181,9 @@ public class MainMenu extends JFrame {
 						node.add(newMatch);
 					}
 					this.add(node);
-				} else {
+					// TODO: Open path to recently edited mode.
 
 				}
-
 			}
 		}));
 	}
@@ -198,10 +197,9 @@ public class MainMenu extends JFrame {
 	public void RecvChildWindowMsg(Object child, String Msg, Object Datagram) {
 		if (child instanceof InputWindow) {
 			switch (Msg) {
-				case "score_save":
-					// TODO: Recast the Datagram to a score class and write to
-					// DB
-					break;
+				case "im_closing_modified":
+					LoadMatchList();
+					// No break here, we're moving into the next one. :D
 				case "im_closing":
 					System.out.println("InputWindow said it's closing. DIE WINDOW DIE!");
 					inputw = null;

@@ -45,11 +45,21 @@ public class Inputwindow_PenaltyInput extends JPanel {
 		this.add(tfouls);
 	}
 
+	public int GetFoulCount() {
+		int f = ParseField(fouls);
+		return f;
+	}
+
 	public int GetPenalties() {
 		System.out.println("Penalties Input calculating!");
 		int f = ParseField(fouls);
 		int tf = ParseField(tfouls);
 		return (f * 3) + (tf * 20);
+	}
+
+	public int GetTFoulCount() {
+		int tf = ParseField(tfouls);
+		return tf;
 	}
 
 	private int ParseField(JTextField field) {

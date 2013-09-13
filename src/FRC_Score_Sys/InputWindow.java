@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -32,13 +33,18 @@ public class InputWindow extends JFrame {
 	Color						color_blue			= new Color(30, 144, 255);
 	Color						color_yellow		= new Color(242, 255, 0);
 	boolean						loaded				= false;
+	boolean						did_save			= false;
 
 	InputWindow(MainMenu parent, String MatchNumber) {
 		myParent = parent;
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				TellParent("im_closing", null);
+				String msg = "im_closing";
+				if (did_save) {
+					msg = "im_closing_modified";
+				}
+				TellParent(msg, null);
 			}
 		});
 		System.out.println("Input Window for Match #" + MatchNumber + " Starting.");
@@ -63,10 +69,11 @@ public class InputWindow extends JFrame {
 					}
 				}
 			} else {
-				// I'll disable the window here because apparently I can not trigger a close event from the constructor. XD
+				// I'll disable the window here because apparently I can not
+				// trigger a close event from the constructor. XD
 				System.out.println("Malformed score data received. Likely the match doesn't exist. Disabling Window.");
-				this.setEnabled(false);
-				this.setTitle("Defunct Input Window. Match did not Exist. Please Close Me.");
+				setEnabled(false);
+				setTitle("Defunct Input Window. Match did not Exist. Please Close Me.");
 			}
 		} catch (Exception e) {
 			System.out.println("Unable to fetch match for DB");
@@ -78,7 +85,7 @@ public class InputWindow extends JFrame {
 		MainPanel.add(BluePanel);
 		RedPanel = new Inputwindow_ScorePanel(this, color_red, RedMatch);
 		MainPanel.add(RedPanel);
-		
+
 		GridBagConstraints gbc_MainPanel = new GridBagConstraints();
 		gbc_MainPanel.fill = GridBagConstraints.BOTH;
 		gbc_MainPanel.insets = new Insets(0, 0, 5, 0);
@@ -99,14 +106,19 @@ public class InputWindow extends JFrame {
 				DoCalc();
 				// Save
 				System.out.println("Requesting Save to DB...");
-				// TODO: WRITE TO DATABASE!
-				// TODO: Need to be sure this error checks so we know if it was
-				// actually written or not.
-				System.out.println("Nothing was saved because this doesn't work yet.");
-
-				// Close Window
-				System.out.println("Input Window Close request pending..");
-				pullThePlug();
+				List<SingleMatch> DataToSave = new ArrayList<SingleMatch>();
+				DataToSave.add(BluePanel.GetRawData());
+				DataToSave.add(RedPanel.GetRawData());
+				boolean Saved = myParent.CommHandle.SqlTalk.SaveMatchChanges(DataToSave);
+				if (Saved) {
+					// Close Window
+					did_save = true;
+					System.out.println("Input Window Close request pending..");
+					pullThePlug();
+				} else {
+					// TODO: Add dialog.
+					System.out.println("Woah. SQL Save failed?");
+				}
 
 			}
 		});
@@ -144,7 +156,7 @@ public class InputWindow extends JFrame {
 		gbc_BtnsPanel.gridx = 0;
 		gbc_BtnsPanel.gridy = 1;
 		getContentPane().add(BtnsPanel, gbc_BtnsPanel);
-		loaded=true;
+		loaded = true;
 		DoCalc();
 	}
 

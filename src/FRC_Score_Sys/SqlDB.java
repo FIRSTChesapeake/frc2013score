@@ -71,6 +71,10 @@ public class SqlDB {
 		}
 	}
 
+	private String BuildUpdateString(String q, String clr, String field) {
+		return q + " " + clr + field + " = ?,";
+	}
+
 	public void close() {
 		System.out.println("SQL Lite DB Closing Gracefully. Goodnight!");
 		try {
@@ -238,6 +242,7 @@ public class SqlDB {
 			return true;
 		}
 	}
+
 	//@formatter:on
 	private String PadString(String inStr) {
 		if (inStr.length() >= 4) {
@@ -260,5 +265,94 @@ public class SqlDB {
 			ExceptionHandler("PerformInternalUpdt Function", e, false);
 			return -1;
 		}
+	}
+
+	public boolean SaveMatchChanges(List<SingleMatch> Match) {
+		try {
+			String q = "UPDATE MATCHES SET";
+			String[] clrs = { "R", "B" };
+			// Build the query
+			System.out.println("Saving Match to DB, building query..");
+			for (String clr : clrs) {
+				System.out.println("Making " + clr + "'s columns..");
+				q = BuildUpdateString(q, clr, "DisksLA");
+				q = BuildUpdateString(q, clr, "DisksLT");
+				q = BuildUpdateString(q, clr, "DisksMA");
+				q = BuildUpdateString(q, clr, "DisksMT");
+				q = BuildUpdateString(q, clr, "DisksHA");
+				q = BuildUpdateString(q, clr, "DisksHT");
+				q = BuildUpdateString(q, clr, "DisksP");
+				q = BuildUpdateString(q, clr, "1Climb");
+				q = BuildUpdateString(q, clr, "2Climb");
+				q = BuildUpdateString(q, clr, "3Climb");
+				q = BuildUpdateString(q, clr, "1Dq");
+				q = BuildUpdateString(q, clr, "2Dq");
+				q = BuildUpdateString(q, clr, "3Dq");
+				q = BuildUpdateString(q, clr, "Foul");
+				q = BuildUpdateString(q, clr, "TFoul");
+				q = BuildUpdateString(q, clr, "Score");
+			}
+			q = q + " Saved = 1 WHERE ID = ?";
+			PreparedStatement s = c.prepareStatement(q);
+			SingleMatch B = new SingleMatch();
+			SingleMatch R = new SingleMatch();
+			for (SingleMatch m : Match) {
+				if (m.aColor() == "R") {
+					R = m;
+				}
+				if (m.aColor() == "B") {
+					B = m;
+				}
+			}
+			System.out.println("Filling Columns..");
+			// Red
+			s.setInt(1, R.DisksLA);
+			s.setInt(2, R.DisksLT);
+			s.setInt(3, R.DisksMA);
+			s.setInt(4, R.DisksMT);
+			s.setInt(5, R.DisksHA);
+			s.setInt(6, R.DisksHT);
+			s.setInt(7, R.DisksP);
+			s.setInt(8, R.Climb1);
+			s.setInt(9, R.Climb2);
+			s.setInt(10, R.Climb3);
+			s.setBoolean(11, R.Dq1);
+			s.setBoolean(12, R.Dq2);
+			s.setBoolean(13, R.Dq3);
+			s.setInt(14, R.Foul);
+			s.setInt(15, R.TFoul);
+			s.setInt(16, R.Score);
+			// Blue
+			s.setInt(17, B.DisksLA);
+			s.setInt(18, B.DisksLT);
+			s.setInt(19, B.DisksMA);
+			s.setInt(20, B.DisksMT);
+			s.setInt(21, B.DisksHA);
+			s.setInt(22, B.DisksHT);
+			s.setInt(23, B.DisksP);
+			s.setInt(24, B.Climb1);
+			s.setInt(25, B.Climb2);
+			s.setInt(26, B.Climb3);
+			s.setBoolean(27, B.Dq1);
+			s.setBoolean(28, B.Dq2);
+			s.setBoolean(29, B.Dq3);
+			s.setInt(30, B.Foul);
+			s.setInt(31, B.TFoul);
+			// WHERE
+			s.setInt(32, B.Score);
+			s.setString(33, B.MatchID());
+			System.out.println("Performing DB Update..");
+			int ret = s.executeUpdate();
+			if (ret != 1) {
+				System.out.println("Update Failed.");
+				return false;
+			}
+			System.out.println("Update Complete!");
+			return true;
+		} catch (Exception e) {
+			ExceptionHandler("Update Match Function", e, false);
+		}
+
+		return false;
 	}
 }

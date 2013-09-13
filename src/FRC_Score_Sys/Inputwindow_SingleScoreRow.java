@@ -65,6 +65,11 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 		this.add(Total);
 	}
 
+	public int GetAutoCount() {
+		int a = ParseField(Auto);
+		return a;
+	}
+
 	public int GetScore(int type) {
 		System.out.println("SingleScoreRow received score request. Calculating!");
 		int ret = 0;
@@ -84,6 +89,11 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 				break;
 		}
 		return ret;
+	}
+
+	public int GetTeleCount() {
+		int t = ParseField(Tele);
+		return t;
 	}
 
 	private int ParseField(JTextField field) {
