@@ -38,8 +38,16 @@ Grab the last commit using git:
 ```
 git clone https://bitbucket.org/crazysane/frc2013score.git
 ```
-
 If you would like to help me with this project, or any other
 application I might be working on for non-profits, please send me a message.
+
+TODO
+----
+- Save modified matches to DB
+- Create ranking table
+- Calculate ranks
+- Retrieve Timer Clock from FMS, waiting on [MS.](/Shoob189)
+- Come up with option for displays?
+- Create process for Finals creation (On-the-fly?)
 
 Matt
