@@ -40,7 +40,7 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 	JTextField						Tele				= new JTextField();
 	JLabel							Total				= new JLabel("0");
 
-	public Inputwindow_SingleScoreRow(Inputwindow_ScorePanel parent, String lblText, int Worth, boolean hasAuto, int TeleVal, int AutoVal) {
+	public Inputwindow_SingleScoreRow(Inputwindow_ScorePanel parent, String lblText, int Worth, boolean hasAuto, int AutoVal, int TeleVal) {
 		myParent = parent;
 		iLabel = lblText;
 		iWorth = Worth;
