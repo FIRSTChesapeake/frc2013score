@@ -9,8 +9,14 @@ public class SingleMatch {
 	public int Robot2 = 0;
 	public boolean Sur2 = false;
 	public int Robot3 = 0;
-	public boolean Sur3 = false;	
-	public int Disks = 0;;
+	public boolean Sur3 = false;
+	public int DisksLA = 0;
+	public int DisksLT = 0;
+	public int DisksMA = 0;
+	public int DisksMT = 0;
+	public int DisksHA = 0;
+	public int DisksHT = 0;
+	public int DisksP = 0;
 	public int Climb1 = 0;
 	public int Climb2 = 0;
 	public int Climb3 = 0;
@@ -20,15 +26,25 @@ public class SingleMatch {
 	public int Foul = 0;
 	public int TFoul = 0;
 	public int Score = 0;
-	public String MatchID(){ return ID; }
-	public String aColor(){ return alColor; }
-	public boolean isHappy(){ return iHappy; }
-	
-	public SingleMatch(){ }
-	
-	public SingleMatch(String inId, String inColor){
+
+	public SingleMatch() {
+	}
+
+	public SingleMatch(String inId, String inColor) {
 		ID = inId;
 		alColor = inColor.toUpperCase();
 		iHappy = true;
+	}
+
+	public String aColor() {
+		return alColor;
+	}
+
+	public boolean isHappy() {
+		return iHappy;
+	}
+
+	public String MatchID() {
+		return ID;
 	}
 }
