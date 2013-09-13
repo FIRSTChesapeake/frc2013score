@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,7 +18,6 @@ import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import java.util.List;
 
 public class MainMenu extends JFrame {
 
@@ -51,6 +51,12 @@ public class MainMenu extends JFrame {
 		// // - CREATE MENU BUTTONS
 		// Reload Button
 		JButton btnReloadMatches = new JButton("Reload Matches");
+		btnReloadMatches.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				LoadMatchList();
+			}
+		});
 		// About Button
 		JButton btnAbout = new JButton("About App");
 		btnAbout.addActionListener(new ActionListener() {
@@ -67,7 +73,15 @@ public class MainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				MainMenu.this.TriggerImportFile();
-
+				LoadMatchList();
+			}
+		});
+		// Import Button
+		JButton btnQuit = new JButton("Quit");
+		btnQuit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				pullThePlug();
 			}
 		});
 		// /// - ADD MENU BUTTONS TO PANEL
@@ -84,8 +98,8 @@ public class MainMenu extends JFrame {
 					try {
 						DefaultMutableTreeNode SelectedMatch = (DefaultMutableTreeNode) MatchList
 								.getLastSelectedPathComponent();
-						if (SelectedMatch.isLeaf()) {
-							String leaf = String.valueOf(SelectedMatch);
+						String leaf = String.valueOf(SelectedMatch);
+						if (SelectedMatch.isLeaf() && (leaf != "Matches")) {
 							System.out
 									.println("Rcvd double click in match list on leaf '"
 											+ leaf
@@ -118,21 +132,7 @@ public class MainMenu extends JFrame {
 			public void mouseReleased(MouseEvent e) {
 			}
 		});
-		MatchList.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(
-				"Matches") {
-			private static final long serialVersionUID = 1;
-
-			{
-				DefaultMutableTreeNode node;
-				node = new DefaultMutableTreeNode("Qualifications");
-				List<String> QualMatches = CommHandle.SqlTalk.FetchMatchList("QQ");
-				for(String item : QualMatches){
-					node.add(new DefaultMutableTreeNode(item));
-				}
-				this.add(node);
-				
-			}
-		}));
+		LoadMatchList();
 
 		JScrollPane MatchScroller = new JScrollPane(MatchList,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -151,6 +151,34 @@ public class MainMenu extends JFrame {
 			System.out
 					.println("Ignoring Edit Request - Edit already underway!");
 		}
+	}
+
+	private void LoadMatchList() {
+		MatchList.setModel(new DefaultTreeModel(new DefaultMutableTreeNode(
+				"Matches") {
+			private static final long serialVersionUID = 1;
+
+			{
+				DefaultMutableTreeNode node;
+				node = new DefaultMutableTreeNode("Qualifications");
+				List<String> QualMatches = CommHandle.SqlTalk
+						.FetchMatchList("QQ");
+				if (QualMatches.size() > 0) {
+					for (String item : QualMatches) {
+						node.add(new DefaultMutableTreeNode(item));
+					}
+					this.add(node);
+				} else {
+
+				}
+
+			}
+		}));
+	}
+
+	public void pullThePlug() {
+		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
+		dispatchEvent(wev);
 	}
 
 	// handle como from child windows.
