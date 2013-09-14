@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SqlDB {
 
-	private String SQLDBVER = "A";
+	private String SQLDBVER = "2";
 	
 	private Connection	c;
 	private String		DBfile	= "score_data.db";
@@ -42,9 +42,8 @@ public class SqlDB {
 					Except.ExceptionHandler("Constructor",null,true,true,"Failed to create database tables.");
 				}
 			} else {
-				//TODO: FIX THIS CHECK!
 				String DBV = FetchOption("SQLDBVER"); 
-				if(DBV.equals(SQLDBVER)){
+				if(!DBV.equals(SQLDBVER)){
 					Except.ExceptionHandler("Constructor",null, true,true,"Your DB version is out-dated."
 							+ "\nYour Version: '"+DBV+"'"
 							+ "\nReq Version : '"+SQLDBVER+"'");
@@ -301,7 +300,7 @@ public class SqlDB {
 			}
 			return ret;
 		} catch (Exception e){
-			Except.ExceptionHandler("UpdateOption", e, false, false);
+			Except.ExceptionHandler("FetchOption", e, false, false);
 			return "";
 		}
 		
