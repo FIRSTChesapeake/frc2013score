@@ -134,14 +134,15 @@ public class Inputwindow_ScorePanel extends JPanel {
 		return A;
 	}
 
-	public void RequestClear() {
-		Low.RequestClear();
-		Mid.RequestClear();
-		Hig.RequestClear();
-		Pyr.RequestClear();
-		R1.RequestClear();
-		R2.RequestClear();
-		R3.RequestClear();
-		PenRow.RequestClear();
+	public void RequestReset() {
+		//TODO: This is where the Panel goes wrong.
+		Low.RequestReset();
+		Mid.RequestReset();
+		Hig.RequestReset();
+		Pyr.RequestReset();
+		R1.RequestReset();
+		R2.RequestReset();
+		R3.RequestReset();
+		PenRow.RequestReset();
 	}
 }

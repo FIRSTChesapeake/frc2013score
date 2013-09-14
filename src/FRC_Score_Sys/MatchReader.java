@@ -29,7 +29,7 @@ public class MatchReader {
 				List<String> WholeFile = new ArrayList<String>();
 				System.out.println("Reading File..");
 				while ((line = br.readLine()) != null) {
-					if (line != "") {
+					if (line.length()>0) {
 						WholeFile.add(line);
 					}
 				}

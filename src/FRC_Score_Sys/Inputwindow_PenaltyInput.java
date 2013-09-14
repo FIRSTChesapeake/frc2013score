@@ -10,8 +10,11 @@ import javax.swing.event.DocumentListener;
 public class Inputwindow_PenaltyInput extends JPanel {
 
 	private static final long		serialVersionUID	= 1;
-	JTextField						fouls;
-	JTextField						tfouls;
+	private JTextField						fouls;
+	private JTextField						tfouls;
+	
+	private int								OrigFouls;
+	private int								OrigTFouls;
 
 	private Inputwindow_ScorePanel	myParent;
 
@@ -39,12 +42,18 @@ public class Inputwindow_PenaltyInput extends JPanel {
 		tfouls = new JTextField();
 		fouls.getDocument().addDocumentListener(dl);
 		tfouls.getDocument().addDocumentListener(dl);
-		fouls.setText(String.valueOf(FoulVal));
-		tfouls.setText(String.valueOf(TFoulVal));
+		SetValues(FoulVal, TFoulVal);
 		this.add(fouls);
 		this.add(tfouls);
 	}
 
+	private void SetValues(int FoulVal, int TFoulVal){
+		fouls.setText(String.valueOf(FoulVal));
+		tfouls.setText(String.valueOf(TFoulVal));
+		OrigFouls = FoulVal;
+		OrigTFouls = TFoulVal;
+	}
+	
 	public int GetFoulCount() {
 		int f = ParseField(fouls);
 		return f;
@@ -72,10 +81,8 @@ public class Inputwindow_PenaltyInput extends JPanel {
 		}
 	}
 
-	public void RequestClear() {
-		System.out.println("PenaltyInput received Clear Request. Done.");
-		fouls.setText("");
-		tfouls.setText("");
+	public void RequestReset() {
+		SetValues(OrigFouls, OrigTFouls);
 	}
 
 }

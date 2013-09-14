@@ -17,9 +17,13 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 	private static final long		serialVersionUID	= 1;
 	private Inputwindow_ScorePanel	myParent;
 	
-	JComboBox<Integer>				Climb;
-	JCheckBox						DQ;
+	private JComboBox<Integer>				Climb;
+	private JCheckBox						DQ;
+	
+	private boolean							OrigDQ;
+	private int								OrigClimb;
 
+	
 	public ActionListener			al					= new ActionListener() {
 															@Override
 															public void actionPerformed(ActionEvent arg0) {
@@ -40,12 +44,12 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 		Climb.addItem(3);
 		Climb.addActionListener(al);
 		this.add(Climb);
-		Climb.setSelectedItem(ClimbVal);
 		DQ = new JCheckBox();
 		DQ.setHorizontalAlignment(SwingConstants.CENTER);
 		DQ.addActionListener(al);
-		DQ.setSelected(DqVal);
 		this.add(DQ);
+		
+		SetValues(DqVal,ClimbVal);
 	}
 
 	@Override
@@ -53,6 +57,13 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 
 	}
 
+	private void SetValues(boolean DqVal, int ClimbVal){
+		DQ.setSelected(DqVal);
+		Climb.setSelectedItem(ClimbVal);
+		OrigClimb = ClimbVal;
+		OrigDQ = DqVal;
+	}
+	
 	public int GetClimb() {
 		int a = 0;
 		try {
@@ -76,9 +87,7 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 		return DQ.isSelected();
 	}
 
-	public void RequestClear() {
-		System.out.println("OptRow Received Clear Request. Performed.");
-		DQ.setSelected(false);
-		Climb.setSelectedIndex(0);
+	public void RequestReset() {
+		SetValues(OrigDQ, OrigClimb);
 	}
 }

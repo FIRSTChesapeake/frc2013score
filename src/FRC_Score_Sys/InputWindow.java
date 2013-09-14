@@ -144,8 +144,8 @@ public class InputWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				// BUTTON PRESSED
-				RedPanel.RequestClear();
-				BluePanel.RequestClear();
+				RedPanel.RequestReset();
+				BluePanel.RequestReset();
 				DoCalc();
 			}
 		});
