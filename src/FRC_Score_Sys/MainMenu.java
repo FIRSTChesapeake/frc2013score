@@ -25,14 +25,18 @@ public class MainMenu extends JFrame {
 
 	public SubSysCommHandler CommHandle;
 
-	InputWindow inputw;
+	private InputWindow inputw;
 
 	private static final long serialVersionUID = 1;
 
-	JTree MatchList;
+	private JTree MatchList;
+	
+	public String EventName = "Unknown";
 
 	public MainMenu(SubSysCommHandler CH) {
 		CommHandle = CH;
+		//TODO: Update the event name after options save?
+		EventName = CH.SqlTalk.FetchOption("EVENTNAME");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -42,7 +46,7 @@ public class MainMenu extends JFrame {
 				CommHandle.RequestAppQuit();
 			}
 		});
-		setTitle("2013 FRC Scoring Application");
+		setTitle("2013 FRC Scoring Application - Event: "+EventName);
 		this.setSize(1000, 500);
 
 		JPanel menu_panel = new JPanel();
@@ -68,6 +72,14 @@ public class MainMenu extends JFrame {
 				about.setVisible(true);
 			}
 		});
+		// Options Button
+		JButton btnOpts = new JButton("Sys Options");
+		btnOpts.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				EditSysOptions();
+			}
+		});
 		// Import Button
 		JButton btnImportMatches = new JButton("Import Match List");
 		btnImportMatches.addActionListener(new ActionListener() {
@@ -88,6 +100,7 @@ public class MainMenu extends JFrame {
 		// /// - ADD MENU BUTTONS TO PANEL
 		menu_panel.add(btnImportMatches);
 		menu_panel.add(btnReloadMatches);
+		menu_panel.add(btnOpts);
 		menu_panel.add(btnAbout);
 		menu_panel.add(btnQuit);
 
@@ -167,6 +180,12 @@ public class MainMenu extends JFrame {
 		}
 	}
 
+	private void EditSysOptions(){
+		EditOptionsWindow opts_wind = new EditOptionsWindow(this);
+		opts_wind.setLocationRelativeTo(null);
+		opts_wind.setVisible(true);
+	}
+	
 	private void LoadMatchList() {
 		MatchList.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Matches") {
 			private static final long serialVersionUID = 1;

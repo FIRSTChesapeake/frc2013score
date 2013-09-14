@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -122,13 +123,9 @@ public class InputWindow extends JFrame {
 
 			}
 		});
-		BtnsPanel.add(SaveBtn);
-
 		WinnerDisplay = new JTextField();
 		WinnerDisplay.setHorizontalAlignment(SwingConstants.CENTER);
-		CheckWinner(0, 0);
-		BtnsPanel.add(WinnerDisplay);
-
+		
 		JButton RefBtn = new JButton("Refresh Calculations");
 		RefBtn.addActionListener(new ActionListener() {
 			@Override
@@ -137,8 +134,6 @@ public class InputWindow extends JFrame {
 				DoCalc();
 			}
 		});
-		BtnsPanel.add(RefBtn);
-
 		JButton ResetBtn = new JButton("Reset");
 		ResetBtn.addActionListener(new ActionListener() {
 			@Override
@@ -149,8 +144,34 @@ public class InputWindow extends JFrame {
 				DoCalc();
 			}
 		});
+		String DispMatchType = "??";
+		switch(MatchNumber.substring(0, 2)){
+		case "QQ":
+			DispMatchType = "Qualification #"+MatchNumber.substring(2);
+			break;
+		case "QF":
+			DispMatchType = "Quarterfinal #"+MatchNumber.substring(2);
+			break;
+		case "SF":
+			DispMatchType = "Semifinal #"+MatchNumber.substring(2);
+			break;
+		case "FF":
+			DispMatchType = "Final #"+MatchNumber.substring(2);
+			break;
+		}
+		JLabel Filler1 = new JLabel(DispMatchType);
+		Filler1.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel Filler2 = new JLabel(myParent.EventName);
+		Filler2.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		BtnsPanel.add(RefBtn);
+		BtnsPanel.add(WinnerDisplay);
 		BtnsPanel.add(ResetBtn);
-
+		BtnsPanel.add(Filler1);
+		BtnsPanel.add(SaveBtn);
+		BtnsPanel.add(Filler2);
+		CheckWinner(0, 0);
+		
 		GridBagConstraints gbc_BtnsPanel = new GridBagConstraints();
 		gbc_BtnsPanel.fill = GridBagConstraints.CENTER;
 		gbc_BtnsPanel.gridx = 0;

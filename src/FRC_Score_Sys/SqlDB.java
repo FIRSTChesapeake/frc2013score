@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SqlDB {
 
-	private String SQLDBVER = "2";
+	private String SQLDBVER = "3";
 
 	private Connection c;
 	private String DBfile = "score_data.db";
@@ -51,7 +51,7 @@ public class SqlDB {
 			}
 			System.out.println("DB Subsystem up and running!");
 		} catch (Exception e) {
-			Except.ExceptionHandler("Constructor", e, true, true);
+			Except.ExceptionHandler("Constructor", e, true, true, ":/ Without a Database, we're about worthless.");
 		}
 	}
 
@@ -247,7 +247,7 @@ public class SqlDB {
 			Table1Success = true;
 		}
 
-		q = "CREATE TABLE OPTIONS (ID TEXT PRIMARY KEY NOT NULL, VAL TEXT NOT NULL)";
+		q = "CREATE TABLE OPTIONS (ID TEXT PRIMARY KEY NOT NULL, VAL TEXT NOT NULL, PUBLIC BOOLEAN NOT NULL)";
 		cre = PerformInternalUpdateQuery(q);
 		if (cre != 0) {
 			System.out.println("Options Table Create failed!");
@@ -278,11 +278,25 @@ public class SqlDB {
 			st.close();
 			return ret;
 		} catch (Exception e) {
-			Except.ExceptionHandler("PerformInternalUpdt", e, false, false);
+			Except.ExceptionHandler("PerformInternalUpdt", e, true, true, "QUERY:\n"+q);
 			return -1;
 		}
 	}
-
+	public List<OptionSetPanel> FetchPublicOptions(){
+		List<OptionSetPanel> WholeList = new ArrayList<OptionSetPanel>();
+		try {
+			PreparedStatement s = c.prepareStatement("SELECT ID,VAL FROM OPTIONS WHERE PUBLIC = 1");
+			ResultSet rs = s.executeQuery();
+			while (rs.next()) {
+				OptionSetPanel newOpt = new OptionSetPanel(rs.getString("ID"), rs.getString("VAL"));
+				WholeList.add(newOpt);
+			}
+		} catch (Exception e) {
+				Except.ExceptionHandler("FetchOptionList", e, false, true, "Option list can not be loaded.");
+			}
+			return WholeList;
+	}
+	
 	public String FetchOption(String Name) {
 		try {
 			String q = "SELECT VAL FROM OPTIONS WHERE ID=?";
@@ -320,14 +334,23 @@ public class SqlDB {
 
 	}
 
-	private boolean CreateOptions() {
-		String q = "INSERT INTO OPTIONS VALUES ('SQLDBVER', '" + SQLDBVER + "')";
+	private boolean CreateEachOption(String Name, String Value, boolean Public){
+		int Pub = 0;
+		if(Public) Pub = 1;
+		String q = "INSERT INTO OPTIONS VALUES ('"+Name+"', '" + Value + "', "+Pub+")";
 		int cre = PerformInternalUpdateQuery(q);
 		if (cre != 1) {
 			return false;
 		} else {
 			return true;
 		}
+	}
+	
+	private boolean CreateOptions() {
+		boolean a = CreateEachOption("SQLDBVER", SQLDBVER, false);
+		boolean b = CreateEachOption("EVENTNAME", "Mystery Event", true);
+		if(a && b) return true;
+		return false;
 	}
 
 	public boolean SaveMatchChanges(List<SingleMatch> Match) {
