@@ -11,9 +11,13 @@ import java.util.List;
 
 public class SqlDB {
 
+	private String SQLDBVER = "A";
+	
 	private Connection	c;
 	private String		DBfile	= "score_data.db";
 
+	private ExceptionClass Except = new ExceptionClass("SQLDB"); 
+	
 	public SqlDB() {
 		System.out.println("Starting SQL Server..");
 		File file = new File(DBfile);
@@ -31,14 +35,24 @@ public class SqlDB {
 			System.out.println("Found. Connecting to Database..");
 			c = DriverManager.getConnection("jdbc:sqlite:" + DBfile);
 			if (doNew) {
-				if (!GenerateNewDatabase()) {
-					System.out.println("DB Subsystem failed to create DB tables. This is fatal.");
-					System.exit(-1);
+				if (GenerateNewDatabase()) {
+					System.out.println("Inserting Default Options..");
+					CreateOptions();
+				} else {
+					Except.ExceptionHandler("Constructor",null,true,true,"Failed to create database tables.");
+				}
+			} else {
+				//TODO: FIX THIS CHECK!
+				String DBV = FetchOption("SQLDBVER"); 
+				if(DBV.equals(SQLDBVER)){
+					Except.ExceptionHandler("Constructor",null, true,true,"Your DB version is out-dated."
+							+ "\nYour Version: '"+DBV+"'"
+							+ "\nReq Version : '"+SQLDBVER+"'");
 				}
 			}
 			System.out.println("DB Subsystem up and running!");
 		} catch (Exception e) {
-			ExceptionHandler("Constructor", e, true);
+			Except.ExceptionHandler("Constructor",e, true,true);
 		}
 	}
 
@@ -66,7 +80,7 @@ public class SqlDB {
 			s.close();
 			return ret;
 		} catch (Exception e) {
-			ExceptionHandler("AddMatchToDB Function", e, false);
+			Except.ExceptionHandler("AddMatchedToDB",e, false, true, "Something was really wrong with the match import.");
 			return 0;
 		}
 	}
@@ -80,16 +94,13 @@ public class SqlDB {
 		try {
 			c.close();
 		} catch (Exception e) {
-			ExceptionHandler("Close function", e, false);
+			Except.ExceptionHandler("DBClose",e, false, false);
 		}
 	}
 
-	private void ExceptionHandler(String title, Exception e, boolean fatal) {
-		System.out.println("SQL EXCEPTION in `" + title + "` : " + e.getClass().getName() + ": " + e.getMessage());
-		if (fatal) {
-			System.exit(-1);
-		}
-	}
+	
+	
+	
 
 	public List<SingleMatch> FetchMatch(String id) {
 		System.out.println("Match Fetch Requested for id " + id);
@@ -137,7 +148,7 @@ public class SqlDB {
 			}
 
 		} catch (Exception e) {
-			ExceptionHandler("FetchMatch Function", e, false);
+			Except.ExceptionHandler("FetchMatch",e, false, true, "We were unable to fetch that match?");
 		}
 		System.out.println("Match Fetched. Here ya go!");
 		return ScoreList;
@@ -173,7 +184,7 @@ public class SqlDB {
 			}
 
 		} catch (Exception e) {
-			ExceptionHandler("Fetch Match List Function", e, false);
+			Except.ExceptionHandler("FetchMatchList",e, false, true, "Match list can not be loaded.");
 		}
 		return WholeList;
 	}
@@ -198,6 +209,8 @@ public class SqlDB {
 	private boolean GenerateNewDatabase() {
 		System.out.println("Creating new database tables..");
 		String[] clrs = {"R", "B"};
+		
+		boolean Table1Success = false;
 		
 		String q = "CREATE TABLE MATCHES (";
 		q = FormatSQLBuild(q, "ID", "TEXT", "", "PRIMARY KEY NOT NULL");
@@ -235,11 +248,21 @@ public class SqlDB {
 		q = q + ")";
 		int cre = PerformInternalUpdateQuery(q);
 		if (cre != 0) {
-			System.out.println("Table Create failed!");
+			System.out.println("Matches Table Create failed!");
+		} else {
+			System.out.println("Matches Table Create successful!");
+			Table1Success = true;
+		}
+		
+		q = "CREATE TABLE OPTIONS (ID TEXT PRIMARY KEY NOT NULL, VAL TEXT NOT NULL)";
+		cre = PerformInternalUpdateQuery(q);
+		if (cre != 0) {
+			System.out.println("Options Table Create failed!");
 			return false;
 		} else {
-			System.out.println("Table Create successful!");
-			return true;
+			System.out.println("Options Table Create successful!");
+			if(Table1Success) return true;
+			return false;
 		}
 	}
 
@@ -262,11 +285,55 @@ public class SqlDB {
 			st.close();
 			return ret;
 		} catch (Exception e) {
-			ExceptionHandler("PerformInternalUpdt Function", e, false);
+			Except.ExceptionHandler("PerformInternalUpdt", e, false, false);
 			return -1;
 		}
 	}
-
+	public String FetchOption(String Name){
+		try{
+			String q = "SELECT VAL FROM OPTIONS WHERE ID=?";
+			PreparedStatement s = c.prepareStatement(q);
+			s.setString(1, Name);
+			ResultSet rs = s.executeQuery();
+			String ret = "";
+			while (rs.next()) {
+				ret = rs.getString("VAL");
+			}
+			return ret;
+		} catch (Exception e){
+			Except.ExceptionHandler("UpdateOption", e, false, false);
+			return "";
+		}
+		
+	}
+	public boolean UpdateOption(String Name, String Val){
+		try{
+			String q = "UPDATE OPTIONS SET VAL=? WHERE ID=?";
+			PreparedStatement s = c.prepareStatement(q);
+			s.setString(1, Val);
+			s.setString(2, Name);
+			int cre = s.executeUpdate();
+			if(cre != 1){
+				return false;
+			} else {
+				return true;
+			}
+		} catch (Exception e){
+			Except.ExceptionHandler("UpdateOption", e, false, false);
+			return false;
+		}
+		
+	}
+	private boolean CreateOptions(){
+		String q = "INSERT INTO OPTIONS VALUES ('SQLDBVER', '"+SQLDBVER+"')";
+		int cre = PerformInternalUpdateQuery(q);
+		if(cre != 1){
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	public boolean SaveMatchChanges(List<SingleMatch> Match) {
 		try {
 			String q = "UPDATE MATCHES SET";
@@ -350,7 +417,7 @@ public class SqlDB {
 			System.out.println("Update Complete!");
 			return true;
 		} catch (Exception e) {
-			ExceptionHandler("Update Match Function", e, false);
+			Except.ExceptionHandler("UpdateMatch", e, false, true, "Match update failed?");
 		}
 
 		return false;

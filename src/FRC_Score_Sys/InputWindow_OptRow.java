@@ -16,7 +16,7 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 	 */
 	private static final long		serialVersionUID	= 1;
 	private Inputwindow_ScorePanel	myParent;
-
+	
 	JComboBox<Integer>				Climb;
 	JCheckBox						DQ;
 
