@@ -43,8 +43,7 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 	private int OrigAuto;
 	private int OrigTele;
 
-	public Inputwindow_SingleScoreRow(Inputwindow_ScorePanel parent,
-			String lblText, int Worth, boolean hasAuto, int AutoVal, int TeleVal) {
+	public Inputwindow_SingleScoreRow(Inputwindow_ScorePanel parent, String lblText, int Worth, boolean hasAuto, int AutoVal, int TeleVal) {
 		myParent = parent;
 		iLabel = lblText;
 		iWorth = Worth;
@@ -81,8 +80,7 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 	}
 
 	public int GetScore(int type) {
-		System.out
-				.println("SingleScoreRow received score request. Calculating!");
+		System.out.println("SingleScoreRow received score request. Calculating!");
 		int ret = 0;
 		int a = ParseField(Auto) * (iWorth * 2);
 		int t = ParseField(Tele) * (iWorth);

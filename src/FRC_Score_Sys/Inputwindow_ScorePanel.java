@@ -33,8 +33,7 @@ public class Inputwindow_ScorePanel extends JPanel {
 
 	Inputwindow_PanelTotal TotPanel;
 
-	public Inputwindow_ScorePanel(InputWindow parent, Color new_color,
-			SingleMatch Match) {
+	public Inputwindow_ScorePanel(InputWindow parent, Color new_color, SingleMatch Match) {
 		myParent = parent;
 		setLayout(new GridLayout(0, 1, 0, 0));
 		setBackground(new_color);
@@ -42,21 +41,16 @@ public class Inputwindow_ScorePanel extends JPanel {
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		// Header 1
 		String[] heads1 = { "", "Auto", "Tele", "Total" };
-		Inputwindow_SectionHeader Sect1 = new Inputwindow_SectionHeader(
-				"Disk Points", heads1);
+		Inputwindow_SectionHeader Sect1 = new Inputwindow_SectionHeader("Disk Points", heads1);
 		this.add(Sect1);
 		matchID = Match.MatchID();
 		myColor = Match.aColor();
 
 		// Score Rows
-		Low = new Inputwindow_SingleScoreRow(this, "Low", 1, true,
-				Match.DisksLA, Match.DisksLT);
-		Mid = new Inputwindow_SingleScoreRow(this, "Mid", 2, true,
-				Match.DisksMA, Match.DisksMT);
-		Hig = new Inputwindow_SingleScoreRow(this, "High", 3, true,
-				Match.DisksHA, Match.DisksHT);
-		Pyr = new Inputwindow_SingleScoreRow(this, "Pyramid", 5, false, 0,
-				Match.DisksP);
+		Low = new Inputwindow_SingleScoreRow(this, "Low", 1, true, Match.DisksLA, Match.DisksLT);
+		Mid = new Inputwindow_SingleScoreRow(this, "Mid", 2, true, Match.DisksMA, Match.DisksMT);
+		Hig = new Inputwindow_SingleScoreRow(this, "High", 3, true, Match.DisksHA, Match.DisksHT);
+		Pyr = new Inputwindow_SingleScoreRow(this, "Pyramid", 5, false, 0, Match.DisksP);
 
 		Low.setBackground(new_color);
 		Mid.setBackground(new_color);
@@ -70,16 +64,12 @@ public class Inputwindow_ScorePanel extends JPanel {
 		// DQ/Climb Rows
 		// Header 2
 		String[] heads2 = { "Robot", "Climb", "DQ'ed?" };
-		Inputwindow_SectionHeader Sect2 = new Inputwindow_SectionHeader(
-				"Robot Options", heads2);
+		Inputwindow_SectionHeader Sect2 = new Inputwindow_SectionHeader("Robot Options", heads2);
 		this.add(Sect2);
 
-		R1 = new InputWindow_OptRow(this, String.valueOf(Match.Robot1),
-				Match.Climb1, Match.Dq1);
-		R2 = new InputWindow_OptRow(this, String.valueOf(Match.Robot2),
-				Match.Climb2, Match.Dq2);
-		R3 = new InputWindow_OptRow(this, String.valueOf(Match.Robot3),
-				Match.Climb3, Match.Dq3);
+		R1 = new InputWindow_OptRow(this, String.valueOf(Match.Robot1), Match.Climb1, Match.Dq1);
+		R2 = new InputWindow_OptRow(this, String.valueOf(Match.Robot2), Match.Climb2, Match.Dq2);
+		R3 = new InputWindow_OptRow(this, String.valueOf(Match.Robot3), Match.Climb3, Match.Dq3);
 		R1.setBackground(new_color);
 		R2.setBackground(new_color);
 		R3.setBackground(new_color);
@@ -91,16 +81,14 @@ public class Inputwindow_ScorePanel extends JPanel {
 		// Penalties Row
 		// Header 3
 		String[] heads3 = { "Fouls", "T-Fouls" };
-		Inputwindow_SectionHeader Sect3 = new Inputwindow_SectionHeader(
-				"Penalties", heads3);
+		Inputwindow_SectionHeader Sect3 = new Inputwindow_SectionHeader("Penalties", heads3);
 		this.add(Sect3);
 		PenRow = new Inputwindow_PenaltyInput(this, Match.Foul, Match.TFoul);
 		this.add(PenRow);
 		// Total Rows
 		// Header 4
 		String[] heads4 = { "Score", "Fouls", "Final" };
-		Inputwindow_SectionHeader Sect4 = new Inputwindow_SectionHeader(
-				"Score Roundup", heads4);
+		Inputwindow_SectionHeader Sect4 = new Inputwindow_SectionHeader("Score Roundup", heads4);
 		this.add(Sect4);
 		TotPanel = new Inputwindow_PanelTotal();
 		this.add(TotPanel);
@@ -108,9 +96,7 @@ public class Inputwindow_ScorePanel extends JPanel {
 	}
 
 	public int DoRefresh(int Penalties) {
-		TotalScore = Low.GetScore(3) + Mid.GetScore(3) + Hig.GetScore(3)
-				+ Pyr.GetScore(3) + R1.GetClimb() + R2.GetClimb()
-				+ R3.GetClimb();
+		TotalScore = Low.GetScore(3) + Mid.GetScore(3) + Hig.GetScore(3) + Pyr.GetScore(3) + R1.GetClimb() + R2.GetClimb() + R3.GetClimb();
 		FinalScore = TotPanel.GetFinal(TotalScore, Penalties);
 		return FinalScore;
 	}

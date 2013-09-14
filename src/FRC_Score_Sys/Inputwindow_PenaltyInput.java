@@ -35,8 +35,7 @@ public class Inputwindow_PenaltyInput extends JPanel {
 		}
 	};
 
-	public Inputwindow_PenaltyInput(Inputwindow_ScorePanel parent, int FoulVal,
-			int TFoulVal) {
+	public Inputwindow_PenaltyInput(Inputwindow_ScorePanel parent, int FoulVal, int TFoulVal) {
 		myParent = parent;
 		setLayout(new GridLayout(0, 2, 0, 0));
 		fouls = new JTextField();

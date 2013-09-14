@@ -20,8 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 
-public class LinkLabel extends JTextField implements MouseListener,
-		FocusListener, ActionListener {
+public class LinkLabel extends JTextField implements MouseListener, FocusListener, ActionListener {
 
 	/**
 	 * 
@@ -44,8 +43,7 @@ public class LinkLabel extends JTextField implements MouseListener,
 		linkLabelFile.init();
 		p.add(linkLabelFile);
 
-		LinkLabel linkLabelWeb = new LinkLabel(new URI(
-				"http://pscode.org/sscce.html"), "SSCCE");
+		LinkLabel linkLabelWeb = new LinkLabel(new URI("http://pscode.org/sscce.html"), "SSCCE");
 		linkLabelWeb.setStandardColor(new Color(0, 128, 0));
 		linkLabelWeb.setHoverColor(new Color(222, 128, 0));
 		linkLabelWeb.init();
@@ -56,8 +54,7 @@ public class LinkLabel extends JTextField implements MouseListener,
 		 */
 		p.add(linkLabelWeb);
 
-		LinkLabel linkLabelConstrain = new LinkLabel(new URI(
-				"http://sdnshare.sun.com/"), "SDN Share");
+		LinkLabel linkLabelConstrain = new LinkLabel(new URI("http://sdnshare.sun.com/"), "SDN Share");
 		linkLabelConstrain.init();
 		/*
 		 * ..and this shows one way to constrain the size (appropriate for this
@@ -70,8 +67,7 @@ public class LinkLabel extends JTextField implements MouseListener,
 		labelConstrain.add(linkLabelConstrain, BorderLayout.EAST);
 		p.add(labelConstrain);
 
-		LinkLabel linkLabelNoUnderline = new LinkLabel(new URI(
-				"http://java.net/"), "java.net");
+		LinkLabel linkLabelNoUnderline = new LinkLabel(new URI("http://java.net/"), "java.net");
 		// another way to deal with the underline is to remove it
 		linkLabelNoUnderline.setUnderlineVisible(false);
 		// we can use the methods inherited from JTextField

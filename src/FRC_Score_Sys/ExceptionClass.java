@@ -10,20 +10,17 @@ public class ExceptionClass {
 		Location = loc;
 	}
 
-	public void ExceptionHandler(String Funct, Exception e, boolean fatal,
-			boolean alert) {
+	public void ExceptionHandler(String Funct, Exception e, boolean fatal, boolean alert) {
 		ExceptionHandler(Funct, e, fatal, alert, "");
 	}
 
-	public void ExceptionHandler(String Funct, Exception e, boolean fatal,
-			boolean alert, String ExtraMsg) {
+	public void ExceptionHandler(String Funct, Exception e, boolean fatal, boolean alert, String ExtraMsg) {
 		String errMsg = "in `" + Location + ":" + Funct + "`";
 		String LogMsg = "";
 		String msg = "";
 		String tit = "";
 		if (e != null) {
-			errMsg = errMsg + ": " + e.getClass().getName() + ": "
-					+ e.getMessage();
+			errMsg = errMsg + ": " + e.getClass().getName() + ": " + e.getMessage();
 		}
 
 		if (fatal) {
@@ -47,8 +44,7 @@ public class ExceptionClass {
 
 		if (fatal) {
 			msg = msg + "\n\n Do you want to ignore this fatal error?";
-			int a = JOptionPane.showConfirmDialog(null, msg, tit,
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			int a = JOptionPane.showConfirmDialog(null, msg, tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (a == JOptionPane.NO_OPTION) {
 				System.exit(-1);
 			}

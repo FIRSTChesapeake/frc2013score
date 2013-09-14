@@ -39,16 +39,14 @@ public class SqlDB {
 					System.out.println("Inserting Default Options..");
 					CreateOptions();
 				} else {
-					Except.ExceptionHandler("Constructor", null, true, true,
-							"Failed to create database tables.");
+					Except.ExceptionHandler("Constructor", null, true, true, "Failed to create database tables.");
 				}
 			} else {
 				String DBV = FetchOption("SQLDBVER");
 				if (!DBV.equals(SQLDBVER)) {
-					Except.ExceptionHandler("Constructor", null, true, true,
-							"Your DB version is out-dated."
-									+ "\nYour Version: '" + DBV + "'"
-									+ "\nReq Version : '" + SQLDBVER + "'");
+					Except.ExceptionHandler("Constructor", null, true, true, "Your DB version is out-dated."
+							+ "\nYour Version: '" + DBV + "'"
+							+ "\nReq Version : '" + SQLDBVER + "'");
 				}
 			}
 			System.out.println("DB Subsystem up and running!");
@@ -59,8 +57,7 @@ public class SqlDB {
 
 	public int AddMatchToDB(String[] matchInfo) {
 		try {
-			PreparedStatement s = c
-					.prepareStatement("INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)");
+			PreparedStatement s = c.prepareStatement("INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)");
 			int i = 1;
 			boolean first = false;
 			System.out.println("==== AddingMatchToDB ====");
@@ -81,8 +78,7 @@ public class SqlDB {
 			s.close();
 			return ret;
 		} catch (Exception e) {
-			Except.ExceptionHandler("AddMatchedToDB", e, false, true,
-					"Something was really wrong with the match import.");
+			Except.ExceptionHandler("AddMatchedToDB", e, false, true, "Something was really wrong with the match import.");
 			return 0;
 		}
 	}
@@ -104,8 +100,7 @@ public class SqlDB {
 		System.out.println("Match Fetch Requested for id " + id);
 		List<SingleMatch> ScoreList = new ArrayList<SingleMatch>();
 		try {
-			PreparedStatement s = c
-					.prepareStatement("SELECT * FROM MATCHES WHERE id = ? LIMIT 1");
+			PreparedStatement s = c.prepareStatement("SELECT * FROM MATCHES WHERE id = ? LIMIT 1");
 			s.setString(1, id);
 			ResultSet rs = s.executeQuery();
 			String[] clrs = { "R", "B" };
@@ -147,8 +142,7 @@ public class SqlDB {
 			}
 
 		} catch (Exception e) {
-			Except.ExceptionHandler("FetchMatch", e, false, true,
-					"We were unable to fetch that match?");
+			Except.ExceptionHandler("FetchMatch", e, false, true, "We were unable to fetch that match?");
 		}
 		System.out.println("Match Fetched. Here ya go!");
 		return ScoreList;
@@ -158,8 +152,7 @@ public class SqlDB {
 		System.out.println("Match List Fetch Requested for type " + type);
 		List<MatchListObj> WholeList = new ArrayList<MatchListObj>();
 		try {
-			PreparedStatement s = c
-					.prepareStatement("SELECT id,Saved,RScore,BScore FROM MATCHES WHERE id LIKE ?");
+			PreparedStatement s = c.prepareStatement("SELECT id,Saved,RScore,BScore FROM MATCHES WHERE id LIKE ?");
 			s.setString(1, type + "%");
 			ResultSet rs = s.executeQuery();
 			while (rs.next()) {
@@ -185,20 +178,17 @@ public class SqlDB {
 			}
 
 		} catch (Exception e) {
-			Except.ExceptionHandler("FetchMatchList", e, false, true,
-					"Match list can not be loaded.");
+			Except.ExceptionHandler("FetchMatchList", e, false, true, "Match list can not be loaded.");
 		}
 		return WholeList;
 	}
 
-	private String FormatSQLBuild(String PrevString, String field, String Type,
-			String Clr) {
+	private String FormatSQLBuild(String PrevString, String field, String Type, String Clr) {
 		return FormatSQLBuild(PrevString, field, Type, Clr, "");
 
 	}
 
-	private String FormatSQLBuild(String PrevString, String field, String Type,
-			String Clr, String Options) {
+	private String FormatSQLBuild(String PrevString, String field, String Type, String Clr, String Options) {
 		String out = PrevString;
 		out = out + " " + Clr + field;
 		out = out + " " + Type;
@@ -209,7 +199,6 @@ public class SqlDB {
 		return out;
 	}
 
-	// @formatter:off
 	private boolean GenerateNewDatabase() {
 		System.out.println("Creating new database tables..");
 		String[] clrs = { "R", "B" };
@@ -271,7 +260,6 @@ public class SqlDB {
 		}
 	}
 
-	// @formatter:on
 	private String PadString(String inStr) {
 		if (inStr.length() >= 4) {
 			return inStr;
@@ -333,8 +321,7 @@ public class SqlDB {
 	}
 
 	private boolean CreateOptions() {
-		String q = "INSERT INTO OPTIONS VALUES ('SQLDBVER', '" + SQLDBVER
-				+ "')";
+		String q = "INSERT INTO OPTIONS VALUES ('SQLDBVER', '" + SQLDBVER + "')";
 		int cre = PerformInternalUpdateQuery(q);
 		if (cre != 1) {
 			return false;
@@ -426,8 +413,7 @@ public class SqlDB {
 			System.out.println("Update Complete!");
 			return true;
 		} catch (Exception e) {
-			Except.ExceptionHandler("UpdateMatch", e, false, true,
-					"Match update failed?");
+			Except.ExceptionHandler("UpdateMatch", e, false, true, "Match update failed?");
 		}
 
 		return false;

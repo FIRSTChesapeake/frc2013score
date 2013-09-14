@@ -47,8 +47,7 @@ public class InputWindow extends JFrame {
 				TellParent(msg, null);
 			}
 		});
-		System.out.println("Input Window for Match #" + MatchNumber
-				+ " Starting.");
+		System.out.println("Input Window for Match #" + MatchNumber + " Starting.");
 		setResizable(false);
 		setAlwaysOnTop(true);
 		setTitle("Input Match Results - Match " + MatchNumber);
@@ -59,8 +58,7 @@ public class InputWindow extends JFrame {
 		SingleMatch BlueMatch = new SingleMatch();
 		SingleMatch RedMatch = new SingleMatch();
 		try {
-			List<SingleMatch> DBScores = myParent.CommHandle.SqlTalk
-					.FetchMatch(MatchNumber);
+			List<SingleMatch> DBScores = myParent.CommHandle.SqlTalk.FetchMatch(MatchNumber);
 			if (DBScores.size() == 2) {
 				for (SingleMatch Match : DBScores) {
 					if (Match.aColor() == "R") {
@@ -73,8 +71,7 @@ public class InputWindow extends JFrame {
 			} else {
 				// I'll disable the window here because apparently I can not
 				// trigger a close event from the constructor. XD
-				System.out
-						.println("Malformed score data received. Likely the match doesn't exist. Disabling Window.");
+				System.out.println("Malformed score data received. Likely the match doesn't exist. Disabling Window.");
 				setEnabled(false);
 				setTitle("Defunct Input Window. Match did not Exist. Please Close Me.");
 			}
@@ -105,16 +102,14 @@ public class InputWindow extends JFrame {
 			public void actionPerformed(ActionEvent ae) {
 				// BUTTON PRESSED
 				// Redo Calc to be sure we're up to date.
-				System.out
-						.println("Pending an Input Window Close let's do one more Calculate, in case something changed.");
+				System.out.println("Pending an Input Window Close let's do one more Calculate, in case something changed.");
 				DoCalc();
 				// Save
 				System.out.println("Requesting Save to DB...");
 				List<SingleMatch> DataToSave = new ArrayList<SingleMatch>();
 				DataToSave.add(BluePanel.GetRawData());
 				DataToSave.add(RedPanel.GetRawData());
-				boolean Saved = myParent.CommHandle.SqlTalk
-						.SaveMatchChanges(DataToSave);
+				boolean Saved = myParent.CommHandle.SqlTalk.SaveMatchChanges(DataToSave);
 				if (Saved) {
 					// Close Window
 					did_save = true;

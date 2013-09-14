@@ -18,8 +18,7 @@ public class Inputwindow_SectionHeader extends JPanel {
 		setLayout(new GridLayout(0, 1, 0, 0));
 
 		JLabel lblTitle = new JLabel(Title);
-		Font newLabelFont = new Font(lblTitle.getFont().getName(), Font.BOLD,
-				lblTitle.getFont().getSize() + 2);
+		Font newLabelFont = new Font(lblTitle.getFont().getName(), Font.BOLD, lblTitle.getFont().getSize() + 2);
 		lblTitle.setFont(newLabelFont);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		Color bgColor = new Color(242, 255, 0);

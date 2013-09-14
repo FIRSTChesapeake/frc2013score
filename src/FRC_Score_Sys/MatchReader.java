@@ -45,18 +45,13 @@ public class MatchReader {
 				DoneFlag = true;
 				int leftover = tot - RetAdd;
 				if (leftover == 1) {
-					System.out
-							.println("All but 1 line was imported ("
-									+ RetAdd
-									+ " matches). This is normal if you didn't edit the file.");
+					System.out.println("All but 1 line was imported (" + RetAdd + " matches). This is normal if you didn't edit the file.");
 					System.out.println("(Usually a blank line at the bottom.)");
 				} else if (leftover == 0) {
 					System.out.println("All line were imported.");
 				} else {
-					System.out.println("Imported " + RetAdd + " lines out of "
-							+ tot + ".");
-					System.out
-							.println("(Remember: There is usually a blank line at the bottom.)");
+					System.out.println("Imported " + RetAdd + " lines out of " + tot + ".");
+					System.out.println("(Remember: There is usually a blank line at the bottom.)");
 				}
 			} catch (Exception e) {
 				ExceptionHandler(e, false);
