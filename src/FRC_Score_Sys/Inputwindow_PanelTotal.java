@@ -10,13 +10,13 @@ public class Inputwindow_PanelTotal extends JPanel {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
-	private int					FinalScore			= 0;
+	private int FinalScore = 0;
 
-	JLabel						lblScore			= new JLabel("0");
-	JLabel						lblPenalties		= new JLabel("0");
-	JLabel						lblFinal			= new JLabel("0");
+	JLabel lblScore = new JLabel("0");
+	JLabel lblPenalties = new JLabel("0");
+	JLabel lblFinal = new JLabel("0");
 
 	public Inputwindow_PanelTotal() {
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);

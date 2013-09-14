@@ -12,13 +12,14 @@ public class Inputwindow_SectionHeader extends JPanel {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1;
+	private static final long serialVersionUID = 1;
 
 	public Inputwindow_SectionHeader(String Title, String Cols[]) {
 		setLayout(new GridLayout(0, 1, 0, 0));
 
 		JLabel lblTitle = new JLabel(Title);
-		Font newLabelFont = new Font(lblTitle.getFont().getName(), Font.BOLD, lblTitle.getFont().getSize() + 2);
+		Font newLabelFont = new Font(lblTitle.getFont().getName(), Font.BOLD,
+				lblTitle.getFont().getSize() + 2);
 		lblTitle.setFont(newLabelFont);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		Color bgColor = new Color(242, 255, 0);

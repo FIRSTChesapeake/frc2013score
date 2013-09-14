@@ -13,7 +13,7 @@ public class AboutWindow extends JFrame {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	public AboutWindow() {
 		setTitle("About App");
@@ -48,17 +48,21 @@ public class AboutWindow extends JFrame {
 		panel.add(lbl);
 
 		try {
-			LinkLabel lnk = new LinkLabel(new URI("https://www.fnsnet.net"), "FNSNetwork");
+			LinkLabel lnk = new LinkLabel(new URI("https://www.fnsnet.net"),
+					"FNSNetwork");
 			lnk.setHorizontalAlignment(SwingConstants.CENTER);
 			lnk.init();
 			panel.add(lnk);
 
-			lnk = new LinkLabel(new URI("https://bitbucket.org/crazysane/frc2013score/issues"), "Bug Tracker");
+			lnk = new LinkLabel(new URI(
+					"https://bitbucket.org/crazysane/frc2013score/issues"),
+					"Bug Tracker");
 			lnk.setHorizontalAlignment(SwingConstants.CENTER);
 			lnk.init();
 			panel.add(lnk);
 
-			lnk = new LinkLabel(new URI("http://www.virginiafirst.org"), "VirginiaFIRST");
+			lnk = new LinkLabel(new URI("http://www.virginiafirst.org"),
+					"VirginiaFIRST");
 			lnk.setHorizontalAlignment(SwingConstants.CENTER);
 			lnk.init();
 			panel.add(lnk);

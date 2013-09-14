@@ -20,12 +20,13 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 
-public class LinkLabel extends JTextField implements MouseListener, FocusListener, ActionListener {
+public class LinkLabel extends JTextField implements MouseListener,
+		FocusListener, ActionListener {
 
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) throws Exception {
 		JPanel p = new JPanel(new GridLayout(0, 1));
@@ -43,7 +44,8 @@ public class LinkLabel extends JTextField implements MouseListener, FocusListene
 		linkLabelFile.init();
 		p.add(linkLabelFile);
 
-		LinkLabel linkLabelWeb = new LinkLabel(new URI("http://pscode.org/sscce.html"), "SSCCE");
+		LinkLabel linkLabelWeb = new LinkLabel(new URI(
+				"http://pscode.org/sscce.html"), "SSCCE");
 		linkLabelWeb.setStandardColor(new Color(0, 128, 0));
 		linkLabelWeb.setHoverColor(new Color(222, 128, 0));
 		linkLabelWeb.init();
@@ -54,7 +56,8 @@ public class LinkLabel extends JTextField implements MouseListener, FocusListene
 		 */
 		p.add(linkLabelWeb);
 
-		LinkLabel linkLabelConstrain = new LinkLabel(new URI("http://sdnshare.sun.com/"), "SDN Share");
+		LinkLabel linkLabelConstrain = new LinkLabel(new URI(
+				"http://sdnshare.sun.com/"), "SDN Share");
 		linkLabelConstrain.init();
 		/*
 		 * ..and this shows one way to constrain the size (appropriate for this
@@ -67,7 +70,8 @@ public class LinkLabel extends JTextField implements MouseListener, FocusListene
 		labelConstrain.add(linkLabelConstrain, BorderLayout.EAST);
 		p.add(labelConstrain);
 
-		LinkLabel linkLabelNoUnderline = new LinkLabel(new URI("http://java.net/"), "java.net");
+		LinkLabel linkLabelNoUnderline = new LinkLabel(new URI(
+				"http://java.net/"), "java.net");
 		// another way to deal with the underline is to remove it
 		linkLabelNoUnderline.setUnderlineVisible(false);
 		// we can use the methods inherited from JTextField
@@ -79,18 +83,18 @@ public class LinkLabel extends JTextField implements MouseListener, FocusListene
 	}
 
 	/** The target or href of this link. */
-	private URI		target;
-	public Color	standardColor		= new Color(0, 0, 255);
-	public Color	hoverColor			= new Color(255, 0, 0);
-	public Color	activeColor			= new Color(128, 0, 128);
+	private URI target;
+	public Color standardColor = new Color(0, 0, 255);
+	public Color hoverColor = new Color(255, 0, 0);
+	public Color activeColor = new Color(128, 0, 128);
 
-	public Color	transparent			= new Color(0, 0, 0, 0);
+	public Color transparent = new Color(0, 0, 0, 0);
 
-	public boolean	underlineVisible	= true;
-	private Border	activeBorder;
-	private Border	hoverBorder;
+	public boolean underlineVisible = true;
+	private Border activeBorder;
+	private Border hoverBorder;
 
-	private Border	standardBorder;
+	private Border standardBorder;
 
 	/**
 	 * Construct a LinkLabel that points to the given target. The URI will be

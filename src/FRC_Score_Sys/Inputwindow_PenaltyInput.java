@@ -9,33 +9,34 @@ import javax.swing.event.DocumentListener;
 
 public class Inputwindow_PenaltyInput extends JPanel {
 
-	private static final long		serialVersionUID	= 1;
-	private JTextField						fouls;
-	private JTextField						tfouls;
-	
-	private int								OrigFouls;
-	private int								OrigTFouls;
+	private static final long serialVersionUID = 1;
+	private JTextField fouls;
+	private JTextField tfouls;
 
-	private Inputwindow_ScorePanel	myParent;
+	private int OrigFouls;
+	private int OrigTFouls;
 
-	public DocumentListener			dl					= new DocumentListener() {
-															@Override
-															public void changedUpdate(DocumentEvent e) {
-																// Nothing?
-															}
+	private Inputwindow_ScorePanel myParent;
 
-															@Override
-															public void insertUpdate(DocumentEvent e) {
-																myParent.ForwardRefresh();
-															}
+	public DocumentListener dl = new DocumentListener() {
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			// Nothing?
+		}
 
-															@Override
-															public void removeUpdate(DocumentEvent e) {
-																myParent.ForwardRefresh();
-															}
-														};
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			myParent.ForwardRefresh();
+		}
 
-	public Inputwindow_PenaltyInput(Inputwindow_ScorePanel parent, int FoulVal, int TFoulVal) {
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			myParent.ForwardRefresh();
+		}
+	};
+
+	public Inputwindow_PenaltyInput(Inputwindow_ScorePanel parent, int FoulVal,
+			int TFoulVal) {
 		myParent = parent;
 		setLayout(new GridLayout(0, 2, 0, 0));
 		fouls = new JTextField();
@@ -47,13 +48,13 @@ public class Inputwindow_PenaltyInput extends JPanel {
 		this.add(tfouls);
 	}
 
-	private void SetValues(int FoulVal, int TFoulVal){
+	private void SetValues(int FoulVal, int TFoulVal) {
 		fouls.setText(String.valueOf(FoulVal));
 		tfouls.setText(String.valueOf(TFoulVal));
 		OrigFouls = FoulVal;
 		OrigTFouls = TFoulVal;
 	}
-	
+
 	public int GetFoulCount() {
 		int f = ParseField(fouls);
 		return f;

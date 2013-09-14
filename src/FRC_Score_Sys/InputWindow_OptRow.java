@@ -14,24 +14,24 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 	/**
 	 * 
 	 */
-	private static final long		serialVersionUID	= 1;
-	private Inputwindow_ScorePanel	myParent;
-	
-	private JComboBox<Integer>				Climb;
-	private JCheckBox						DQ;
-	
-	private boolean							OrigDQ;
-	private int								OrigClimb;
+	private static final long serialVersionUID = 1;
+	private Inputwindow_ScorePanel myParent;
 
-	
-	public ActionListener			al					= new ActionListener() {
-															@Override
-															public void actionPerformed(ActionEvent arg0) {
-																myParent.ForwardRefresh();
-															}
-														};
+	private JComboBox<Integer> Climb;
+	private JCheckBox DQ;
 
-	public InputWindow_OptRow(Inputwindow_ScorePanel parent, String Title, int ClimbVal, boolean DqVal) {
+	private boolean OrigDQ;
+	private int OrigClimb;
+
+	public ActionListener al = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			myParent.ForwardRefresh();
+		}
+	};
+
+	public InputWindow_OptRow(Inputwindow_ScorePanel parent, String Title,
+			int ClimbVal, boolean DqVal) {
 		myParent = parent;
 		setLayout(new GridLayout(0, 3, 0, 0));
 		JLabel lblTitle = new JLabel(Title);
@@ -48,8 +48,8 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 		DQ.setHorizontalAlignment(SwingConstants.CENTER);
 		DQ.addActionListener(al);
 		this.add(DQ);
-		
-		SetValues(DqVal,ClimbVal);
+
+		SetValues(DqVal, ClimbVal);
 	}
 
 	@Override
@@ -57,32 +57,36 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 
 	}
 
-	private void SetValues(boolean DqVal, int ClimbVal){
+	private void SetValues(boolean DqVal, int ClimbVal) {
 		DQ.setSelected(DqVal);
 		Climb.setSelectedItem(ClimbVal);
 		OrigClimb = ClimbVal;
 		OrigDQ = DqVal;
 	}
-	
+
 	public int GetClimb() {
 		int a = 0;
 		try {
 			if (!DQ.isSelected()) {
 				a = (Integer) Climb.getSelectedItem();
 				a = a * 10;
-				System.out.println("OptRow Found No DQ, Climb of " + String.valueOf(Climb.getSelectedItem()));
+				System.out.println("OptRow Found No DQ, Climb of "
+						+ String.valueOf(Climb.getSelectedItem()));
 			} else {
 				System.out.println("OptRow Found Robot DQ. Using Zero.");
 			}
 		} catch (NumberFormatException e) {
-			System.out.println("OptRow failed to parse Climb Integer! Using Zero.");
+			System.out
+					.println("OptRow failed to parse Climb Integer! Using Zero.");
 			a = 0;
 		}
 		return a;
 	}
-	public int GetRawClimb(){
-		return (Integer)Climb.getSelectedItem();
+
+	public int GetRawClimb() {
+		return (Integer) Climb.getSelectedItem();
 	}
+
 	public boolean isDQ() {
 		return DQ.isSelected();
 	}

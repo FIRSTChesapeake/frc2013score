@@ -13,37 +13,38 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 	/**
 	 * 
 	 */
-	private static final long		serialVersionUID	= 1;
+	private static final long serialVersionUID = 1;
 
-	String							iLabel				= "";
-	int								iWorth				= 0;
-	private Inputwindow_ScorePanel	myParent;
+	String iLabel = "";
+	int iWorth = 0;
+	private Inputwindow_ScorePanel myParent;
 
-	public DocumentListener			dl					= new DocumentListener() {
-															@Override
-															public void changedUpdate(DocumentEvent e) {
-																// Nothing?
-															}
+	public DocumentListener dl = new DocumentListener() {
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			// Nothing?
+		}
 
-															@Override
-															public void insertUpdate(DocumentEvent e) {
-																myParent.ForwardRefresh();
-															}
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			myParent.ForwardRefresh();
+		}
 
-															@Override
-															public void removeUpdate(DocumentEvent e) {
-																myParent.ForwardRefresh();
-															}
-														};
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			myParent.ForwardRefresh();
+		}
+	};
 
-	private JTextField						Auto				= new JTextField();
-	private JTextField						Tele				= new JTextField();
-	private JLabel							Total				= new JLabel("0");
-	
-	private int								OrigAuto;
-	private int								OrigTele;
+	private JTextField Auto = new JTextField();
+	private JTextField Tele = new JTextField();
+	private JLabel Total = new JLabel("0");
 
-	public Inputwindow_SingleScoreRow(Inputwindow_ScorePanel parent, String lblText, int Worth, boolean hasAuto, int AutoVal, int TeleVal) {
+	private int OrigAuto;
+	private int OrigTele;
+
+	public Inputwindow_SingleScoreRow(Inputwindow_ScorePanel parent,
+			String lblText, int Worth, boolean hasAuto, int AutoVal, int TeleVal) {
 		myParent = parent;
 		iLabel = lblText;
 		iWorth = Worth;
@@ -58,7 +59,7 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 
 		Auto.getDocument().addDocumentListener(dl);
 		Tele.getDocument().addDocumentListener(dl);
-		
+
 		SetValues(AutoVal, TeleVal);
 
 		this.add(lbl);
@@ -67,35 +68,36 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 		this.add(Total);
 	}
 
-	private void SetValues(int AutoVal, int TeleVal){
+	private void SetValues(int AutoVal, int TeleVal) {
 		Auto.setText(String.valueOf(AutoVal));
 		Tele.setText(String.valueOf(TeleVal));
 		OrigAuto = AutoVal;
 		OrigTele = TeleVal;
 	}
-	
+
 	public int GetAutoCount() {
 		int a = ParseField(Auto);
 		return a;
 	}
 
 	public int GetScore(int type) {
-		System.out.println("SingleScoreRow received score request. Calculating!");
+		System.out
+				.println("SingleScoreRow received score request. Calculating!");
 		int ret = 0;
 		int a = ParseField(Auto) * (iWorth * 2);
 		int t = ParseField(Tele) * (iWorth);
 		int tot = a + t;
 		Total.setText(String.valueOf(tot));
 		switch (type) {
-			case 1:
-				ret = a;
-				break;
-			case 2:
-				ret = t;
-				break;
-			case 3:
-				ret = tot;
-				break;
+		case 1:
+			ret = a;
+			break;
+		case 2:
+			ret = t;
+			break;
+		case 3:
+			ret = tot;
+			break;
 		}
 		return ret;
 	}

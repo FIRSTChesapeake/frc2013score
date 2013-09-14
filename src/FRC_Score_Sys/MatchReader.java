@@ -11,10 +11,10 @@ import javax.swing.JFileChooser;
 public class MatchReader {
 
 	class DataLoader implements Runnable {
-		public boolean	DoneFlag	= false;
-		public int		max			= -1;
-		public int		tot			= 0;
-		private File	f;
+		public boolean DoneFlag = false;
+		public int max = -1;
+		public int tot = 0;
+		private File f;
 
 		public DataLoader(File file) {
 			f = file;
@@ -29,7 +29,7 @@ public class MatchReader {
 				List<String> WholeFile = new ArrayList<String>();
 				System.out.println("Reading File..");
 				while ((line = br.readLine()) != null) {
-					if (line.length()>0) {
+					if (line.length() > 0) {
 						WholeFile.add(line);
 					}
 				}
@@ -45,13 +45,18 @@ public class MatchReader {
 				DoneFlag = true;
 				int leftover = tot - RetAdd;
 				if (leftover == 1) {
-					System.out.println("All but 1 line was imported (" + RetAdd + " matches). This is normal if you didn't edit the file.");
+					System.out
+							.println("All but 1 line was imported ("
+									+ RetAdd
+									+ " matches). This is normal if you didn't edit the file.");
 					System.out.println("(Usually a blank line at the bottom.)");
 				} else if (leftover == 0) {
 					System.out.println("All line were imported.");
 				} else {
-					System.out.println("Imported " + RetAdd + " lines out of " + tot + ".");
-					System.out.println("(Remember: There is usually a blank line at the bottom.)");
+					System.out.println("Imported " + RetAdd + " lines out of "
+							+ tot + ".");
+					System.out
+							.println("(Remember: There is usually a blank line at the bottom.)");
 				}
 			} catch (Exception e) {
 				ExceptionHandler(e, false);
@@ -60,7 +65,7 @@ public class MatchReader {
 		}
 	}
 
-	private MainMenu	myParent;
+	private MainMenu myParent;
 
 	public MatchReader(MainMenu parent) {
 		myParent = parent;
