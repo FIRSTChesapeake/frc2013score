@@ -1,5 +1,6 @@
 package FRC_Score_Sys;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JLabel;
@@ -102,8 +103,10 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 		int ret = 0;
 		try {
 			ret = Integer.parseInt(field.getText());
+			field.setBackground(new Color(255,255,255));
 			return ret;
 		} catch (NumberFormatException e) {
+			field.setBackground(new Color(255,0,0));
 			return 0;
 		}
 	}
