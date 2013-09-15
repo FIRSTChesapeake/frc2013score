@@ -47,13 +47,6 @@ public class Inputwindow_PenaltyInput extends JPanel {
 		this.add(tfouls);
 	}
 
-	private void SetValues(int FoulVal, int TFoulVal) {
-		fouls.setText(String.valueOf(FoulVal));
-		tfouls.setText(String.valueOf(TFoulVal));
-		OrigFouls = FoulVal;
-		OrigTFouls = TFoulVal;
-	}
-
 	public int GetFoulCount() {
 		int f = ParseField(fouls);
 		return f;
@@ -83,6 +76,13 @@ public class Inputwindow_PenaltyInput extends JPanel {
 
 	public void RequestReset() {
 		SetValues(OrigFouls, OrigTFouls);
+	}
+
+	private void SetValues(int FoulVal, int TFoulVal) {
+		fouls.setText(String.valueOf(FoulVal));
+		tfouls.setText(String.valueOf(TFoulVal));
+		OrigFouls = FoulVal;
+		OrigTFouls = TFoulVal;
 	}
 
 }

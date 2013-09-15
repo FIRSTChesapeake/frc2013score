@@ -67,13 +67,6 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 		this.add(Total);
 	}
 
-	private void SetValues(int AutoVal, int TeleVal) {
-		Auto.setText(String.valueOf(AutoVal));
-		Tele.setText(String.valueOf(TeleVal));
-		OrigAuto = AutoVal;
-		OrigTele = TeleVal;
-	}
-
 	public int GetAutoCount() {
 		int a = ParseField(Auto);
 		return a;
@@ -118,5 +111,12 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 	public void RequestReset() {
 		SetValues(OrigAuto, OrigTele);
 		GetScore(-1);
+	}
+
+	private void SetValues(int AutoVal, int TeleVal) {
+		Auto.setText(String.valueOf(AutoVal));
+		Tele.setText(String.valueOf(TeleVal));
+		OrigAuto = AutoVal;
+		OrigTele = TeleVal;
 	}
 }

@@ -24,22 +24,18 @@ public class ExceptionClass {
 		}
 
 		if (fatal) {
-			msg = "A Fatal has popped up that means we prolly can't continue.."
-					+ "\n However, not wanting to tell you what to do, we'll let you skip this error at your own risk."
-					+ "\nIf this happens again, please report it to the bug tracker."
-					+ "\n Thanks for your support and assistance";
+			msg = "A Fatal has popped up that means we prolly can't continue.." + "\n However, not wanting to tell you what to do, we'll let you skip this error at your own risk." + "\nIf this happens again, please report it to the bug tracker." + "\n Thanks for your support and assistance";
 			tit = "Fatal Error";
 			LogMsg = "FATAL Exception Handled: " + errMsg;
 		} else {
-			msg = "A non-fatal has popped up and it's important enough to tell you about."
-					+ "\nIf this happens again, please report it to the bug tracker."
-					+ "\n Thanks for your support and assistance";
+			msg = "A non-fatal has popped up and it's important enough to tell you about." + "\nIf this happens again, please report it to the bug tracker." + "\n Thanks for your support and assistance";
 			tit = "Non-Fatal Error";
 			LogMsg = "Exception Handled: " + errMsg;
 		}
 		System.out.println(LogMsg);
-		if (ExtraMsg != "")
+		if (ExtraMsg != "") {
 			msg = msg + "\n\n " + ExtraMsg;
+		}
 		msg = msg + "\n\n " + errMsg;
 
 		if (fatal) {

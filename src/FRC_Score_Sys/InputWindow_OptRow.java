@@ -56,13 +56,6 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 
 	}
 
-	private void SetValues(boolean DqVal, int ClimbVal) {
-		DQ.setSelected(DqVal);
-		Climb.setSelectedItem(ClimbVal);
-		OrigClimb = ClimbVal;
-		OrigDQ = DqVal;
-	}
-
 	public int GetClimb() {
 		int a = 0;
 		try {
@@ -90,5 +83,12 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 
 	public void RequestReset() {
 		SetValues(OrigDQ, OrigClimb);
+	}
+
+	private void SetValues(boolean DqVal, int ClimbVal) {
+		DQ.setSelected(DqVal);
+		Climb.setSelectedItem(ClimbVal);
+		OrigClimb = ClimbVal;
+		OrigDQ = DqVal;
 	}
 }

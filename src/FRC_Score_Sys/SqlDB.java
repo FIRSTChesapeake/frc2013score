@@ -44,9 +44,7 @@ public class SqlDB {
 			} else {
 				String DBV = FetchOption("SQLDBVER");
 				if (!DBV.equals(SQLDBVER)) {
-					Except.ExceptionHandler("Constructor", null, true, true, "Your DB version is out-dated."
-							+ "\nYour Version: '" + DBV + "'"
-							+ "\nReq Version : '" + SQLDBVER + "'");
+					Except.ExceptionHandler("Constructor", null, true, true, "Your DB version is out-dated." + "\nYour Version: '" + DBV + "'" + "\nReq Version : '" + SQLDBVER + "'");
 				}
 			}
 			System.out.println("DB Subsystem up and running!");
@@ -94,6 +92,29 @@ public class SqlDB {
 		} catch (Exception e) {
 			Except.ExceptionHandler("DBClose", e, false, false);
 		}
+	}
+
+	private boolean CreateEachOption(String Name, String Value, boolean Public) {
+		int Pub = 0;
+		if (Public) {
+			Pub = 1;
+		}
+		String q = "INSERT INTO OPTIONS VALUES ('" + Name + "', '" + Value + "', " + Pub + ")";
+		int cre = PerformInternalUpdateQuery(q);
+		if (cre != 1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private boolean CreateOptions() {
+		boolean a = CreateEachOption("SQLDBVER", SQLDBVER, false);
+		boolean b = CreateEachOption("EVENTNAME", "Mystery Event", true);
+		if (a && b) {
+			return true;
+		}
+		return false;
 	}
 
 	public List<SingleMatch> FetchMatch(String id) {
@@ -183,6 +204,39 @@ public class SqlDB {
 		return WholeList;
 	}
 
+	public String FetchOption(String Name) {
+		try {
+			String q = "SELECT VAL FROM OPTIONS WHERE ID=?";
+			PreparedStatement s = c.prepareStatement(q);
+			s.setString(1, Name);
+			ResultSet rs = s.executeQuery();
+			String ret = "";
+			while (rs.next()) {
+				ret = rs.getString("VAL");
+			}
+			return ret;
+		} catch (Exception e) {
+			Except.ExceptionHandler("FetchOption", e, false, false);
+			return "";
+		}
+
+	}
+
+	public List<OptionSetPanel> FetchPublicOptions() {
+		List<OptionSetPanel> WholeList = new ArrayList<OptionSetPanel>();
+		try {
+			PreparedStatement s = c.prepareStatement("SELECT ID,VAL FROM OPTIONS WHERE PUBLIC = 1");
+			ResultSet rs = s.executeQuery();
+			while (rs.next()) {
+				OptionSetPanel newOpt = new OptionSetPanel(rs.getString("ID"), rs.getString("VAL"));
+				WholeList.add(newOpt);
+			}
+		} catch (Exception e) {
+			Except.ExceptionHandler("FetchOptionList", e, false, true, "Option list can not be loaded.");
+		}
+		return WholeList;
+	}
+
 	private String FormatSQLBuild(String PrevString, String field, String Type, String Clr) {
 		return FormatSQLBuild(PrevString, field, Type, Clr, "");
 
@@ -254,8 +308,9 @@ public class SqlDB {
 			return false;
 		} else {
 			System.out.println("Options Table Create successful!");
-			if (Table1Success)
+			if (Table1Success) {
 				return true;
+			}
 			return false;
 		}
 	}
@@ -278,79 +333,9 @@ public class SqlDB {
 			st.close();
 			return ret;
 		} catch (Exception e) {
-			Except.ExceptionHandler("PerformInternalUpdt", e, true, true, "QUERY:\n"+q);
+			Except.ExceptionHandler("PerformInternalUpdt", e, true, true, "QUERY:\n" + q);
 			return -1;
 		}
-	}
-	public List<OptionSetPanel> FetchPublicOptions(){
-		List<OptionSetPanel> WholeList = new ArrayList<OptionSetPanel>();
-		try {
-			PreparedStatement s = c.prepareStatement("SELECT ID,VAL FROM OPTIONS WHERE PUBLIC = 1");
-			ResultSet rs = s.executeQuery();
-			while (rs.next()) {
-				OptionSetPanel newOpt = new OptionSetPanel(rs.getString("ID"), rs.getString("VAL"));
-				WholeList.add(newOpt);
-			}
-		} catch (Exception e) {
-				Except.ExceptionHandler("FetchOptionList", e, false, true, "Option list can not be loaded.");
-			}
-			return WholeList;
-	}
-	
-	public String FetchOption(String Name) {
-		try {
-			String q = "SELECT VAL FROM OPTIONS WHERE ID=?";
-			PreparedStatement s = c.prepareStatement(q);
-			s.setString(1, Name);
-			ResultSet rs = s.executeQuery();
-			String ret = "";
-			while (rs.next()) {
-				ret = rs.getString("VAL");
-			}
-			return ret;
-		} catch (Exception e) {
-			Except.ExceptionHandler("FetchOption", e, false, false);
-			return "";
-		}
-
-	}
-
-	public boolean UpdateOption(String Name, String Val) {
-		try {
-			String q = "UPDATE OPTIONS SET VAL=? WHERE ID=?";
-			PreparedStatement s = c.prepareStatement(q);
-			s.setString(1, Val);
-			s.setString(2, Name);
-			int cre = s.executeUpdate();
-			if (cre != 1) {
-				return false;
-			} else {
-				return true;
-			}
-		} catch (Exception e) {
-			Except.ExceptionHandler("UpdateOption", e, false, false);
-			return false;
-		}
-
-	}
-
-	private boolean CreateEachOption(String Name, String Value, boolean Public){
-		int Pub = 0;
-		if(Public) Pub = 1;
-		String q = "INSERT INTO OPTIONS VALUES ('"+Name+"', '" + Value + "', "+Pub+")";
-		int cre = PerformInternalUpdateQuery(q);
-		if (cre != 1) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-	
-	private boolean CreateOptions() {
-		boolean a = CreateEachOption("SQLDBVER", SQLDBVER, false);
-		boolean b = CreateEachOption("EVENTNAME", "Mystery Event", true);
-		if(a && b) return true;
-		return false;
 	}
 
 	public boolean SaveMatchChanges(List<SingleMatch> Match) {
@@ -440,5 +425,24 @@ public class SqlDB {
 		}
 
 		return false;
+	}
+
+	public boolean UpdateOption(String Name, String Val) {
+		try {
+			String q = "UPDATE OPTIONS SET VAL=? WHERE ID=?";
+			PreparedStatement s = c.prepareStatement(q);
+			s.setString(1, Val);
+			s.setString(2, Name);
+			int cre = s.executeUpdate();
+			if (cre != 1) {
+				return false;
+			} else {
+				return true;
+			}
+		} catch (Exception e) {
+			Except.ExceptionHandler("UpdateOption", e, false, false);
+			return false;
+		}
+
 	}
 }
