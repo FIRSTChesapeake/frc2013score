@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SqlDB {
 
-	private String SQLDBVER = "3";
+	private String SQLDBVER = "5";
 
 	private Connection c;
 	private String DBfile = "score_data.db";
@@ -53,22 +53,100 @@ public class SqlDB {
 		}
 	}
 
+	private void AddTeamToDB(int id){
+		try{
+			PreparedStatement s = c.prepareStatement("INSERT INTO TEAMS VALUES(?, 0, 0, 0, 0, 0, 0, 0)");
+			s.setInt(1, id);
+			s.executeUpdate();
+		} catch (Exception e){
+			// Supress
+		}
+	}
+	
+	public void RefreshRanks(){
+		List<TeamRankObj> Teams = FetchTeamlist(false);
+		System.out.println("Refreshing Rankings..");
+		try{
+			String qR = "SELECT SUM(case RQS when 2 then 1 else 0 end) as wins, SUM(case RQS when 1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(RQS) as QS, SUM(RAP) as AP, SUM(RCP) as CP, SUM(RTP) as TP FROM MATCHES WHERE (R1Robot=? AND R1Sur=0 AND R1Dq=0) OR (R2Robot=? AND R2Sur=0 AND R2Dq=0) OR (R3Robot=? AND R3Sur=0 AND R3Dq=0) AND Saved=1";
+			String qB = "SELECT SUM(case BQS when 2 then 1 else 0 end) as wins, SUM(case BQS when 1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(BQS) as QS, SUM(BAP) as AP, SUM(BCP) as CP, SUM(BTP) as TP FROM MATCHES WHERE (B1Robot=? AND B1Sur=0 AND B1Dq=0) OR (B2Robot=? AND B2Sur=0 AND B2Dq=0) OR (B3Robot=? AND B3Sur=0 AND B3Dq=0) AND Saved=1";
+			String qT = "UPDATE TEAMS SET QS=?, AP=?, CP=?, TP=?, WINS=?, TIES=?, TOT=? WHERE ID=?";
+			PreparedStatement sR = c.prepareStatement(qR);
+			PreparedStatement sB = c.prepareStatement(qB);
+			PreparedStatement sT = c.prepareStatement(qT);
+			for(TeamRankObj team : Teams){
+				sR.setInt(1, team.ID);
+				sR.setInt(2, team.ID);
+				sR.setInt(3, team.ID);
+				sB.setInt(1, team.ID);
+				sB.setInt(2, team.ID);
+				sB.setInt(3, team.ID);
+				ResultSet rsR = sR.executeQuery();
+				ResultSet rsB = sB.executeQuery();
+				TeamRankObj newRank = new TeamRankObj();
+				newRank.ID = team.ID;
+				while(rsR.next()){
+					newRank.QS = rsR.getInt("QS");
+					newRank.AP = rsR.getInt("AP");
+					newRank.CP = rsR.getInt("CP");
+					newRank.TP = rsR.getInt("TP");
+					newRank.wins = rsR.getInt("wins");
+					newRank.ties = rsR.getInt("ties");
+					newRank.tot = rsR.getInt("tot");
+				}
+				while(rsB.next()){
+					newRank.QS = newRank.QS+rsB.getInt("QS");
+					newRank.AP = newRank.AP+rsB.getInt("AP");
+					newRank.CP = newRank.CP+rsB.getInt("CP");
+					newRank.TP = newRank.TP+rsB.getInt("TP");
+					newRank.wins = newRank.TP+rsB.getInt("wins");
+					newRank.ties = newRank.TP+rsB.getInt("ties");
+					newRank.tot  = newRank.TP+rsB.getInt("tot");
+				}
+				sT.setInt(1, newRank.QS);
+				sT.setInt(2, newRank.AP);
+				sT.setInt(3, newRank.CP);
+				sT.setInt(4, newRank.TP);
+				sT.setInt(5, newRank.wins);
+				sT.setInt(6, newRank.ties);
+				sT.setInt(7, newRank.tot);
+				// WHERE
+				sT.setInt(8, newRank.ID);
+				int ret = sT.executeUpdate();
+				if(ret!=1){
+					Except.ExceptionHandler("RefreshRanks", null, false, true, "We failed to save the ranks for '"+newRank.ID+"' (Returned: "+ret+")"+ 
+							"\nWe canceled the rest of the refresh to be safe.");
+					break;
+				} 
+			}
+			System.out.println("Ranking Updated");
+		} catch (Exception e){
+			Except.ExceptionHandler("RefreshRanks", e, false, true, "The ranks failed to refresh. This is going to be a problem. :/");
+		}
+	}
+	
 	public int AddMatchToDB(String[] matchInfo) {
 		try {
-			PreparedStatement s = c.prepareStatement("INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)");
+			PreparedStatement s = c.prepareStatement("INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)");
 			int i = 1;
-			boolean first = false;
+			int first = 0;
 			System.out.println("==== AddingMatchToDB ====");
 			for (String item : matchInfo) {
 				System.out.print("Evaluating '" + item + "'.. ");
-				if (!first) {
+				if (first == 0) {
 					System.out.println("Match ID");
 					item = PadString(item);
 					s.setString(i, "QQ" + item);
-					first = true;
-				} else {
-					System.out.println("Data");
+					first = 1;
+				} else if(first == 1) {
+					System.out.println("TeamNumber");
+					int Team = Integer.parseInt(item);
+					AddTeamToDB(Team);
+					s.setInt(i, Team);
+					first = 2;
+				} else if(first == 2) {
+					System.out.println("Suro");
 					s.setInt(i, Integer.parseInt(item));
+					first = 1;
 				}
 				i = i + 1;
 			}
@@ -169,6 +247,33 @@ public class SqlDB {
 		return ScoreList;
 	}
 
+	public List<TeamRankObj> FetchTeamlist(boolean rank){
+		System.out.println("TeamList Fetch Requested");
+		List<TeamRankObj> WholeList = new ArrayList<TeamRankObj>();
+		String rank_order = "ID";
+		if(rank) rank_order = "QS,AP,CP,TP";
+		try {
+			PreparedStatement s = c.prepareStatement("SELECT * FROM TEAMS ORDER BY "+rank_order);
+			ResultSet rs = s.executeQuery();
+			while (rs.next()) {
+				TeamRankObj n = new TeamRankObj();
+				n.ID = rs.getInt("ID");
+				n.QS = rs.getInt("QS");
+				n.AP = rs.getInt("AP");
+				n.CP = rs.getInt("CP");
+				n.TP = rs.getInt("TP");
+				n.wins = rs.getInt("WINS");
+				n.ties = rs.getInt("TIES");
+				n.tot  = rs.getInt("TOT");
+				WholeList.add(n);
+			}
+		} catch (Exception e) {
+			Except.ExceptionHandler("FetchTeamList", e, false, true, "Match list can not be loaded.");
+		}
+		return WholeList;
+	}
+	
+	
 	public List<MatchListObj> FetchMatchList(String type) {
 		System.out.println("Match List Fetch Requested for type " + type);
 		List<MatchListObj> WholeList = new ArrayList<MatchListObj>();
@@ -258,6 +363,7 @@ public class SqlDB {
 		String[] clrs = { "R", "B" };
 
 		boolean Table1Success = false;
+		boolean Table2Success = false;
 
 		String q = "CREATE TABLE MATCHES (";
 		q = FormatSQLBuild(q, "ID", "TEXT", "", "PRIMARY KEY NOT NULL");
@@ -287,6 +393,10 @@ public class SqlDB {
 			q = FormatSQLBuild(q, "3Dq", "BOOLEAN", clr);
 			q = FormatSQLBuild(q, "Foul", "INT", clr);
 			q = FormatSQLBuild(q, "TFoul", "INT", clr);
+			q = FormatSQLBuild(q, "QS", "INT", clr);
+			q = FormatSQLBuild(q, "AP", "INT", clr);
+			q = FormatSQLBuild(q, "CP", "INT", clr);
+			q = FormatSQLBuild(q, "TP", "INT", clr);
 			q = FormatSQLBuild(q, "Score", "INT", clr);
 		}
 		q = FormatSQLBuild(q, "Saved", "BOOLEAN", "");
@@ -301,6 +411,18 @@ public class SqlDB {
 			Table1Success = true;
 		}
 
+		q = "CREATE TABLE TEAMS (ID INT PRIMARY KEY NOT NULL, QS INT NOT NULL, AP INT NOT NULL, CP INT NOT NULL, TP INT NOT NULL, WINS INT NOT NULL, TIES INT NOT NULL, TOT INT NOT NULL)";
+		cre = PerformInternalUpdateQuery(q);
+		if (cre != 0) {
+			System.out.println("Teams Table Create failed!");
+			return false;
+		} else {
+			System.out.println("Teams Table Create successful!");
+			if (Table1Success) {
+				Table2Success = true;
+			}
+		}
+		
 		q = "CREATE TABLE OPTIONS (ID TEXT PRIMARY KEY NOT NULL, VAL TEXT NOT NULL, PUBLIC BOOLEAN NOT NULL)";
 		cre = PerformInternalUpdateQuery(q);
 		if (cre != 0) {
@@ -308,7 +430,7 @@ public class SqlDB {
 			return false;
 		} else {
 			System.out.println("Options Table Create successful!");
-			if (Table1Success) {
+			if (Table2Success) {
 				return true;
 			}
 			return false;
@@ -361,6 +483,10 @@ public class SqlDB {
 				q = BuildUpdateString(q, clr, "3Dq");
 				q = BuildUpdateString(q, clr, "Foul");
 				q = BuildUpdateString(q, clr, "TFoul");
+				q = BuildUpdateString(q, clr, "QS");
+				q = BuildUpdateString(q, clr, "AP");
+				q = BuildUpdateString(q, clr, "CP");
+				q = BuildUpdateString(q, clr, "TP");
 				q = BuildUpdateString(q, clr, "Score");
 			}
 			q = q + " Saved = 1 WHERE ID = ?";
@@ -392,30 +518,38 @@ public class SqlDB {
 			s.setBoolean(13, R.Dq3);
 			s.setInt(14, R.Foul);
 			s.setInt(15, R.TFoul);
-			s.setInt(16, R.Score);
+			s.setInt(16, R.QS);
+			s.setInt(17, R.AP);
+			s.setInt(18, R.CP);
+			s.setInt(19, R.TP);
+			s.setInt(20, R.Score);
 			// Blue
-			s.setInt(17, B.DisksLA);
-			s.setInt(18, B.DisksLT);
-			s.setInt(19, B.DisksMA);
-			s.setInt(20, B.DisksMT);
-			s.setInt(21, B.DisksHA);
-			s.setInt(22, B.DisksHT);
-			s.setInt(23, B.DisksP);
-			s.setInt(24, B.Climb1);
-			s.setInt(25, B.Climb2);
-			s.setInt(26, B.Climb3);
-			s.setBoolean(27, B.Dq1);
-			s.setBoolean(28, B.Dq2);
-			s.setBoolean(29, B.Dq3);
-			s.setInt(30, B.Foul);
-			s.setInt(31, B.TFoul);
+			s.setInt(21, B.DisksLA);
+			s.setInt(22, B.DisksLT);
+			s.setInt(23, B.DisksMA);
+			s.setInt(24, B.DisksMT);
+			s.setInt(25, B.DisksHA);
+			s.setInt(26, B.DisksHT);
+			s.setInt(27, B.DisksP);
+			s.setInt(28, B.Climb1);
+			s.setInt(29, B.Climb2);
+			s.setInt(30, B.Climb3);
+			s.setBoolean(31, B.Dq1);
+			s.setBoolean(32, B.Dq2);
+			s.setBoolean(33, B.Dq3);
+			s.setInt(34, B.Foul);
+			s.setInt(35, B.TFoul);
+			s.setInt(36, B.QS);
+			s.setInt(37, B.AP);
+			s.setInt(38, B.CP);
+			s.setInt(39, B.TP);
+			s.setInt(40, B.Score);
 			// WHERE
-			s.setInt(32, B.Score);
-			s.setString(33, B.MatchID());
+			s.setString(41, B.MatchID());
 			System.out.println("Performing DB Update..");
 			int ret = s.executeUpdate();
 			if (ret != 1) {
-				System.out.println("Update Failed.");
+				System.out.println("Update Failed."+s.getWarnings());
 				return false;
 			}
 			System.out.println("Update Complete!");

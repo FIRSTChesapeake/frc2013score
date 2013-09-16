@@ -108,8 +108,12 @@ public class InputWindow extends JFrame {
 				// Save
 				System.out.println("Requesting Save to DB...");
 				List<SingleMatch> DataToSave = new ArrayList<SingleMatch>();
-				DataToSave.add(BluePanel.GetRawData());
-				DataToSave.add(RedPanel.GetRawData());
+				
+				SingleMatch BlueData = BluePanel.GetRawData(); 
+				SingleMatch RedData  = RedPanel.GetRawData();
+				
+				DataToSave.add(BlueData);
+				DataToSave.add(RedData);
 				boolean Saved = myParent.CommHandle.SqlTalk.SaveMatchChanges(DataToSave);
 				if (Saved) {
 					// Close Window
@@ -186,16 +190,22 @@ public class InputWindow extends JFrame {
 		if (Red == Blue) {
 			WinnerDisplay.setText("DRAW");
 			WinnerDisplay.setBackground(color_yellow);
+			BluePanel.my_QS = 1;
+			RedPanel.my_QS  = 1;
 			System.out.println("  WINNER: DRAW");
 		}
 		if (Red > Blue) {
 			WinnerDisplay.setText("RED WINS");
 			WinnerDisplay.setBackground(color_red);
+			BluePanel.my_QS = 0;
+			RedPanel.my_QS  = 2;
 			System.out.println("  WINNER: RED");
 		}
 		if (Blue > Red) {
 			WinnerDisplay.setText("BLUE WINS");
 			WinnerDisplay.setBackground(color_blue);
+			BluePanel.my_QS = 2;
+			RedPanel.my_QS  = 0;
 			System.out.println("  WINNER: BLUE");
 		}
 	}

@@ -72,7 +72,7 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 		int a = ParseField(Auto);
 		return a;
 	}
-
+	
 	public int GetScore(int type) {
 		System.out.println("SingleScoreRow received score request. Calculating!");
 		int ret = 0;

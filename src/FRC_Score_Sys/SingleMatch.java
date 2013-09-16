@@ -25,11 +25,15 @@ public class SingleMatch {
 	public boolean Dq3 = false;
 	public int Foul = 0;
 	public int TFoul = 0;
+	public int QS = 0;
+	public int AP = 0;
+	public int CP = 0;
+	public int TP = 0;
 	public int Score = 0;
 
 	public SingleMatch() {
 	}
-
+	
 	public SingleMatch(String inId, String inColor) {
 		ID = inId;
 		alColor = inColor.toUpperCase();

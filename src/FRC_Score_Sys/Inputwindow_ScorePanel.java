@@ -19,6 +19,8 @@ public class Inputwindow_ScorePanel extends JPanel {
 	private String matchID;
 	private String myColor;
 
+	public int my_QS = 0;
+	
 	// Input Objects
 	Inputwindow_SingleScoreRow Low;
 	Inputwindow_SingleScoreRow Mid;
@@ -130,6 +132,13 @@ public class Inputwindow_ScorePanel extends JPanel {
 		A.Dq3 = R3.isDQ();
 		A.Foul = PenRow.GetFoulCount();
 		A.TFoul = PenRow.GetTFoulCount();
+		
+		A.QS = my_QS;
+		
+		A.AP = Low.GetScore(1) + Mid.GetScore(1) + Hig.GetScore(1);
+		A.TP = Low.GetScore(2) + Mid.GetScore(2) + Hig.GetScore(2);
+		A.CP = R1.GetClimb() + R2.GetClimb() + R3.GetClimb();
+		
 		A.Score = FinalScore;
 		return A;
 	}

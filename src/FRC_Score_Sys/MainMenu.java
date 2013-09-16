@@ -31,6 +31,8 @@ public class MainMenu extends JFrame {
 
 	private JTree MatchList;
 
+	private JPanel RankPanel;
+	
 	public String EventName = "Unknown";
 
 	public MainMenu(SubSysCommHandler CH) {
@@ -60,6 +62,7 @@ public class MainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				LoadMatchList();
+				RefreshRanks();
 			}
 		});
 		// About Button
@@ -163,10 +166,15 @@ public class MainMenu extends JFrame {
 			}
 		});
 		LoadMatchList();
-
 		JScrollPane MatchScroller = new JScrollPane(MatchList, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
 		getContentPane().add(MatchScroller, BorderLayout.CENTER);
+		
+		RankPanel = new JPanel();
+		RankPanel.setLayout(new GridLayout(0, 1, 0, 0));
+		JScrollPane RankScroller = new JScrollPane(RankPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		getContentPane().add(RankScroller, BorderLayout.EAST);
+		
+		RefreshRanks();
 	}
 
 	private void EditMatch(String matchNumber) {
@@ -207,6 +215,19 @@ public class MainMenu extends JFrame {
 		}));
 	}
 
+	public void RefreshRanks(){
+		CommHandle.SqlTalk.RefreshRanks();
+		List<TeamRankObj> Teams = CommHandle.SqlTalk.FetchTeamlist(true);
+		RankPanel.removeAll();
+		int i = 0;
+		for(TeamRankObj team : Teams){
+			i++;
+			RankListObj a = new RankListObj(i,team.ID,team.WTL());
+			RankPanel.add(a);
+		}
+		RankPanel.repaint();
+	}
+	
 	public void pullThePlug() {
 		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 		dispatchEvent(wev);
@@ -217,6 +238,7 @@ public class MainMenu extends JFrame {
 		if (child instanceof InputWindow) {
 			switch (Msg) {
 			case "im_closing_modified":
+				RefreshRanks();
 				LoadMatchList();
 				// No break here, we're moving into the next one. :D
 			case "im_closing":
