@@ -20,4 +20,8 @@ public class TeamRankObj {
 	public TeamRankObj(){
 		
 	}
+	public RankListObj GetObject(int Rank){
+		RankListObj ret = new RankListObj(Rank,ID,WTL());
+		return ret;
+	}
 }

@@ -1,12 +1,11 @@
 package FRC_Score_Sys;
 
-import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.BorderFactory;
 
 public class RankListObj extends JPanel {
 	private static final long	serialVersionUID	= 1L;

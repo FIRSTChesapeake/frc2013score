@@ -2,8 +2,6 @@ package FRC_Score_Sys;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,16 +10,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -35,8 +31,9 @@ public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 1;
 
 	private JTree MatchList;
-
-	private JPanel RankPanel;
+	
+	DefaultTableModel RankTableModel = new DefaultTableModel();
+	JTable RankTable = new JTable(RankTableModel);
 	
 	public String EventName = "Unknown";
 
@@ -175,11 +172,11 @@ public class MainMenu extends JFrame {
 		JScrollPane MatchScroller = new JScrollPane(MatchList, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		getContentPane().add(MatchScroller, BorderLayout.CENTER);
 		
-		RankPanel = new JPanel();
-		GridBagLayout gblRankPanel = new GridBagLayout();
-		RankPanel.setLayout(gblRankPanel);
-		JScrollPane RankScroller = new JScrollPane(RankPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		getContentPane().add(RankScroller, BorderLayout.EAST);
+		RankTableModel.addColumn("Rank");
+		RankTableModel.addColumn("Team");
+		RankTableModel.addColumn("WTL");
+		
+		getContentPane().add(RankTable, BorderLayout.EAST);
 		
 		RefreshRanks();
 	}
@@ -225,29 +222,18 @@ public class MainMenu extends JFrame {
 	public void RefreshRanks(){
 		CommHandle.SqlTalk.RefreshRanks();
 		List<TeamRankObj> Teams = CommHandle.SqlTalk.FetchTeamlist(true);
-		RankPanel.removeAll();
 		
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		if(Teams.size()==0) RankPanel.add(new RankListObj(0,0,"No Ranks"),gbc);
-		int i = 0;
-		for(TeamRankObj team : Teams){
-			i++;
-			gbc = new GridBagConstraints();
-			gbc.fill = GridBagConstraints.HORIZONTAL;
-			gbc.anchor = GridBagConstraints.NORTHWEST;
-			gbc.gridx = 0;
-			gbc.gridy = i;
-			RankListObj a = new RankListObj(i,team.ID,team.WTL());
-			RankPanel.add(a,gbc);
+		int rows=RankTableModel.getRowCount();
+		if(rows>0){
+			for(int i = rows - 1; i >=0; i--){
+			   RankTableModel.removeRow(i); 
+			}
 		}
-		gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.gridx = 0;
-		gbc.gridy = i+1;
-		RankPanel.add(new JLabel(""),gbc);
+		int rnk =0;
+		for(TeamRankObj team : Teams){
+			rnk++;
+			RankTableModel.addRow(new Object[]{rnk,team.ID,team.WTL()});
+		}
 	}
 	
 	public void pullThePlug() {
