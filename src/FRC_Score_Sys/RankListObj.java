@@ -16,15 +16,16 @@ public class RankListObj extends JPanel {
 	JLabel WTL;
 	
 	public RankListObj(int inRank, int inTeam, String inWTL){
-		setLayout(new GridLayout(0, 3, 0, 0));
+		setLayout(new GridLayout(0, 3, 5, 5));
 		setSize(new Dimension(400, 30));
+		
 		Rank = new JLabel(String.valueOf(inRank));
-		Team = new JLabel(" "+String.valueOf(inTeam)+" ");
+		Team = new JLabel(String.valueOf(inTeam));
 		WTL = new JLabel(inWTL);
 		
-		Rank.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		Team.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		WTL.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		//Rank.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		//Team.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		//WTL.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
 		this.add(Rank);
 		this.add(Team);
