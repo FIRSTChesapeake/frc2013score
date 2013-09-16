@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SqlDB {
 
-	private String SQLDBVER = "5";
+	private String SQLDBVER = "6";
 
 	private Connection c;
 	private String DBfile = "score_data.db";

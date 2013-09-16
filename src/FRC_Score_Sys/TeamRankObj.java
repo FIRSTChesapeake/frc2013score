@@ -11,17 +11,13 @@ public class TeamRankObj {
 	public int ties = 0;
 	public int tot  = 0;
 	
-	public String WTL(){
+	public String WLT(){
 		int loss = tot-(wins+ties);
-		String ret = String.valueOf(wins)+"/"+String.valueOf(ties)+"/"+String.valueOf(loss);
+		String ret = String.valueOf(wins)+"/"+String.valueOf(loss)+"/"+String.valueOf(ties);
 		return ret;
 	}
 	
 	public TeamRankObj(){
 		
-	}
-	public RankListObj GetObject(int Rank){
-		RankListObj ret = new RankListObj(Rank,ID,WTL());
-		return ret;
 	}
 }

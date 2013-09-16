@@ -17,7 +17,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -32,7 +31,7 @@ public class MainMenu extends JFrame {
 
 	private JTree MatchList;
 	
-	DefaultTableModel RankTableModel = new DefaultTableModel();
+	customTableModel RankTableModel = new customTableModel();
 	JTable RankTable = new JTable(RankTableModel);
 	
 	public String EventName = "Unknown";
@@ -174,9 +173,14 @@ public class MainMenu extends JFrame {
 		
 		RankTableModel.addColumn("Rank");
 		RankTableModel.addColumn("Team");
-		RankTableModel.addColumn("WTL");
+		RankTableModel.addColumn("QS");
+		RankTableModel.addColumn("AP");
+		RankTableModel.addColumn("CP");
+		RankTableModel.addColumn("TP");
+		RankTableModel.addColumn("WLT");
 		
-		getContentPane().add(RankTable, BorderLayout.EAST);
+		JScrollPane RankScroller = new JScrollPane(RankTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		getContentPane().add(RankScroller, BorderLayout.EAST);
 		
 		RefreshRanks();
 	}
@@ -232,7 +236,7 @@ public class MainMenu extends JFrame {
 		int rnk =0;
 		for(TeamRankObj team : Teams){
 			rnk++;
-			RankTableModel.addRow(new Object[]{rnk,team.ID,team.WTL()});
+			RankTableModel.addRow(new Object[]{rnk,team.ID,team.QS,team.AP,team.CP,team.TP,team.WLT()});
 		}
 	}
 	
