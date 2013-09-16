@@ -67,8 +67,8 @@ public class SqlDB {
 		List<TeamRankObj> Teams = FetchTeamlist(false);
 		System.out.println("Refreshing Rankings..");
 		try{
-			String qR = "SELECT SUM(case when RQS=2 then 1 else 0 end) as wins, SUM(case when RQS=1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(RQS) as QS, SUM(RAP) as AP, SUM(RCP) as CP, SUM(RTP) as TP FROM MATCHES WHERE ((R1Robot=? AND R1Sur=0 AND R1Dq=0) OR (R2Robot=? AND R2Sur=0 AND R2Dq=0) OR (R3Robot=? AND R3Sur=0 AND R3Dq=0)) AND Saved=1";
-			String qB = "SELECT SUM(case when BQS=2 then 1 else 0 end) as wins, SUM(case when BQS=1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(BQS) as QS, SUM(BAP) as AP, SUM(BCP) as CP, SUM(BTP) as TP FROM MATCHES WHERE ((B1Robot=? AND B1Sur=0 AND B1Dq=0) OR (B2Robot=? AND B2Sur=0 AND B2Dq=0) OR (B3Robot=? AND B3Sur=0 AND B3Dq=0)) AND Saved=1";
+			String qR = "SELECT SUM(case RQS when 2 then 1 else 0 end) as wins, SUM(case RQS when 1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(RQS) as QS, SUM(RAP) as AP, SUM(RCP) as CP, SUM(RTP) as TP FROM MATCHES WHERE ((R1Robot=? AND R1Sur=0 AND R1Dq=0) OR (R2Robot=? AND R2Sur=0 AND R2Dq=0) OR (R3Robot=? AND R3Sur=0 AND R3Dq=0)) AND Saved=1";
+			String qB = "SELECT SUM(case BQS when 2 then 1 else 0 end) as wins, SUM(case BQS when 1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(BQS) as QS, SUM(BAP) as AP, SUM(BCP) as CP, SUM(BTP) as TP FROM MATCHES WHERE ((B1Robot=? AND B1Sur=0 AND B1Dq=0) OR (B2Robot=? AND B2Sur=0 AND B2Dq=0) OR (B3Robot=? AND B3Sur=0 AND B3Dq=0)) AND Saved=1";
 			String qT = "UPDATE TEAMS SET QS=?, AP=?, CP=?, TP=?, WINS=?, TIES=?, TOT=? WHERE ID=?";
 			PreparedStatement sR = c.prepareStatement(qR);
 			PreparedStatement sB = c.prepareStatement(qB);
@@ -116,7 +116,9 @@ public class SqlDB {
 					Except.ExceptionHandler("RefreshRanks", null, false, true, "We failed to save the ranks for '"+newRank.ID+"' (Returned: "+ret+")"+ 
 							"\nWe canceled the rest of the refresh to be safe.");
 					break;
-				} 
+				} else {
+					System.out.println("Updated Team '"+newRank.ID+"'");
+				}
 			}
 			System.out.println("Ranking Updated");
 		} catch (Exception e){
@@ -251,7 +253,7 @@ public class SqlDB {
 		System.out.println("TeamList Fetch Requested");
 		List<TeamRankObj> WholeList = new ArrayList<TeamRankObj>();
 		String rank_order = "ID";
-		if(rank) rank_order = "QS,AP,CP,TP";
+		if(rank) rank_order = "QS DESC,AP DESC,CP DESC,TP DESC";
 		try {
 			PreparedStatement s = c.prepareStatement("SELECT * FROM TEAMS ORDER BY "+rank_order);
 			ResultSet rs = s.executeQuery();

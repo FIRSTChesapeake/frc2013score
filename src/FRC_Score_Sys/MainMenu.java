@@ -237,8 +237,9 @@ public class MainMenu extends JFrame {
 			i++;
 			gbc = new GridBagConstraints();
 			gbc.fill = GridBagConstraints.HORIZONTAL;
+			gbc.anchor = GridBagConstraints.NORTHWEST;
 			gbc.gridx = 0;
-			gbc.gridy = 0;
+			gbc.gridy = i;
 			RankListObj a = new RankListObj(i,team.ID,team.WTL());
 			RankPanel.add(a,gbc);
 		}
