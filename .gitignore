@@ -1,11 +1,28 @@
-bin/
-*.exe
+# Ignore project build artifacts
+build/
 *.class
-*~
-logfile.txt
+*.exe
+bin/
 out/
+
+# Ignore developer specific files
+*.db
+.gradle
+
+# Ignore runtime files
+logfile.txt
+
+# Ignore Operating System specific files
+.DS_Store
+
+# Ignore IDE/Editor specific files
 .project
 .classpath
-.settings
-*.db
+.idea/
+*.ipr
+*.iws
+*.iml
+*.swp
+*~
+
 do-git
