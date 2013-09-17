@@ -112,6 +112,10 @@ public class InputWindow extends JFrame {
 				SingleMatch BlueData = BluePanel.GetRawData(); 
 				SingleMatch RedData  = RedPanel.GetRawData();
 				
+				// Add the other ally's penalty points to the TP score per Scoring manual
+				BlueData.TP = BlueData.TP +  RedPanel.PenRow.GetPenalties();
+				RedData.TP  =  RedData.TP + BluePanel.PenRow.GetPenalties();
+				
 				DataToSave.add(BlueData);
 				DataToSave.add(RedData);
 				boolean Saved = myParent.CommHandle.SqlTalk.SaveMatchChanges(DataToSave);
