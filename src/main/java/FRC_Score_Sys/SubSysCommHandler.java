@@ -1,4 +1,4 @@
-package FRC_Score_Sys;
+package main.java.FRC_Score_Sys;
 
 public class SubSysCommHandler {
 

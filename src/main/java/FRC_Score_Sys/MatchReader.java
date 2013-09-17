@@ -1,4 +1,4 @@
-package FRC_Score_Sys;
+package main.java.FRC_Score_Sys;
 
 import java.io.BufferedReader;
 import java.io.File;
