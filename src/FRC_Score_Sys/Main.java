@@ -9,6 +9,8 @@ public class Main {
 	static MainMenu MM;
 	static SqlDB SqlTalk;
 
+	static ExceptionClass Except = new ExceptionClass("Main");
+	
 	public static void main(String[] args) {
 		System.out.println("You've started Matt's 2013 FRC Scoring App Version: 1.2.3");
 		System.out.println("Report Issues at: https://bitbucket.org/crazysane/frc2013score/issues");
@@ -33,7 +35,14 @@ public class Main {
 			}
 		}
 		SqlTalk = new SqlDB();
-
+		
+		myWebSvr web = new myWebSvr(8080);
+		try{
+			web.start();
+		} catch (Exception e){
+			Except.ExceptionHandler("StartWeb", e, false, true, "We couldn't start the webserver!");
+		}
+		
 		// ProgWindow pb = new ProgWindow();
 		// pb.go();
 
