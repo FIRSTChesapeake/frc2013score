@@ -39,10 +39,10 @@ application I might be working on for non-profits, please send me a message.
 
 TODO
 ----
-- ~~Save modified matches to DB~~
-- Design the Edit Options window to formulate event options.
-- Create ranking table
-- Calculate ranks
+- Save modified matches to DB **(complete)**
+- Design the Edit Options window to formulate event options. **(complete)**
+- Create ranking table. **(complete)**
+- Calculate ranks. **(complete)**
 - Retrieve Timer Clock from FMS, waiting on [MS.](/Shoob189)
 - Come up with option for displays?
 - Create process for Finals creation (On-the-fly?)
