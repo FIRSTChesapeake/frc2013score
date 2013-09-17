@@ -12,6 +12,7 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -89,12 +90,25 @@ public class MainMenu extends JFrame {
 		btnImportMatches.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				TriggerImportFile();
-				LoadMatchList();
-				RefreshRanks();
+				int currentCount = CommHandle.SqlTalk.CountRows("MATCHES");
+				int perform = -1;
+				if(currentCount > 0){
+					String msg = "You already have matches in the database! Do you want to drop them and lose ALL data?";
+					String tit = "Import Matches";
+					perform = JOptionPane.showConfirmDialog(null, msg, tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				}
+				switch(perform){
+					case JOptionPane.YES_OPTION:
+						CommHandle.SqlTalk.ScrubDB(); 
+					case -1:
+						TriggerImportFile();
+						LoadMatchList();
+						RefreshRanks();
+						break;
+				}
 			}
 		});
-		// Import Button
+		// Quit Button
 		JButton btnQuit = new JButton("Quit");
 		btnQuit.addActionListener(new ActionListener() {
 			@Override

@@ -52,7 +52,33 @@ public class SqlDB {
 			Except.ExceptionHandler("Constructor", e, true, true, ":/ Without a Database, we're about worthless.");
 		}
 	}
-
+	public int CountRows(String table){
+		int cnt = 0;
+		String q = "SELECT COUNT(*) as cnt FROM ?";
+		try {
+			PreparedStatement s = c.prepareStatement(q);
+			s.setString(1, table);
+			ResultSet rs = s.executeQuery();
+			while(rs.next()){
+				cnt = rs.getInt("cnt");
+			}
+		} catch (Exception e){
+			Except.ExceptionHandler("CountRows", e, false, true,"It seems we failed to count the number of rows in a table - which could be a problem..");
+		}
+		return cnt;
+	}
+	
+	public int ScrubDB(){
+		String q = "DELETE FROM MATCHES";
+		try{
+			PreparedStatement s = c.prepareStatement(q);
+			return s.executeUpdate();
+		} catch (Exception e){
+			Except.ExceptionHandler("ScrubDB", e, false, true, "Failed to empty the matches table.");
+			return 0;
+		}
+	}
+	
 	private void AddTeamToDB(int id){
 		try{
 			PreparedStatement s = c.prepareStatement("INSERT INTO TEAMS VALUES(?, 0, 0, 0, 0, 0, 0, 0)");
