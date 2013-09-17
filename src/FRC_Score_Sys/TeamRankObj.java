@@ -20,4 +20,7 @@ public class TeamRankObj {
 	public TeamRankObj(){
 		
 	}
+	public String RankHTMLTableRow(int RankNumber){
+		return "<tr><td>"+String.valueOf(RankNumber)+"</td><td>"+ID+"</td><td>"+WLT()+"</td></tr>";
+	}
 }

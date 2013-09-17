@@ -252,6 +252,7 @@ public class MainMenu extends JFrame {
 			rnk++;
 			RankTableModel.addRow(new Object[]{rnk,team.ID,team.QS,team.AP,team.CP,team.TP,team.WLT()});
 		}
+		CommHandle.WebSvr.SetRankData(Teams);
 	}
 	
 	public void pullThePlug() {

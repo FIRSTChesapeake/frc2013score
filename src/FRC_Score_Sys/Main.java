@@ -9,6 +9,8 @@ public class Main {
 	static MainMenu MM;
 	static SqlDB SqlTalk;
 	static myWebSvr web;
+	
+	static File webRoot = new File("wwwroot"); 
 
 	static ExceptionClass Except = new ExceptionClass("Main");
 	
@@ -37,7 +39,7 @@ public class Main {
 		}
 		SqlTalk = new SqlDB();
 		
-		web = new myWebSvr(8080);
+		web = new myWebSvr("127.0.0.1",8080,webRoot);
 		
 		try{
 			web.start();
