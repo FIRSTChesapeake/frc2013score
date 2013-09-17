@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package main.java.FRC_Score_Sys.InputWindow;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -8,13 +8,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class Inputwindow_SectionHeader extends JPanel {
+public class SectionHeader extends JPanel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1;
 
-	public Inputwindow_SectionHeader(String Title, String Cols[]) {
+	public SectionHeader(String Title, String Cols[]) {
 		setLayout(new GridLayout(0, 1, 0, 0));
 
 		JLabel lblTitle = new JLabel(Title);

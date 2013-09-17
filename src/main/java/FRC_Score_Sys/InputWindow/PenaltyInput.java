@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package main.java.FRC_Score_Sys.InputWindow;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class Inputwindow_PenaltyInput extends JPanel {
+public class PenaltyInput extends JPanel {
 
 	private static final long serialVersionUID = 1;
 	private JTextField fouls;
@@ -17,7 +17,7 @@ public class Inputwindow_PenaltyInput extends JPanel {
 	private int OrigFouls;
 	private int OrigTFouls;
 
-	private Inputwindow_ScorePanel myParent;
+	private ScorePanel myParent;
 
 	public DocumentListener dl = new DocumentListener() {
 		@Override
@@ -36,7 +36,7 @@ public class Inputwindow_PenaltyInput extends JPanel {
 		}
 	};
 
-	public Inputwindow_PenaltyInput(Inputwindow_ScorePanel parent, int FoulVal, int TFoulVal) {
+	public PenaltyInput(ScorePanel parent, int FoulVal, int TFoulVal) {
 		myParent = parent;
 		setLayout(new GridLayout(0, 2, 0, 0));
 		fouls = new JTextField();

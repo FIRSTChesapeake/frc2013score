@@ -1,6 +1,6 @@
-package main.java.FRC_Score_Sys;
+package main.java.FRC_Score_Sys.InputWindow;
 
-public class Inputwindow_ScoreTotal {
+public class ScoreTotal {
 	public int RawAuto = 0;
 	public int RawTele = 0;
 	public int ClimbPoints = 0;

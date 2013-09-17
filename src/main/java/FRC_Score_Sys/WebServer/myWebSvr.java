@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package main.java.FRC_Score_Sys.WebServer;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -13,6 +13,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import main.java.FRC_Score_Sys.ExceptionClass;
+import main.java.FRC_Score_Sys.TeamRankObj;
 
 public class myWebSvr extends NanoHTTPD {
     

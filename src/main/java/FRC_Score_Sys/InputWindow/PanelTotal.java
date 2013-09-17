@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package main.java.FRC_Score_Sys.InputWindow;
 
 import java.awt.GridLayout;
 
@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class Inputwindow_PanelTotal extends JPanel {
+public class PanelTotal extends JPanel {
 	/**
 	 * 
 	 */
@@ -18,7 +18,7 @@ public class Inputwindow_PanelTotal extends JPanel {
 	JLabel lblPenalties = new JLabel("0");
 	JLabel lblFinal = new JLabel("0");
 
-	public Inputwindow_PanelTotal() {
+	public PanelTotal() {
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPenalties.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFinal.setHorizontalAlignment(SwingConstants.CENTER);

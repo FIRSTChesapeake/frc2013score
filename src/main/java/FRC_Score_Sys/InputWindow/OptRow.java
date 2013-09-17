@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package main.java.FRC_Score_Sys.InputWindow;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -10,12 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class InputWindow_OptRow extends JPanel implements ActionListener {
+public class OptRow extends JPanel implements ActionListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1;
-	private Inputwindow_ScorePanel myParent;
+	private ScorePanel myParent;
 
 	private JComboBox<Integer> Climb;
 	private JCheckBox DQ;
@@ -30,7 +30,7 @@ public class InputWindow_OptRow extends JPanel implements ActionListener {
 		}
 	};
 
-	public InputWindow_OptRow(Inputwindow_ScorePanel parent, String Title, int ClimbVal, boolean DqVal) {
+	public OptRow(ScorePanel parent, String Title, int ClimbVal, boolean DqVal) {
 		myParent = parent;
 		setLayout(new GridLayout(0, 3, 0, 0));
 		JLabel lblTitle = new JLabel(Title);

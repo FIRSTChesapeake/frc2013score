@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package main.java.FRC_Score_Sys.InputWindow;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -10,7 +10,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class Inputwindow_SingleScoreRow extends JPanel {
+public class SingleScoreRow extends JPanel {
 	/**
 	 * 
 	 */
@@ -18,7 +18,7 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 
 	String iLabel = "";
 	int iWorth = 0;
-	private Inputwindow_ScorePanel myParent;
+	private ScorePanel myParent;
 
 	public DocumentListener dl = new DocumentListener() {
 		@Override
@@ -44,7 +44,7 @@ public class Inputwindow_SingleScoreRow extends JPanel {
 	private int OrigAuto;
 	private int OrigTele;
 
-	public Inputwindow_SingleScoreRow(Inputwindow_ScorePanel parent, String lblText, int Worth, boolean hasAuto, int AutoVal, int TeleVal) {
+	public SingleScoreRow(ScorePanel parent, String lblText, int Worth, boolean hasAuto, int AutoVal, int TeleVal) {
 		myParent = parent;
 		iLabel = lblText;
 		iWorth = Worth;

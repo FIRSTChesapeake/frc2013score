@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package main.java.FRC_Score_Sys.InputWindow;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -6,7 +6,9 @@ import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-public class Inputwindow_ScorePanel extends JPanel {
+import main.java.FRC_Score_Sys.SingleMatch;
+
+public class ScorePanel extends JPanel {
 	/**
 	 * 
 	 */
@@ -22,20 +24,20 @@ public class Inputwindow_ScorePanel extends JPanel {
 	public int my_QS = 0;
 	
 	// Input Objects
-	Inputwindow_SingleScoreRow Low;
-	Inputwindow_SingleScoreRow Mid;
-	Inputwindow_SingleScoreRow Hig;
-	Inputwindow_SingleScoreRow Pyr;
+	SingleScoreRow Low;
+	SingleScoreRow Mid;
+	SingleScoreRow Hig;
+	SingleScoreRow Pyr;
 
-	InputWindow_OptRow R1;
-	InputWindow_OptRow R2;
-	InputWindow_OptRow R3;
+	OptRow R1;
+	OptRow R2;
+	OptRow R3;
 
-	Inputwindow_PenaltyInput PenRow;
+	PenaltyInput PenRow;
 
-	Inputwindow_PanelTotal TotPanel;
+	PanelTotal TotPanel;
 
-	public Inputwindow_ScorePanel(InputWindow parent, Color new_color, SingleMatch Match) {
+	public ScorePanel(InputWindow parent, Color new_color, SingleMatch Match) {
 		myParent = parent;
 		setLayout(new GridLayout(0, 1, 0, 0));
 		setBackground(new_color);
@@ -43,16 +45,16 @@ public class Inputwindow_ScorePanel extends JPanel {
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		// Header 1
 		String[] heads1 = { "", "Auto", "Tele", "Total" };
-		Inputwindow_SectionHeader Sect1 = new Inputwindow_SectionHeader("Disk Points", heads1);
+		SectionHeader Sect1 = new SectionHeader("Disk Points", heads1);
 		this.add(Sect1);
 		matchID = Match.MatchID();
 		myColor = Match.aColor();
 
 		// Score Rows
-		Low = new Inputwindow_SingleScoreRow(this, "Low", 1, true, Match.DisksLA, Match.DisksLT);
-		Mid = new Inputwindow_SingleScoreRow(this, "Mid", 2, true, Match.DisksMA, Match.DisksMT);
-		Hig = new Inputwindow_SingleScoreRow(this, "High", 3, true, Match.DisksHA, Match.DisksHT);
-		Pyr = new Inputwindow_SingleScoreRow(this, "Pyramid", 5, false, 0, Match.DisksP);
+		Low = new SingleScoreRow(this, "Low", 1, true, Match.DisksLA, Match.DisksLT);
+		Mid = new SingleScoreRow(this, "Mid", 2, true, Match.DisksMA, Match.DisksMT);
+		Hig = new SingleScoreRow(this, "High", 3, true, Match.DisksHA, Match.DisksHT);
+		Pyr = new SingleScoreRow(this, "Pyramid", 5, false, 0, Match.DisksP);
 
 		Low.setBackground(new_color);
 		Mid.setBackground(new_color);
@@ -66,12 +68,12 @@ public class Inputwindow_ScorePanel extends JPanel {
 		// DQ/Climb Rows
 		// Header 2
 		String[] heads2 = { "Robot", "Climb", "DQ'ed?" };
-		Inputwindow_SectionHeader Sect2 = new Inputwindow_SectionHeader("Robot Options", heads2);
+		SectionHeader Sect2 = new SectionHeader("Robot Options", heads2);
 		this.add(Sect2);
 
-		R1 = new InputWindow_OptRow(this, String.valueOf(Match.Robot1), Match.Climb1, Match.Dq1);
-		R2 = new InputWindow_OptRow(this, String.valueOf(Match.Robot2), Match.Climb2, Match.Dq2);
-		R3 = new InputWindow_OptRow(this, String.valueOf(Match.Robot3), Match.Climb3, Match.Dq3);
+		R1 = new OptRow(this, String.valueOf(Match.Robot1), Match.Climb1, Match.Dq1);
+		R2 = new OptRow(this, String.valueOf(Match.Robot2), Match.Climb2, Match.Dq2);
+		R3 = new OptRow(this, String.valueOf(Match.Robot3), Match.Climb3, Match.Dq3);
 		R1.setBackground(new_color);
 		R2.setBackground(new_color);
 		R3.setBackground(new_color);
@@ -83,16 +85,16 @@ public class Inputwindow_ScorePanel extends JPanel {
 		// Penalties Row
 		// Header 3
 		String[] heads3 = { "Fouls", "T-Fouls" };
-		Inputwindow_SectionHeader Sect3 = new Inputwindow_SectionHeader("Penalties", heads3);
+		SectionHeader Sect3 = new SectionHeader("Penalties", heads3);
 		this.add(Sect3);
-		PenRow = new Inputwindow_PenaltyInput(this, Match.Foul, Match.TFoul);
+		PenRow = new PenaltyInput(this, Match.Foul, Match.TFoul);
 		this.add(PenRow);
 		// Total Rows
 		// Header 4
 		String[] heads4 = { "Score", "Fouls", "Final" };
-		Inputwindow_SectionHeader Sect4 = new Inputwindow_SectionHeader("Score Roundup", heads4);
+		SectionHeader Sect4 = new SectionHeader("Score Roundup", heads4);
 		this.add(Sect4);
-		TotPanel = new Inputwindow_PanelTotal();
+		TotPanel = new PanelTotal();
 		this.add(TotPanel);
 		FinalScore = TotPanel.GetFinal(TotalScore, 0);
 	}

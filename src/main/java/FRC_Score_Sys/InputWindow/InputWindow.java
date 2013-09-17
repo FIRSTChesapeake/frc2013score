@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package main.java.FRC_Score_Sys.InputWindow;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -19,12 +19,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import main.java.FRC_Score_Sys.MainMenu;
+import main.java.FRC_Score_Sys.SingleMatch;
+
 public class InputWindow extends JFrame {
 	private static final long serialVersionUID = 1;
 	private MainMenu myParent;
 
-	Inputwindow_ScorePanel RedPanel;
-	Inputwindow_ScorePanel BluePanel;
+	ScorePanel RedPanel;
+	ScorePanel BluePanel;
 
 	String MatchNumber = "Unk";
 
@@ -36,7 +39,7 @@ public class InputWindow extends JFrame {
 	boolean loaded = false;
 	boolean did_save = false;
 
-	InputWindow(MainMenu parent, String MatchNumber) {
+	public InputWindow(MainMenu parent, String MatchNumber) {
 		myParent = parent;
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -82,9 +85,9 @@ public class InputWindow extends JFrame {
 		}
 		// MAIN PANEL WHERE SCORES TALLY
 		JPanel MainPanel = new JPanel();
-		BluePanel = new Inputwindow_ScorePanel(this, color_blue, BlueMatch);
+		BluePanel = new ScorePanel(this, color_blue, BlueMatch);
 		MainPanel.add(BluePanel);
-		RedPanel = new Inputwindow_ScorePanel(this, color_red, RedMatch);
+		RedPanel = new ScorePanel(this, color_red, RedMatch);
 		MainPanel.add(RedPanel);
 
 		GridBagConstraints gbc_MainPanel = new GridBagConstraints();
