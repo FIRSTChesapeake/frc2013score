@@ -8,6 +8,7 @@ public class Main {
 	static PrintStream out;
 	static MainMenu MM;
 	static SqlDB SqlTalk;
+	static myWebSvr web;
 
 	static ExceptionClass Except = new ExceptionClass("Main");
 	
@@ -36,7 +37,8 @@ public class Main {
 		}
 		SqlTalk = new SqlDB();
 		
-		myWebSvr web = new myWebSvr(8080);
+		web = new myWebSvr(8080);
+		
 		try{
 			web.start();
 		} catch (Exception e){
@@ -47,7 +49,7 @@ public class Main {
 		// pb.go();
 
 		System.out.println("Creating Communications Handler to tie it all together!");
-		SubSysCommHandler CH = new SubSysCommHandler(SqlTalk);
+		SubSysCommHandler CH = new SubSysCommHandler(SqlTalk, web);
 		System.out.println("Opening Main menu.");
 		MM = new MainMenu(CH);
 		// MM.pack();
