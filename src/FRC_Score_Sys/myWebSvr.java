@@ -56,10 +56,15 @@ public class myWebSvr extends NanoHTTPD {
     }};
 
     private File rootDir;
+    
+    private ExceptionClass Except = new ExceptionClass("WebServer");
 
     public myWebSvr(String host, int port, File wwwroot) {
-        super(host, port);
-        this.rootDir = wwwroot;
+    	super(host, port);
+    	if(!wwwroot.isDirectory()){
+        	Except.ExceptionHandler("Constructor", null, false, true, "It appears the wwwroot folder doesn't exist. This will keep the display webpages from functioning!");
+        }
+    	this.rootDir = wwwroot;
     }
 
     public File getRootDir() {

@@ -7,15 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 public class MatchReader {
 
+	private ExceptionClass Except = new ExceptionClass("FileReader");
+	
 	class DataLoader implements Runnable {
 		public boolean DoneFlag = false;
 		public int max = -1;
 		public int tot = 0;
 		private File f;
-
+		
 		public DataLoader(File file) {
 			f = file;
 		}
@@ -38,6 +41,11 @@ public class MatchReader {
 				for (String match : WholeFile) {
 					String[] spl = match.split(" ");
 					int ret = myParent.CommHandle.SqlTalk.AddMatchToDB(spl);
+					if(ret == -1){
+						String msg = "We encountered an error reading that match file into the DB, so to prevent a million error messages, I'll abort if you like?";
+						int answer = JOptionPane.showConfirmDialog(null, msg, "Import Matches", JOptionPane.YES_NO_OPTION);
+						if(answer == JOptionPane.YES_OPTION) break;
+					}
 					System.out.println("= Result: " + ret);
 					RetAdd = RetAdd + ret;
 					tot = tot + 1;
@@ -54,8 +62,9 @@ public class MatchReader {
 					System.out.println("(Remember: There is usually a blank line at the bottom.)");
 				}
 			} catch (Exception e) {
-				ExceptionHandler(e, false);
+				Except.ExceptionHandler("Run", e, false, true,"Woah. Major error while reading the file. Is this really output from MatchMaker?");
 				DoneFlag = true;
+				
 			}
 		}
 	}
@@ -68,7 +77,7 @@ public class MatchReader {
 	}
 
 	public int DoFileLoad() {
-		ProgWindow pb = new ProgWindow();
+		//ProgWindow pb = new ProgWindow();
 		JFileChooser fc = new JFileChooser();
 		System.out.println("Asking user to find file..");
 		int ret = fc.showOpenDialog(myParent);
@@ -76,30 +85,29 @@ public class MatchReader {
 			try {
 				File file = fc.getSelectedFile();
 				System.out.println("User choose: " + file.toString());
-				DataLoader DL = new DataLoader(file);
-				pb.go();
-				DL.run();
-				while (!DL.DoneFlag) {
-					pb.repaint();
-					Thread.sleep(50);
+				if(file.exists()){
+					DataLoader DL = new DataLoader(file);
+					//pb.go();
+					DL.run();
+					while (!DL.DoneFlag) {
+						//pb.repaint();
+						Thread.sleep(50);
+					}
+					//pb.pullThePlug();
+					return 0;
+				} else {
+					String msg = "I don't mean to call you a liar or anything - but I really can't find that file. Sorry!";
+					JOptionPane.showMessageDialog(null, msg);
+					return -2;
 				}
-				pb.pullThePlug();
-				return 0;
 			} catch (Exception e) {
-				ExceptionHandler(e, false);
-
+				//pb.pullThePlug();
+				Except.ExceptionHandler("FileLoad", e, false,true,"Exception handled while trying to load the selected file. Did it exist? Was it Readable?");
 				return -2;
 			}
 		} else {
 			System.out.println("User canceled file open request");
 			return -1;
-		}
-	}
-
-	private void ExceptionHandler(Exception e, boolean fatal) {
-		System.out.println(e.getClass().getName() + ": " + e.getMessage());
-		if (fatal) {
-			System.exit(-1);
 		}
 	}
 }

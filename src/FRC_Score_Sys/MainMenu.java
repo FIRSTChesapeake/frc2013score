@@ -93,7 +93,7 @@ public class MainMenu extends JFrame {
 				int currentCount = CommHandle.SqlTalk.CountRows("MATCHES");
 				int perform = -1;
 				if(currentCount > 0){
-					String msg = "You already have matches in the database! Do you want to drop them and lose ALL data?";
+					String msg = "You already have matches in the database!\nDo you want to drop them and lose ALL data?\nTHIS WILL HAPPEN RIGHT NOW AND ALL DATA WILL BE GONE!";
 					String tit = "Import Matches";
 					perform = JOptionPane.showConfirmDialog(null, msg, tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				}
@@ -101,9 +101,10 @@ public class MainMenu extends JFrame {
 					case JOptionPane.YES_OPTION:
 						CommHandle.SqlTalk.ScrubDB(); 
 					case -1:
-						TriggerImportFile();
-						LoadMatchList();
-						RefreshRanks();
+						if(TriggerImportFile()==0){
+							LoadMatchList();
+							RefreshRanks();
+						}
 						break;
 				}
 			}
@@ -281,9 +282,9 @@ public class MainMenu extends JFrame {
 		}
 	}
 
-	public void TriggerImportFile() {
+	public int TriggerImportFile() {
 		MatchReader rdr = new MatchReader(this);
-		rdr.DoFileLoad();
+		return rdr.DoFileLoad();
 		
 	}
 

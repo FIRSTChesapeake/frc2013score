@@ -9,9 +9,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 public class SqlDB {
 
-	private String SQLDBVER = "6";
+	private String SQLDBVER = "7";
 
 	private Connection c;
 	private String DBfile = "score_data.db";
@@ -44,7 +46,23 @@ public class SqlDB {
 			} else {
 				String DBV = FetchOption("SQLDBVER");
 				if (!DBV.equals(SQLDBVER)) {
-					Except.ExceptionHandler("Constructor", null, true, true, "Your DB version is out-dated." + "\nYour Version: '" + DBV + "'" + "\nReq Version : '" + SQLDBVER + "'");
+					String msg = "Your DB version is out-dated."
+							+ "\nYour Version: '" + DBV + "'"
+							+ "\nReq Version : '" + SQLDBVER + "'"
+							+ "\nSince SQLite doesn't support ALTER TABLE, we have no choice but to replace the DB entirely."
+							+ "\nDo you want to do this now?";
+					String tit = "Database Out of Date";
+					int perform = JOptionPane.showConfirmDialog(null, msg, tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					if(perform == JOptionPane.YES_OPTION){
+						this.close();
+						File f = new File(DBfile);
+						if(f.delete()){
+							JOptionPane.showMessageDialog(null, "Alright!\nNow restart the application and we'll be good to go.");
+							System.exit(0);
+						} else {
+							JOptionPane.showMessageDialog(null, "Ah.. that didn't work. Go to the working directory and delete teh following file manually.\n"+DBfile);
+						}
+					}
 				}
 			}
 			System.out.println("DB Subsystem up and running!");
@@ -54,10 +72,10 @@ public class SqlDB {
 	}
 	public int CountRows(String table){
 		int cnt = 0;
-		String q = "SELECT COUNT(*) as cnt FROM ?";
+		String q = "SELECT COUNT(*) as cnt FROM "+table;
 		try {
 			PreparedStatement s = c.prepareStatement(q);
-			s.setString(1, table);
+			//s.setString(1, table);
 			ResultSet rs = s.executeQuery();
 			while(rs.next()){
 				cnt = rs.getInt("cnt");
@@ -69,12 +87,17 @@ public class SqlDB {
 	}
 	
 	public int ScrubDB(){
-		String q = "DELETE FROM MATCHES";
+		String q = "DELETE FROM ";
+		String[] tables = {"MATCHES", "TEAMS"};
 		try{
-			PreparedStatement s = c.prepareStatement(q);
-			return s.executeUpdate();
+			for (String table : tables){
+				System.out.println("Dumping Table "+table);
+				PreparedStatement s = c.prepareStatement(q+table);
+				s.executeUpdate();
+			}
+			return 1;
 		} catch (Exception e){
-			Except.ExceptionHandler("ScrubDB", e, false, true, "Failed to empty the matches table.");
+			Except.ExceptionHandler("ScrubDB", e, false, true, "Failed to empty the tables.");
 			return 0;
 		}
 	}
@@ -183,7 +206,7 @@ public class SqlDB {
 			return ret;
 		} catch (Exception e) {
 			Except.ExceptionHandler("AddMatchedToDB", e, false, true, "Something was really wrong with the match import.");
-			return 0;
+			return -1;
 		}
 	}
 
