@@ -29,6 +29,7 @@ public class MatchReader {
 		@Override
 		public void run() {
 			try {
+				long timeStart = System.nanoTime();
 				BufferedReader br = new BufferedReader(new FileReader(f));
 				String line;
 				int RetAdd = 0;
@@ -64,6 +65,9 @@ public class MatchReader {
 					logger.info("Imported {} lines out of {}.", RetAdd, tot);
 					logger.info("(Remember: There is usually a blank line at the bottom.)");
 				}
+				long timeStop = System.nanoTime();
+				long duration = ((timeStop - timeStart)/1000000000);
+				System.out.println("Match Import took: "+duration+" seconds.");
 			} catch (Exception e) {
 				Except.ExceptionHandler("Run", e, false, true,"Woah. Major error while reading the file. Is this really output from MatchMaker?");
 				DoneFlag = true;
