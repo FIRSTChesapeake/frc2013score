@@ -53,7 +53,7 @@ public class MatchReader {
 						int answer = JOptionPane.showConfirmDialog(null, msg, "Import Matches", JOptionPane.YES_NO_OPTION);
 						if(answer == JOptionPane.YES_OPTION) break;
 					}
-					logger.debug("= Result: " + ret);
+					logger.debug("Result: {}",ret);
 					RetAdd = RetAdd + ret;
 					tot = tot + 1;
 				}

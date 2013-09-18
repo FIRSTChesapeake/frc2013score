@@ -65,13 +65,13 @@ public class OptRow extends JPanel implements ActionListener {
 			if (!DQ.isSelected()) {
 				a = (Integer) Climb.getSelectedItem();
 				a = a * 10;
-				logger.info("OptRow Found No DQ, Climb of {}",
+				logger.debug("OptRow Found No DQ, Climb of {}",
 				            String.valueOf(Climb.getSelectedItem()));
 			} else {
-				logger.info("OptRow Found Robot DQ. Using Zero.");
+				logger.debug("OptRow Found Robot DQ. Using Zero.");
 			}
 		} catch (NumberFormatException e) {
-			logger.info("OptRow failed to parse Climb Integer! Using Zero.");
+			logger.debug("OptRow failed to parse Climb Integer! Using Zero.");
 			a = 0;
 		}
 		return a;

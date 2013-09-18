@@ -77,7 +77,7 @@ public class InputWindow extends JFrame {
 			} else {
 				// I'll disable the window here because apparently I can not
 				// trigger a close event from the constructor. XD
-				logger.info("Malformed score data received. Likely the match doesn't exist. Disabling Window.");
+				logger.error("Malformed score data received. Likely the match doesn't exist. Disabling Window.");
 				setEnabled(false);
 				setTitle("Defunct Input Window. Match did not Exist. Please Close Me.");
 			}
@@ -108,7 +108,7 @@ public class InputWindow extends JFrame {
 			public void actionPerformed(ActionEvent ae) {
 				// BUTTON PRESSED
 				// Redo Calc to be sure we're up to date.
-				logger.info("Pending an Input Window Close let's do one more Calculate, in case something changed.");
+				logger.debug("Pending an Input Window Close let's do one more Calculate, in case something changed.");
 				DoCalc();
 				// Save
 				logger.info("Requesting Save to DB...");
@@ -127,7 +127,7 @@ public class InputWindow extends JFrame {
 				if (Saved) {
 					// Close Window
 					did_save = true;
-					logger.info("Input Window Close request pending..");
+					logger.debug("Input Window Close request pending..");
 					pullThePlug();
 				} else {
 					// TODO: Add dialog.

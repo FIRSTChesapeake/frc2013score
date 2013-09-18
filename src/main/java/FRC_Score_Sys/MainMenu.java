@@ -161,7 +161,7 @@ public class MainMenu extends JFrame {
 					try {
 						DefaultMutableTreeNode SelectedMatch = (DefaultMutableTreeNode) MatchList.getLastSelectedPathComponent();
 						MatchListObj leaf = (MatchListObj) SelectedMatch.getUserObject();
-						logger.info("Rcvd double click in match list on leaf '{}'. Triggering edit fuction!", leaf.matchID);
+						logger.debug("Rcvd double click in match list on leaf '{}'. Triggering edit fuction!", leaf.matchID);
 						MainMenu.this.EditMatch(leaf.matchID);
 					} catch (ClassCastException err) {
 						logger.error("Rcvd double click in match list, but caught a Cast Error. Must not have been a match ref.");
@@ -202,6 +202,8 @@ public class MainMenu extends JFrame {
 		JScrollPane RankScroller = new JScrollPane(RankTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		getContentPane().add(RankScroller, BorderLayout.EAST);
 		
+		this.setLocationRelativeTo(null);
+		this.setVisible(true);
 		RefreshRanks();
 	}
 
@@ -209,7 +211,7 @@ public class MainMenu extends JFrame {
 		if (inputw == null) {
 			inputw = new InputWindow(this, matchNumber);
 			inputw.pack();
-			inputw.setLocationRelativeTo(null);
+			inputw.setLocationRelativeTo(this);
 			inputw.setVisible(true);
 		} else {
 			logger.info("Ignoring Edit Request - Edit already underway!");
@@ -218,7 +220,7 @@ public class MainMenu extends JFrame {
 
 	private void EditSysOptions() {
 		EditOptionsWindow opts_wind = new EditOptionsWindow(this);
-		opts_wind.setLocationRelativeTo(null);
+		opts_wind.setLocationRelativeTo(this);
 		opts_wind.setVisible(true);
 	}
 

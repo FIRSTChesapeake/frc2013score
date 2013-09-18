@@ -33,7 +33,7 @@ public class PanelTotal extends JPanel {
 	}
 
 	public int GetFinal(int Score, int Penalties) {
-		logger.info("PanelTotal Received GetFinal Request. Performing!");
+		logger.debug("PanelTotal Received GetFinal Request. Performing!");
 		FinalScore = Score + Penalties;
 		lblScore.setText(String.valueOf(Score));
 		lblPenalties.setText(String.valueOf(Penalties));
