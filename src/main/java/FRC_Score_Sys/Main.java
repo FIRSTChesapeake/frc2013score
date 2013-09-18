@@ -9,7 +9,7 @@ import java.io.PrintStream;
 
 public class Main {
 	final static Logger logger = LoggerFactory.getLogger(Main.class);
-
+	
 	static PrintStream out;
 	static MainMenu MM;
 	static SqlDB SqlTalk;
@@ -17,12 +17,12 @@ public class Main {
 	
 	static File webRoot = new File("wwwroot"); 
 
-	static ExceptionClass Except = new ExceptionClass("Main");
+	static PopupGenerator Pops = new PopupGenerator();
 	
 	public static void main(String[] args) {
 		logger.info("You've started Matt's 2013 FRC Scoring App Version: 1.2.3");
 		logger.info("Report Issues at: https://bitbucket.org/crazysane/frc2013score/issues");
-
+		
 		SqlTalk = new SqlDB();
 		
 		web = new myWebSvr("127.0.0.1",8080,webRoot);
@@ -30,7 +30,7 @@ public class Main {
 		try{
 			web.start();
 		} catch (Exception e){
-			Except.ExceptionHandler("StartWeb", e, false, true, "We couldn't start the webserver!");
+			Pops.Exception("Constructor", e, "We couldn't start the webserver", false);
 		}
 		
 		// ProgWindow pb = new ProgWindow();

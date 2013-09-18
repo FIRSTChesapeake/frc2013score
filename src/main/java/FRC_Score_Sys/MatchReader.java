@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -13,7 +14,8 @@ import java.util.List;
 
 public class MatchReader {
 
-	private ExceptionClass Except = new ExceptionClass("FileReader");
+	private PopupGenerator Pops = new PopupGenerator();
+	
 	final Logger logger = LoggerFactory.getLogger(MatchReader.class);
 
 	class DataLoader implements Runnable {
@@ -67,9 +69,9 @@ public class MatchReader {
 				}
 				long timeStop = System.nanoTime();
 				long duration = ((timeStop - timeStart)/1000000000);
-				System.out.println("Match Import took: "+duration+" seconds.");
+				logger.info("Match Import took: "+duration+" seconds.");
 			} catch (Exception e) {
-				Except.ExceptionHandler("Run", e, false, true,"Woah. Major error while reading the file. Is this really output from MatchMaker?");
+				Pops.Exception("Run", e, "Woah. Major error while reading the file. Is this really output from MatchMaker?", false);
 				DoneFlag = true;
 				
 			}
@@ -109,7 +111,7 @@ public class MatchReader {
 				}
 			} catch (Exception e) {
 				//pb.pullThePlug();
-				Except.ExceptionHandler("FileLoad", e, false,true,"Exception handled while trying to load the selected file. Did it exist? Was it Readable?");
+				Pops.Exception("FileLoad", e, "Exception handled while trying to load the selected file. Did it exist? Was it Readable?", false);
 				return -2;
 			}
 		} else {

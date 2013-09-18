@@ -1,6 +1,5 @@
 package FRC_Score_Sys.WebServer;
 
-import FRC_Score_Sys.ExceptionClass;
 import FRC_Score_Sys.TeamRankObj;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,13 +61,11 @@ public class myWebSvr extends NanoHTTPD {
     }};
 
     private File rootDir;
-    
-    private ExceptionClass Except = new ExceptionClass("WebServer");
 
     public myWebSvr(String host, int port, File wwwroot) {
     	super(host, port);
     	if(!wwwroot.isDirectory()){
-        	Except.ExceptionHandler("Constructor", null, false, true, "It appears the wwwroot folder doesn't exist. This will keep the display webpages from functioning!");
+        	logger.error("Can not find wwwroot directory. Webserver will not operate properly.");
         }
     	this.rootDir = wwwroot;
     }

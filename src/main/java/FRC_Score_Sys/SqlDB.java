@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.JOptionPane;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,7 +21,7 @@ public class SqlDB {
 	private Connection c;
 	private String DBfile = "score_data.db";
 
-	private ExceptionClass Except = new ExceptionClass("SQLDB");
+	private PopupGenerator Pops = new PopupGenerator();
 	final Logger logger = LoggerFactory.getLogger(SqlDB.class);
 
 	public SqlDB() {
@@ -44,7 +45,9 @@ public class SqlDB {
 					logger.info("Inserting Default Options..");
 					CreateOptions();
 				} else {
-					Except.ExceptionHandler("Constructor", null, true, true, "Failed to create database tables.");
+					JOptionPane.showMessageDialog(null, "Oh boy - something went wrong while creating the DB Tables. We can't continue.");
+					logger.error("DBTABLE CREATE REPORTED AS FAIL");
+					System.exit(-1);
 				}
 			} else {
 				String DBV = FetchOption("SQLDBVER");
@@ -70,7 +73,7 @@ public class SqlDB {
 			}
 			logger.info("DB Subsystem up and running!");
 		} catch (Exception e) {
-			Except.ExceptionHandler("Constructor", e, true, true, ":/ Without a Database, we're about worthless.");
+			JOptionPane.showMessageDialog(null, "Alright!\nNow restart the application and we'll be good to go.");
 		}
 	}
 	public int CountRows(String table){
@@ -84,7 +87,7 @@ public class SqlDB {
 				cnt = rs.getInt("cnt");
 			}
 		} catch (Exception e){
-			Except.ExceptionHandler("CountRows", e, false, true,"It seems we failed to count the number of rows in a table - which could be a problem..");
+			Pops.Exception("CountRows", e, "It seems we failed to count the number of rows in a table - which could be a problem..", false);
 		}
 		return cnt;
 	}
@@ -100,7 +103,7 @@ public class SqlDB {
 			}
 			return 1;
 		} catch (Exception e){
-			Except.ExceptionHandler("ScrubDB", e, false, true, "Failed to empty the tables.");
+			Pops.Exception("ScrubDB", e, "Failed to Empty Tables", false);
 			return 0;
 		}
 	}
@@ -166,20 +169,19 @@ public class SqlDB {
 				sT.setInt(8, newRank.ID);
 				int ret = sT.executeUpdate();
 				if(ret!=1){
-					Except.ExceptionHandler("RefreshRanks", null, false, true, "We failed to save the ranks for '"+newRank.ID+"' (Returned: "+ret+")"+ 
-							"\nWe canceled the rest of the refresh to be safe.");
+					logger.error("failed to save the ranks for '"+newRank.ID+"' (Returned: "+ret+")"+" Canceled the rest of the refresh to be safe.");
 					break;
 				} else {
-					logger.info("Updated Team '"+newRank.ID+"'");
+					logger.debug("Updated Team '"+newRank.ID+"'");
 				}
 			}
 			logger.info("Ranking Updated");
 		} catch (Exception e){
-			Except.ExceptionHandler("RefreshRanks", e, false, true, "The ranks failed to refresh. This is going to be a problem. :/");
+			Pops.Exception("RefreshRanks", e,"The ranks failed to refresh. This is going to be a problem. :/", false);
 		}
 		long timeStop = System.nanoTime();
 		long duration = ((timeStop - timeStart)/1000000000);
-		System.out.println("Rank Refresh took: "+duration+" seconds.");
+		logger.info("Rank Refresh took: "+duration+" seconds.");
 	}
 	
 	public int AddMatchToDB(String[] matchInfo) {
@@ -189,20 +191,20 @@ public class SqlDB {
 			int first = 0;
 			logger.info("==== AddingMatchToDB ====");
 			for (String item : matchInfo) {
-				logger.info("Evaluating '{}'.. ", item);
+				logger.debug("Evaluating '{}'.. ", item);
 				if (first == 0) {
-					logger.info("Match ID");
+					logger.debug("Match ID");
 					item = PadString(item);
 					s.setString(i, "QQ" + item);
 					first = 1;
 				} else if(first == 1) {
-					logger.info("TeamNumber");
+					logger.debug("TeamNumber");
 					int Team = Integer.parseInt(item);
 					AddTeamToDB(Team);
 					s.setInt(i, Team);
 					first = 2;
 				} else if(first == 2) {
-					logger.info("Suro");
+					logger.debug("Suro");
 					s.setInt(i, Integer.parseInt(item));
 					first = 1;
 				}
@@ -212,7 +214,7 @@ public class SqlDB {
 			s.close();
 			return ret;
 		} catch (Exception e) {
-			Except.ExceptionHandler("AddMatchedToDB", e, false, true, "Something was really wrong with the match import.");
+			Pops.Exception("AddMatchedToDB", e, "Something was really wrong with the match import.",false);
 			return -1;
 		}
 	}
@@ -226,7 +228,7 @@ public class SqlDB {
 		try {
 			c.close();
 		} catch (Exception e) {
-			Except.ExceptionHandler("DBClose", e, false, false);
+			logger.error("DB Close threw error?");
 		}
 	}
 
@@ -263,7 +265,7 @@ public class SqlDB {
 			String[] clrs = { "R", "B" };
 			while (rs.next()) {
 				for (String clr : clrs) {
-					logger.info("Gathering {}'s", clr);
+					logger.debug("Gathering {}'s", clr);
 					SingleMatch Scores = new SingleMatch(id, clr);
 					Scores.Robot1 = rs.getInt(clr + "1Robot");
 					Scores.Robot2 = rs.getInt(clr + "2Robot");
@@ -299,7 +301,7 @@ public class SqlDB {
 			}
 
 		} catch (Exception e) {
-			Except.ExceptionHandler("FetchMatch", e, false, true, "We were unable to fetch that match?");
+			Pops.Exception("FetchMatch", e, "We were unable to fetch that match?", false);
 		}
 		logger.info("Match Fetched. Here ya go!");
 		return ScoreList;
@@ -326,7 +328,7 @@ public class SqlDB {
 				WholeList.add(n);
 			}
 		} catch (Exception e) {
-			Except.ExceptionHandler("FetchTeamList", e, false, true, "Match list can not be loaded.");
+			Pops.Exception("FetchTeamList", e, "Match list can not be loaded.",false);
 		}
 		return WholeList;
 	}
@@ -362,7 +364,7 @@ public class SqlDB {
 			}
 
 		} catch (Exception e) {
-			Except.ExceptionHandler("FetchMatchList", e, false, true, "Match list can not be loaded.");
+			Pops.Exception("FetchMatchList", e, "Match list can not be loaded.",false);
 		}
 		return WholeList;
 	}
@@ -379,7 +381,7 @@ public class SqlDB {
 			}
 			return ret;
 		} catch (Exception e) {
-			Except.ExceptionHandler("FetchOption", e, false, false);
+			logger.error("Fetch option threw error "+e.getMessage());
 			return "";
 		}
 
@@ -395,7 +397,7 @@ public class SqlDB {
 				WholeList.add(newOpt);
 			}
 		} catch (Exception e) {
-			Except.ExceptionHandler("FetchOptionList", e, false, true, "Option list can not be loaded.");
+			Pops.Exception("FetchOptionList", e, "Option list can not be loaded.", false);
 		}
 		return WholeList;
 	}
@@ -513,7 +515,7 @@ public class SqlDB {
 			st.close();
 			return ret;
 		} catch (Exception e) {
-			Except.ExceptionHandler("PerformInternalUpdt", e, true, true, "QUERY:\n" + q);
+			Pops.Exception("PerformInternalUpdt",e,"SQL Update Function failed at a required task. :/", false);
 			return -1;
 		}
 	}
@@ -523,9 +525,10 @@ public class SqlDB {
 			String q = "UPDATE MATCHES SET";
 			String[] clrs = { "R", "B" };
 			// Build the query
-			logger.info("Saving Match to DB, building query..");
+			logger.info("Saving Match to DB");
+			logger.debug("Building query..");
 			for (String clr : clrs) {
-				logger.info("Making {}'s columns..", clr);
+				logger.debug("Making {}'s columns..", clr);
 				q = BuildUpdateString(q, clr, "DisksLA");
 				q = BuildUpdateString(q, clr, "DisksLT");
 				q = BuildUpdateString(q, clr, "DisksMA");
@@ -559,7 +562,7 @@ public class SqlDB {
 					B = m;
 				}
 			}
-			logger.info("Filling Columns..");
+			logger.debug("Filling Columns..");
 			// Red
 			s.setInt(1, R.DisksLA);
 			s.setInt(2, R.DisksLT);
@@ -604,7 +607,7 @@ public class SqlDB {
 			s.setInt(40, B.Score);
 			// WHERE
 			s.setString(41, B.MatchID());
-			logger.info("Performing DB Update..");
+			logger.debug("Performing DB Update..");
 			int ret = s.executeUpdate();
 			if (ret != 1) {
 				logger.info("Update Failed."+s.getWarnings());
@@ -613,7 +616,7 @@ public class SqlDB {
 			logger.info("Update Complete!");
 			return true;
 		} catch (Exception e) {
-			Except.ExceptionHandler("UpdateMatch", e, false, true, "Match update failed?");
+			Pops.Exception("UpdateMatch", e, "Match update failed?", false);
 		}
 
 		return false;
@@ -632,7 +635,7 @@ public class SqlDB {
 				return true;
 			}
 		} catch (Exception e) {
-			Except.ExceptionHandler("UpdateOption", e, false, false);
+			logger.error("Update Option threw exception "+e.getMessage());
 			return false;
 		}
 

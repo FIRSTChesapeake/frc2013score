@@ -17,7 +17,7 @@ public class AboutWindow extends JFrame {
 
 	public AboutWindow() {
 		setTitle("About App");
-		// this.setSize(1000, 300);
+		// this.setSize(600, 400);
 
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.NORTH);
