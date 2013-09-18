@@ -44,6 +44,7 @@ public class MatchReader {
 				}
 				br.close();
 				logger.info("File Closed.");
+				logger.info("Importing {} matches.. Please wait..", WholeFile.size());
 				for (String match : WholeFile) {
 					String[] spl = match.split(" ");
 					int ret = myParent.CommHandle.SqlTalk.AddMatchToDB(spl);

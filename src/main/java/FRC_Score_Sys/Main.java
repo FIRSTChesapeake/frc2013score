@@ -30,6 +30,7 @@ public class Main {
 		try{
 			web.start();
 		} catch (Exception e){
+			logger.error("Webserver start failed: {}", e.getMessage());
 			Pops.Exception("Constructor", e, "We couldn't start the webserver", false);
 		}
 		
