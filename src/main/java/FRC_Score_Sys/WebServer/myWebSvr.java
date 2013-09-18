@@ -1,5 +1,10 @@
 package FRC_Score_Sys.WebServer;
 
+import FRC_Score_Sys.ExceptionClass;
+import FRC_Score_Sys.TeamRankObj;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,13 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import FRC_Score_Sys.ExceptionClass;
-import FRC_Score_Sys.TeamRankObj;
-
 public class myWebSvr extends NanoHTTPD {
     
 	private List<TeamRankObj> ranks = new ArrayList<TeamRankObj>();
-	
+	private Logger logger = LoggerFactory.getLogger(myWebSvr.class);
+
 	public void SetRankData(List<TeamRankObj> newRanks){
         ranks = newRanks;
 	}
@@ -281,22 +284,22 @@ public class myWebSvr extends NanoHTTPD {
     
     @Override
     public Response serve(String uri, Method method, Map<String, String> header, Map<String, String> parms, Map<String, String> files) {
-        System.out.println(method + " '" + uri + "' ");
+        logger.info("{} '{}'", method, uri);
 
         Iterator<String> e = header.keySet().iterator();
         while (e.hasNext()) {
             String value = e.next();
-            System.out.println("  HDR: '" + value + "' = '" + header.get(value) + "'");
+            logger.info("  HDR: '{}' = '{}'", value, header.get(value));
         }
         e = parms.keySet().iterator();
         while (e.hasNext()) {
             String value = e.next();
-            System.out.println("  PRM: '" + value + "' = '" + parms.get(value) + "'");
+            logger.info("  PRM: '{}' = '{}'", value, parms.get(value));
         }
         e = files.keySet().iterator();
         while (e.hasNext()) {
             String value = e.next();
-            System.out.println("  UPLOADED: '" + value + "' = '" + files.get(value) + "'");
+            logger.info("  UPLOADED: '{}' = '{}'", value, files.get(value));
         }
 
         return serveFile(uri, header, getRootDir());

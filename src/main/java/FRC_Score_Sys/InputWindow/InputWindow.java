@@ -1,5 +1,16 @@
 package FRC_Score_Sys.InputWindow;
 
+import FRC_Score_Sys.MainMenu;
+import FRC_Score_Sys.SingleMatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,16 +22,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
-import FRC_Score_Sys.MainMenu;
-import FRC_Score_Sys.SingleMatch;
 
 public class InputWindow extends JFrame {
 	private static final long serialVersionUID = 1;
@@ -38,6 +39,7 @@ public class InputWindow extends JFrame {
 	Color color_yellow = new Color(242, 255, 0);
 	boolean loaded = false;
 	boolean did_save = false;
+	private Logger logger = LoggerFactory.getLogger(InputWindow.class);
 
 	public InputWindow(MainMenu parent, String MatchNumber) {
 		myParent = parent;
@@ -51,7 +53,7 @@ public class InputWindow extends JFrame {
 				TellParent(msg, null);
 			}
 		});
-		System.out.println("Input Window for Match #" + MatchNumber + " Starting.");
+		logger.info("Input Window for Match #{} Starting", MatchNumber);
 		setResizable(false);
 		setAlwaysOnTop(true);
 		setTitle("Input Match Results - Match " + MatchNumber);
@@ -75,12 +77,12 @@ public class InputWindow extends JFrame {
 			} else {
 				// I'll disable the window here because apparently I can not
 				// trigger a close event from the constructor. XD
-				System.out.println("Malformed score data received. Likely the match doesn't exist. Disabling Window.");
+				logger.info("Malformed score data received. Likely the match doesn't exist. Disabling Window.");
 				setEnabled(false);
 				setTitle("Defunct Input Window. Match did not Exist. Please Close Me.");
 			}
 		} catch (Exception e) {
-			System.out.println("Unable to fetch match for DB");
+			logger.info("Unable to fetch match for DB");
 			pullThePlug();
 		}
 		// MAIN PANEL WHERE SCORES TALLY
@@ -106,10 +108,10 @@ public class InputWindow extends JFrame {
 			public void actionPerformed(ActionEvent ae) {
 				// BUTTON PRESSED
 				// Redo Calc to be sure we're up to date.
-				System.out.println("Pending an Input Window Close let's do one more Calculate, in case something changed.");
+				logger.info("Pending an Input Window Close let's do one more Calculate, in case something changed.");
 				DoCalc();
 				// Save
-				System.out.println("Requesting Save to DB...");
+				logger.info("Requesting Save to DB...");
 				List<SingleMatch> DataToSave = new ArrayList<SingleMatch>();
 				
 				SingleMatch BlueData = BluePanel.GetRawData(); 
@@ -125,11 +127,11 @@ public class InputWindow extends JFrame {
 				if (Saved) {
 					// Close Window
 					did_save = true;
-					System.out.println("Input Window Close request pending..");
+					logger.info("Input Window Close request pending..");
 					pullThePlug();
 				} else {
 					// TODO: Add dialog.
-					System.out.println("Woah. SQL Save failed?");
+					logger.error("Woah. SQL Save failed?");
 				}
 
 			}
@@ -193,39 +195,39 @@ public class InputWindow extends JFrame {
 	}
 
 	private void CheckWinner(int Red, int Blue) {
-		System.out.println("CheckWinner Function processing..");
+		logger.info("CheckWinner Function processing..");
 		if (Red == Blue) {
 			WinnerDisplay.setText("DRAW");
 			WinnerDisplay.setBackground(color_yellow);
 			BluePanel.my_QS = 1;
 			RedPanel.my_QS  = 1;
-			System.out.println("  WINNER: DRAW");
+			logger.info("  WINNER: DRAW");
 		}
 		if (Red > Blue) {
 			WinnerDisplay.setText("RED WINS");
 			WinnerDisplay.setBackground(color_red);
 			BluePanel.my_QS = 0;
 			RedPanel.my_QS  = 2;
-			System.out.println("  WINNER: RED");
+			logger.info("  WINNER: RED");
 		}
 		if (Blue > Red) {
 			WinnerDisplay.setText("BLUE WINS");
 			WinnerDisplay.setBackground(color_blue);
 			BluePanel.my_QS = 2;
 			RedPanel.my_QS  = 0;
-			System.out.println("  WINNER: BLUE");
+			logger.info("  WINNER: BLUE");
 		}
 	}
 
 	public void DoCalc() {
 		if (loaded) {
-			System.out.println("Starting Calc Routine..");
+			logger.info("Starting Calc Routine..");
 			int rPen = RedPanel.GetPenalties();
 			int bPen = BluePanel.GetPenalties();
 			int rFinal = RedPanel.DoRefresh(bPen);
 			int bFinal = BluePanel.DoRefresh(rPen);
 			CheckWinner(rFinal, bFinal);
-			System.out.println("FULL CALC REUTINE COMPLETE.");
+			logger.info("FULL CALC REUTINE COMPLETE.");
 		}
 	}
 

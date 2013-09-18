@@ -1,10 +1,12 @@
 package FRC_Score_Sys.InputWindow;
 
-import java.awt.GridLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import java.awt.GridLayout;
 
 public class PanelTotal extends JPanel {
 	/**
@@ -17,6 +19,7 @@ public class PanelTotal extends JPanel {
 	JLabel lblScore = new JLabel("0");
 	JLabel lblPenalties = new JLabel("0");
 	JLabel lblFinal = new JLabel("0");
+	final Logger logger = LoggerFactory.getLogger(PanelTotal.class);
 
 	public PanelTotal() {
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
@@ -30,7 +33,7 @@ public class PanelTotal extends JPanel {
 	}
 
 	public int GetFinal(int Score, int Penalties) {
-		System.out.println("PanelTotal Received GetFinal Request. Performing!");
+		logger.info("PanelTotal Received GetFinal Request. Performing!");
 		FinalScore = Score + Penalties;
 		lblScore.setText(String.valueOf(Score));
 		lblPenalties.setText(String.valueOf(Penalties));

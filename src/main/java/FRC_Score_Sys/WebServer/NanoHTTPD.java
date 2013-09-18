@@ -1,7 +1,14 @@
 package FRC_Score_Sys.WebServer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
-import java.net.*;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.URLDecoder;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
@@ -717,6 +724,7 @@ public abstract class NanoHTTPD {
      * Handles one session, i.e. parses the HTTP request and returns the response.
      */
     protected class HTTPSession {
+        final Logger logger = LoggerFactory.getLogger(HTTPSession.class);
         public static final int BUFSIZE = 8192;
         private final TempFileManager tempFileManager;
         private final OutputStream outputStream;
@@ -1080,7 +1088,7 @@ public abstract class NanoHTTPD {
                     dest.write(src.slice());
                     path = tempFile.getName();
                 } catch (Exception e) { // Catch exception if any
-                    System.err.println("Error: " + e.getMessage());
+                    logger.error(e.getLocalizedMessage());
                 } finally {
                     safeClose(fileOutputStream);
                 }
@@ -1093,7 +1101,7 @@ public abstract class NanoHTTPD {
                 TempFile tempFile = tempFileManager.createTempFile();
                 return new RandomAccessFile(tempFile.getName(), "rw");
             } catch (Exception e) {
-                System.err.println("Error: " + e.getMessage());
+                logger.error(e.getLocalizedMessage());
             }
             return null;
         }

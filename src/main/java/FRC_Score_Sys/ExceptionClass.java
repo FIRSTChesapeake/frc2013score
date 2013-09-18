@@ -1,10 +1,14 @@
 package FRC_Score_Sys;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.JOptionPane;
 
 public class ExceptionClass {
 
 	private String Location;
+	final Logger logger = LoggerFactory.getLogger(ExceptionClass.class);
 
 	public ExceptionClass(String loc) {
 		Location = loc;
@@ -33,7 +37,7 @@ public class ExceptionClass {
 			LogMsg = "Exception Handled: " + errMsg+"\n";
 			
 		}
-		System.out.println(LogMsg);
+		logger.error(LogMsg);
 		if (ExtraMsg != "") {
 			msg = msg + "\n\n " + ExtraMsg;
 		}

@@ -1,7 +1,7 @@
 package FRC_Score_Sys.InputWindow;
 
-import java.awt.Color;
-import java.awt.GridLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -9,6 +9,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.Color;
+import java.awt.GridLayout;
 
 public class SingleScoreRow extends JPanel {
 	/**
@@ -43,6 +45,7 @@ public class SingleScoreRow extends JPanel {
 
 	private int OrigAuto;
 	private int OrigTele;
+	final Logger logger = LoggerFactory.getLogger(SingleScoreRow.class);
 
 	public SingleScoreRow(ScorePanel parent, String lblText, int Worth, boolean hasAuto, int AutoVal, int TeleVal) {
 		myParent = parent;
@@ -74,7 +77,7 @@ public class SingleScoreRow extends JPanel {
 	}
 	
 	public int GetScore(int type) {
-		System.out.println("SingleScoreRow received score request. Calculating!");
+		logger.info("SingleScoreRow received score request. Calculating!");
 		int ret = 0;
 		int a = ParseField(Auto) * (iWorth * 2);
 		int t = ParseField(Tele) * (iWorth);

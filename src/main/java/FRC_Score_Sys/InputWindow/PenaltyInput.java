@@ -1,12 +1,14 @@
 package FRC_Score_Sys.InputWindow;
 
-import java.awt.Color;
-import java.awt.GridLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.Color;
+import java.awt.GridLayout;
 
 public class PenaltyInput extends JPanel {
 
@@ -35,6 +37,7 @@ public class PenaltyInput extends JPanel {
 			myParent.ForwardRefresh();
 		}
 	};
+	final Logger logger = LoggerFactory.getLogger(PenaltyInput.class);
 
 	public PenaltyInput(ScorePanel parent, int FoulVal, int TFoulVal) {
 		myParent = parent;
@@ -54,7 +57,7 @@ public class PenaltyInput extends JPanel {
 	}
 
 	public int GetPenalties() {
-		System.out.println("Penalties Input calculating!");
+		logger.info("Penalties Input calculating!");
 		int f = ParseField(fouls);
 		int tf = ParseField(tfouls);
 		return (f * 3) + (tf * 20);
