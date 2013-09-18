@@ -1,5 +1,9 @@
 package FRC_Score_Sys;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.JOptionPane;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,8 +13,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 public class SqlDB {
 
 	private String SQLDBVER = "7";
@@ -19,26 +21,27 @@ public class SqlDB {
 	private String DBfile = "score_data.db";
 
 	private ExceptionClass Except = new ExceptionClass("SQLDB");
+	final Logger logger = LoggerFactory.getLogger(SqlDB.class);
 
 	public SqlDB() {
-		System.out.println("Starting SQL Server..");
+		logger.info("Starting SQL Server..");
 		File file = new File(DBfile);
 		Boolean doNew = false;
 		if (!file.exists()) {
 			doNew = true;
-			System.out.println("DB File not found. Will create.");
+			logger.info("DB File not found. Will create.");
 		} else {
-			System.out.println("DB File found. using existing DB.");
+			logger.info("DB File found. using existing DB.");
 		}
 		file = null;
 		try {
-			System.out.println("Looking for SQLLite Driver..");
+			logger.info("Looking for SQLLite Driver..");
 			Class.forName("org.sqlite.JDBC");
-			System.out.println("Found. Connecting to Database..");
+			logger.info("Found. Connecting to Database..");
 			c = DriverManager.getConnection("jdbc:sqlite:" + DBfile);
 			if (doNew) {
 				if (GenerateNewDatabase()) {
-					System.out.println("Inserting Default Options..");
+					logger.info("Inserting Default Options..");
 					CreateOptions();
 				} else {
 					Except.ExceptionHandler("Constructor", null, true, true, "Failed to create database tables.");
@@ -65,7 +68,7 @@ public class SqlDB {
 					}
 				}
 			}
-			System.out.println("DB Subsystem up and running!");
+			logger.info("DB Subsystem up and running!");
 		} catch (Exception e) {
 			Except.ExceptionHandler("Constructor", e, true, true, ":/ Without a Database, we're about worthless.");
 		}
@@ -91,7 +94,7 @@ public class SqlDB {
 		String[] tables = {"MATCHES", "TEAMS"};
 		try{
 			for (String table : tables){
-				System.out.println("Dumping Table "+table);
+				logger.info("Dumping Table "+table);
 				PreparedStatement s = c.prepareStatement(q+table);
 				s.executeUpdate();
 			}
@@ -115,7 +118,7 @@ public class SqlDB {
 	public void RefreshRanks(){
 		long timeStart = System.nanoTime();
 		List<TeamRankObj> Teams = FetchTeamlist(false);
-		System.out.println("Refreshing Rankings..");
+		logger.info("Refreshing Rankings..");
 		try{
 			String qR = "SELECT SUM(case RQS when 2 then 1 else 0 end) as wins, SUM(case RQS when 1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(RQS) as QS, SUM(RAP) as AP, SUM(RCP) as CP, SUM(RTP) as TP FROM MATCHES WHERE ((R1Robot=? AND R1Sur=0 AND R1Dq=0) OR (R2Robot=? AND R2Sur=0 AND R2Dq=0) OR (R3Robot=? AND R3Sur=0 AND R3Dq=0)) AND Saved=1";
 			String qB = "SELECT SUM(case BQS when 2 then 1 else 0 end) as wins, SUM(case BQS when 1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(BQS) as QS, SUM(BAP) as AP, SUM(BCP) as CP, SUM(BTP) as TP FROM MATCHES WHERE ((B1Robot=? AND B1Sur=0 AND B1Dq=0) OR (B2Robot=? AND B2Sur=0 AND B2Dq=0) OR (B3Robot=? AND B3Sur=0 AND B3Dq=0)) AND Saved=1";
@@ -167,10 +170,10 @@ public class SqlDB {
 							"\nWe canceled the rest of the refresh to be safe.");
 					break;
 				} else {
-					System.out.println("Updated Team '"+newRank.ID+"'");
+					logger.info("Updated Team '"+newRank.ID+"'");
 				}
 			}
-			System.out.println("Ranking Updated");
+			logger.info("Ranking Updated");
 		} catch (Exception e){
 			Except.ExceptionHandler("RefreshRanks", e, false, true, "The ranks failed to refresh. This is going to be a problem. :/");
 		}
@@ -184,22 +187,22 @@ public class SqlDB {
 			PreparedStatement s = c.prepareStatement("INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)");
 			int i = 1;
 			int first = 0;
-			System.out.println("==== AddingMatchToDB ====");
+			logger.info("==== AddingMatchToDB ====");
 			for (String item : matchInfo) {
-				System.out.print("Evaluating '" + item + "'.. ");
+				logger.info("Evaluating '{}'.. ", item);
 				if (first == 0) {
-					System.out.println("Match ID");
+					logger.info("Match ID");
 					item = PadString(item);
 					s.setString(i, "QQ" + item);
 					first = 1;
 				} else if(first == 1) {
-					System.out.println("TeamNumber");
+					logger.info("TeamNumber");
 					int Team = Integer.parseInt(item);
 					AddTeamToDB(Team);
 					s.setInt(i, Team);
 					first = 2;
 				} else if(first == 2) {
-					System.out.println("Suro");
+					logger.info("Suro");
 					s.setInt(i, Integer.parseInt(item));
 					first = 1;
 				}
@@ -219,7 +222,7 @@ public class SqlDB {
 	}
 
 	public void close() {
-		System.out.println("SQL Lite DB Closing Gracefully. Goodnight!");
+		logger.info("SQL Lite DB Closing Gracefully. Goodnight!");
 		try {
 			c.close();
 		} catch (Exception e) {
@@ -251,7 +254,7 @@ public class SqlDB {
 	}
 
 	public List<SingleMatch> FetchMatch(String id) {
-		System.out.println("Match Fetch Requested for id " + id);
+		logger.info("Match Fetch Requested for id {}", id);
 		List<SingleMatch> ScoreList = new ArrayList<SingleMatch>();
 		try {
 			PreparedStatement s = c.prepareStatement("SELECT * FROM MATCHES WHERE id = ? LIMIT 1");
@@ -260,7 +263,7 @@ public class SqlDB {
 			String[] clrs = { "R", "B" };
 			while (rs.next()) {
 				for (String clr : clrs) {
-					System.out.println("Gathering " + clr + "'s");
+					logger.info("Gathering {}'s", clr);
 					SingleMatch Scores = new SingleMatch(id, clr);
 					Scores.Robot1 = rs.getInt(clr + "1Robot");
 					Scores.Robot2 = rs.getInt(clr + "2Robot");
@@ -298,12 +301,12 @@ public class SqlDB {
 		} catch (Exception e) {
 			Except.ExceptionHandler("FetchMatch", e, false, true, "We were unable to fetch that match?");
 		}
-		System.out.println("Match Fetched. Here ya go!");
+		logger.info("Match Fetched. Here ya go!");
 		return ScoreList;
 	}
 
 	public List<TeamRankObj> FetchTeamlist(boolean rank){
-		System.out.println("TeamList Fetch Requested");
+		logger.info("TeamList Fetch Requested");
 		List<TeamRankObj> WholeList = new ArrayList<TeamRankObj>();
 		String rank_order = "ID";
 		if(rank) rank_order = "QS DESC,AP DESC,CP DESC,TP DESC";
@@ -330,7 +333,7 @@ public class SqlDB {
 	
 	
 	public List<MatchListObj> FetchMatchList(String type) {
-		System.out.println("Match List Fetch Requested for type " + type);
+		logger.info("Match List Fetch Requested for type {}", type);
 		List<MatchListObj> WholeList = new ArrayList<MatchListObj>();
 		try {
 			PreparedStatement s = c.prepareStatement("SELECT id,Saved,RScore,BScore FROM MATCHES WHERE id LIKE ?");
@@ -414,7 +417,7 @@ public class SqlDB {
 	}
 
 	private boolean GenerateNewDatabase() {
-		System.out.println("Creating new database tables..");
+		logger.info("Creating new database tables..");
 		String[] clrs = { "R", "B" };
 
 		boolean Table1Success = false;
@@ -460,19 +463,19 @@ public class SqlDB {
 		q = q + ")";
 		int cre = PerformInternalUpdateQuery(q);
 		if (cre != 0) {
-			System.out.println("Matches Table Create failed!");
+			logger.info("Matches Table Create failed!");
 		} else {
-			System.out.println("Matches Table Create successful!");
+			logger.info("Matches Table Create successful!");
 			Table1Success = true;
 		}
 
 		q = "CREATE TABLE TEAMS (ID INT PRIMARY KEY NOT NULL, QS INT NOT NULL, AP INT NOT NULL, CP INT NOT NULL, TP INT NOT NULL, WINS INT NOT NULL, TIES INT NOT NULL, TOT INT NOT NULL)";
 		cre = PerformInternalUpdateQuery(q);
 		if (cre != 0) {
-			System.out.println("Teams Table Create failed!");
+			logger.info("Teams Table Create failed!");
 			return false;
 		} else {
-			System.out.println("Teams Table Create successful!");
+			logger.info("Teams Table Create successful!");
 			if (Table1Success) {
 				Table2Success = true;
 			}
@@ -481,10 +484,10 @@ public class SqlDB {
 		q = "CREATE TABLE OPTIONS (ID TEXT PRIMARY KEY NOT NULL, VAL TEXT NOT NULL, PUBLIC BOOLEAN NOT NULL)";
 		cre = PerformInternalUpdateQuery(q);
 		if (cre != 0) {
-			System.out.println("Options Table Create failed!");
+			logger.info("Options Table Create failed!");
 			return false;
 		} else {
-			System.out.println("Options Table Create successful!");
+			logger.info("Options Table Create successful!");
 			if (Table2Success) {
 				return true;
 			}
@@ -520,9 +523,9 @@ public class SqlDB {
 			String q = "UPDATE MATCHES SET";
 			String[] clrs = { "R", "B" };
 			// Build the query
-			System.out.println("Saving Match to DB, building query..");
+			logger.info("Saving Match to DB, building query..");
 			for (String clr : clrs) {
-				System.out.println("Making " + clr + "'s columns..");
+				logger.info("Making {}'s columns..", clr);
 				q = BuildUpdateString(q, clr, "DisksLA");
 				q = BuildUpdateString(q, clr, "DisksLT");
 				q = BuildUpdateString(q, clr, "DisksMA");
@@ -556,7 +559,7 @@ public class SqlDB {
 					B = m;
 				}
 			}
-			System.out.println("Filling Columns..");
+			logger.info("Filling Columns..");
 			// Red
 			s.setInt(1, R.DisksLA);
 			s.setInt(2, R.DisksLT);
@@ -601,13 +604,13 @@ public class SqlDB {
 			s.setInt(40, B.Score);
 			// WHERE
 			s.setString(41, B.MatchID());
-			System.out.println("Performing DB Update..");
+			logger.info("Performing DB Update..");
 			int ret = s.executeUpdate();
 			if (ret != 1) {
-				System.out.println("Update Failed."+s.getWarnings());
+				logger.info("Update Failed."+s.getWarnings());
 				return false;
 			}
-			System.out.println("Update Complete!");
+			logger.info("Update Complete!");
 			return true;
 		} catch (Exception e) {
 			Except.ExceptionHandler("UpdateMatch", e, false, true, "Match update failed?");

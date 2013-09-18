@@ -1,14 +1,16 @@
 package FRC_Score_Sys.InputWindow;
 
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class OptRow extends JPanel implements ActionListener {
 	/**
@@ -29,6 +31,7 @@ public class OptRow extends JPanel implements ActionListener {
 			myParent.ForwardRefresh();
 		}
 	};
+	final Logger logger = LoggerFactory.getLogger(OptRow.class);
 
 	public OptRow(ScorePanel parent, String Title, int ClimbVal, boolean DqVal) {
 		myParent = parent;
@@ -62,12 +65,13 @@ public class OptRow extends JPanel implements ActionListener {
 			if (!DQ.isSelected()) {
 				a = (Integer) Climb.getSelectedItem();
 				a = a * 10;
-				System.out.println("OptRow Found No DQ, Climb of " + String.valueOf(Climb.getSelectedItem()));
+				logger.info("OptRow Found No DQ, Climb of {}",
+				            String.valueOf(Climb.getSelectedItem()));
 			} else {
-				System.out.println("OptRow Found Robot DQ. Using Zero.");
+				logger.info("OptRow Found Robot DQ. Using Zero.");
 			}
 		} catch (NumberFormatException e) {
-			System.out.println("OptRow failed to parse Climb Integer! Using Zero.");
+			logger.info("OptRow failed to parse Climb Integer! Using Zero.");
 			a = 0;
 		}
 		return a;

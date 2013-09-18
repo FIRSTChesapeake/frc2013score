@@ -1,15 +1,8 @@
 package FRC_Score_Sys;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.List;
+import FRC_Score_Sys.InputWindow.InputWindow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,8 +15,16 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-
-import FRC_Score_Sys.InputWindow.InputWindow;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
 
 public class MainMenu extends JFrame {
 
@@ -39,6 +40,7 @@ public class MainMenu extends JFrame {
 	JTable RankTable = new JTable(RankTableModel);
 	
 	public String EventName = "Unknown";
+	final Logger logger = LoggerFactory.getLogger(MainMenu.class);
 
 	public MainMenu(SubSysCommHandler CH) {
 		CommHandle = CH;
@@ -49,7 +51,7 @@ public class MainMenu extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				System.out.println("Main Window is closing. Let's tell the Comm Handler to close everything out.");
+				logger.info("Main Window is closing. Let's tell the Comm Handler to close everything out.");
 				CommHandle.RequestAppQuit();
 			}
 		});
@@ -159,12 +161,12 @@ public class MainMenu extends JFrame {
 					try {
 						DefaultMutableTreeNode SelectedMatch = (DefaultMutableTreeNode) MatchList.getLastSelectedPathComponent();
 						MatchListObj leaf = (MatchListObj) SelectedMatch.getUserObject();
-						System.out.println("Rcvd double click in match list on leaf '" + leaf.matchID + "'. Triggering edit function!");
+						logger.info("Rcvd double click in match list on leaf '{}'. Triggering edit fuction!", leaf.matchID);
 						MainMenu.this.EditMatch(leaf.matchID);
 					} catch (ClassCastException err) {
-						System.out.println("Rcvd double click in match list, but caught a Cast Error. Must not have been a match ref.");
+						logger.error("Rcvd double click in match list, but caught a Cast Error. Must not have been a match ref.");
 					} catch (NullPointerException err) {
-						System.out.println("Rcvd double click in match list, but caught a Null Error. Was something selected?");
+						logger.error("Rcvd double click in match list, but caught a Null Error. Was something selected?");
 					}
 				}
 			}
@@ -210,7 +212,7 @@ public class MainMenu extends JFrame {
 			inputw.setLocationRelativeTo(null);
 			inputw.setVisible(true);
 		} else {
-			System.out.println("Ignoring Edit Request - Edit already underway!");
+			logger.info("Ignoring Edit Request - Edit already underway!");
 		}
 	}
 
@@ -273,15 +275,15 @@ public class MainMenu extends JFrame {
 				LoadMatchList();
 				// No break here, we're moving into the next one. :D
 			case "im_closing":
-				System.out.println("InputWindow said it's closing. DIE WINDOW DIE!");
+				logger.info("InputWindow said it's closing. DIE WINDOW DIE!");
 				inputw = null;
 				break;
 			default:
-				System.out.println("InputWindow said something we didn't understand? German Perhaps?");
+				logger.info("InputWindow said something we didn't understand? German Perhaps?");
 				break;
 			}
 		} else {
-			System.out.println("No child recognized? Hmm...");
+			logger.info("No child recognized? Hmm...");
 		}
 	}
 
