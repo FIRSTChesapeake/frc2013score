@@ -26,4 +26,4 @@ dependencies {
 }
 
 // Main class name for Application Plugin to execute by default
-mainClassName = "main.java.FRC_Score_Sys.Main"
+mainClassName = "FRC_Score_Sys.Main"
