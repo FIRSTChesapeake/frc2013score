@@ -1,6 +1,6 @@
-package main.java.FRC_Score_Sys;
+package FRC_Score_Sys;
 
-import main.java.FRC_Score_Sys.WebServer.myWebSvr;
+import FRC_Score_Sys.WebServer.myWebSvr;
 
 public class SubSysCommHandler {
 

@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys.WebServer;
+package FRC_Score_Sys.WebServer;
 
 import java.io.*;
 import java.net.*;

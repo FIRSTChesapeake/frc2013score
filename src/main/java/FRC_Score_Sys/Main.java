@@ -1,9 +1,9 @@
-package main.java.FRC_Score_Sys;
+package FRC_Score_Sys;
 
 import java.io.File;
 import java.io.PrintStream;
 
-import main.java.FRC_Score_Sys.WebServer.myWebSvr;
+import FRC_Score_Sys.WebServer.myWebSvr;
 
 public class Main {
 

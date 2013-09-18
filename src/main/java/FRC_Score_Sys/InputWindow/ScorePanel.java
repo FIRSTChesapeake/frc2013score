@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys.InputWindow;
+package FRC_Score_Sys.InputWindow;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -6,7 +6,7 @@ import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import main.java.FRC_Score_Sys.SingleMatch;
+import FRC_Score_Sys.SingleMatch;
 
 public class ScorePanel extends JPanel {
 	/**

@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package FRC_Score_Sys;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;

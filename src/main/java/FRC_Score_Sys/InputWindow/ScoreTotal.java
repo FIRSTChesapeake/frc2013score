@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys.InputWindow;
+package FRC_Score_Sys.InputWindow;
 
 public class ScoreTotal {
 	public int RawAuto = 0;

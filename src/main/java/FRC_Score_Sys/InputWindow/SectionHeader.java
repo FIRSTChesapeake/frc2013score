@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys.InputWindow;
+package FRC_Score_Sys.InputWindow;
 
 import java.awt.Color;
 import java.awt.Font;

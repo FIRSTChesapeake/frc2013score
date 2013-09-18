@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys.InputWindow;
+package FRC_Score_Sys.InputWindow;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -19,8 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import main.java.FRC_Score_Sys.MainMenu;
-import main.java.FRC_Score_Sys.SingleMatch;
+import FRC_Score_Sys.MainMenu;
+import FRC_Score_Sys.SingleMatch;
 
 public class InputWindow extends JFrame {
 	private static final long serialVersionUID = 1;

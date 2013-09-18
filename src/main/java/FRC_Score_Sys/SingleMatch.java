@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package FRC_Score_Sys;
 
 public class SingleMatch {
 	private boolean iHappy = false;

@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package FRC_Score_Sys;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -23,7 +23,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 
-import main.java.FRC_Score_Sys.InputWindow.InputWindow;
+import FRC_Score_Sys.InputWindow.InputWindow;
 
 public class MainMenu extends JFrame {
 

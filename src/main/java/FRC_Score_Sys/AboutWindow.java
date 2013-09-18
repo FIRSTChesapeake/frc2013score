@@ -1,4 +1,4 @@
-package main.java.FRC_Score_Sys;
+package FRC_Score_Sys;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
