@@ -12,6 +12,7 @@ out/
 # Ignore runtime files
 *.log
 logfile.txt
+logfile.txt.*
 
 # Ignore Operating System specific files
 .DS_Store
