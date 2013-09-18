@@ -113,6 +113,7 @@ public class SqlDB {
 	}
 	
 	public void RefreshRanks(){
+		long timeStart = System.nanoTime();
 		List<TeamRankObj> Teams = FetchTeamlist(false);
 		System.out.println("Refreshing Rankings..");
 		try{
@@ -173,6 +174,9 @@ public class SqlDB {
 		} catch (Exception e){
 			Except.ExceptionHandler("RefreshRanks", e, false, true, "The ranks failed to refresh. This is going to be a problem. :/");
 		}
+		long timeStop = System.nanoTime();
+		long duration = ((timeStop - timeStart)/1000000000);
+		System.out.println("Rank Refresh took: "+duration+" seconds.");
 	}
 	
 	public int AddMatchToDB(String[] matchInfo) {
