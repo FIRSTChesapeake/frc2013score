@@ -335,6 +335,10 @@ public class SqlDB {
 
 					Scores.Score = rs.getInt(clr + "Score");
 					
+					Scores.QS = rs.getInt(clr + "QS");
+					Scores.AP = rs.getInt(clr + "AP");
+					Scores.CP = rs.getInt(clr + "CP");
+					Scores.TP = rs.getInt(clr + "TP");
 					//Non-color specific
 					Scores.Played = rs.getBoolean("Saved");
 

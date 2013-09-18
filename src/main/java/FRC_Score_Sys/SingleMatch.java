@@ -53,6 +53,13 @@ public class SingleMatch implements Comparable<SingleMatch>{
 		return ID;
 	}
 
+	public String MatchTypeOnly(){
+		return ID.substring(0,2);
+	}
+	public int MatchNumberOnly(){
+		return Integer.parseInt(ID.substring(3));
+	}
+	
 	@Override
 	public int compareTo(SingleMatch o) {
 		MatchesCompare mc = new MatchesCompare();

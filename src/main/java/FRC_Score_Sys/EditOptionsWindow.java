@@ -6,9 +6,11 @@ import org.slf4j.LoggerFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +19,23 @@ public class EditOptionsWindow extends JFrame {
 	private List<OptionSetPanel> Opts = new ArrayList<OptionSetPanel>();
 	private static final long serialVersionUID = 1L;
 	private MainMenu myParent;
-
+	private boolean did_save = false;
 	final Logger logger = LoggerFactory.getLogger(EditOptionsWindow.class);
 
 	public EditOptionsWindow(MainMenu parent) {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				String msg = "im_closing";
+				if (did_save) {
+					msg = "im_closing_modified";
+				}
+				TellParent(msg, null);
+			}
+		});
 		setLayout(new GridLayout(0, 1, 0, 0));
 		myParent = parent;
-
+		setAlwaysOnTop(true);
 		JLabel Head = new JLabel("Below are the options you can change.");
 		getContentPane().add(Head);
 
@@ -36,6 +48,7 @@ public class EditOptionsWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (DoSave()) {
+					did_save = true;
 					pullThePlug();
 				} else {
 					// TODO: HANDLE THIS
@@ -61,5 +74,8 @@ public class EditOptionsWindow extends JFrame {
 	public void pullThePlug() {
 		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 		dispatchEvent(wev);
+	}
+	private void TellParent(String Msg, Object Datagram) {
+		myParent.RecvChildWindowMsg(this, Msg, Datagram);
 	}
 }

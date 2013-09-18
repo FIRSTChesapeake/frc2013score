@@ -1,12 +1,15 @@
 package FRC_Score_Sys;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class TeamWindow extends JFrame {
 	private static final long	serialVersionUID	= 1L;
@@ -14,19 +17,37 @@ public class TeamWindow extends JFrame {
 	customTableModel TeamTableModel = new customTableModel();
 	JTable TeamTable = new JTable(TeamTableModel);
 	
+	Color color_red = new Color(255, 106, 0);
+	Color color_blue = new Color(30, 144, 255);
+	Color color_yellow = new Color(242, 255, 0);
+	Color color_green = new Color(0, 255, 0);
+	
 	public TeamWindow(MainMenu parent, int Team){
 		myParent = parent;
 		setAlwaysOnTop(true);
 		setTitle("Matches for team " + Team);
 		
-		TeamTableModel.addColumn("MatchID");
+		TeamTableModel.addColumn("Type");		// 0
+		TeamTableModel.addColumn("Match #");
 		TeamTableModel.addColumn("Spot");
 		TeamTableModel.addColumn("Played");
-		TeamTableModel.addColumn("Result");
+		TeamTableModel.addColumn("Result");		
 		
 		List<SingleMatch> matches = myParent.CommHandle.SqlTalk.FetchTeamMatches(Team);
+		
 		for(SingleMatch m : matches){
-			TeamTableModel.addRow(new Object[]{m.MatchID(),FindSpot(m,Team),m.Played,Result(m)});
+			JLabel T = MatchType(m.MatchTypeOnly());
+			JLabel M = StdLabel(m.MatchNumberOnly(), null);
+			JLabel S = FindSpot(m, Team);
+			JLabel P = BoolLabel(m.Played);
+			JLabel R = Result(m);
+			JLabel[] a = {T, M, S, P, R}; 
+			TeamTableModel.addRow(a);
+		}
+		
+		TableRender newRender = new TableRender();
+		for(int i=0; i<TeamTableModel.getColumnCount(); i++){
+			TeamTable.getColumnModel().getColumn(i).setCellRenderer( newRender );
 		}
 		
 		JScrollPane TeamScroller = new JScrollPane(TeamTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -34,17 +55,81 @@ public class TeamWindow extends JFrame {
 		this.getContentPane().add(TeamScroller,BorderLayout.CENTER);
 		this.pack();
 	}
-	private String FindSpot(SingleMatch in, int id){
-		if(in.Robot1 == id) return in.aColor()+"1";
-		if(in.Robot2 == id) return in.aColor()+"2";
-		if(in.Robot3 == id) return in.aColor()+"3";
-		return "UNK?";
+	private JLabel FindSpot(SingleMatch in, int id){
+		String str = "";
+		Color clr = null;
+		if(in.Robot1 == id) str = in.aColor()+"1";
+		if(in.Robot2 == id) str = in.aColor()+"2";
+		if(in.Robot3 == id) str = in.aColor()+"3";
+		if(in.aColor()=="R") clr = color_red;
+		if(in.aColor()=="B") clr = color_blue;
+		return StdLabel(str, clr);
 	}
-	private String Result(SingleMatch in){
-		if(!in.Played) return "";
-		if(in.QS == 2) return "WIN";
-		if(in.QS == 1) return "TIE";
-		if(in.QS == 0) return "LOSS";
-		return "NOT PLAYED";
+	
+	private JLabel MatchType(String mType){
+		String str = "";
+		switch(mType){
+			case "QQ": str = "QUALs"; break;
+			case "QF": str = "QUARTERs"; break;
+			case "SF": str = "SEMIs"; break;
+			case "FF": str = "FINALs"; break;
+			default: str = "UNK: "+mType; break;
+		}
+		return StdLabel(str, null);
+	}
+	
+	private JLabel Result(SingleMatch in){
+		String txt = "";
+		Color clr = null;
+		if(!in.Played){
+			txt = "QUEUE";
+		} else {
+			switch(in.QS){
+				case 2:
+					txt = "WIN";
+					if(in.aColor()=="B"){
+						clr = color_blue;
+					} else {
+						clr = color_red;
+					}
+					break;
+				case 1:
+					txt = "TIE";
+					clr = color_yellow;
+					break;
+				case 0:
+					txt = "LOSS";
+					if(in.aColor()=="B"){
+						clr = color_red;
+					} else {
+						clr = color_blue;
+					}
+					break;
+				default:
+					txt = "WHAT? "+in.QS;
+					clr = null;
+			}
+		}
+		return StdLabel(txt, clr);
+	}
+	private JLabel BoolLabel(boolean boolval){
+		Color clr = color_red;
+		String str = "NO";
+		if(boolval) {
+			clr = color_green;
+			str = "YES"; 
+		}
+		return StdLabel(str, clr);
+	}
+	private JLabel StdLabel(int intval, Color inColor){
+		return StdLabel(String.valueOf(intval), inColor);
+	}
+	private JLabel StdLabel(String str, Color inColor){
+		JLabel ret = new JLabel("");
+		if(inColor != null) ret.setBackground(inColor);
+		ret.setOpaque(true);
+		ret.setText(str);
+		ret.setHorizontalAlignment(JLabel.CENTER);
+		return ret;
 	}
 }

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -14,6 +15,7 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -34,6 +36,7 @@ public class MainMenu extends JFrame {
 	public SubSysCommHandler CommHandle;
 
 	private InputWindow inputw;
+	private EditOptionsWindow opts_wind;
 
 	private static final long serialVersionUID = 1;
 
@@ -42,13 +45,14 @@ public class MainMenu extends JFrame {
 	customTableModel RankTableModel = new customTableModel();
 	JTable RankTable = new JTable(RankTableModel);
 	
+	final String AppTitle = "2013 FRC Scoring Application";
 	public String EventName = "Unknown";
+	
 	final Logger logger = LoggerFactory.getLogger(MainMenu.class);
 
 	public MainMenu(SubSysCommHandler CH) {
 		CommHandle = CH;
 		// TODO: Update the event name after options save?
-		EventName = CH.SqlTalk.FetchOption("EVENTNAME");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -58,7 +62,7 @@ public class MainMenu extends JFrame {
 				CommHandle.RequestAppQuit();
 			}
 		});
-		setTitle("2013 FRC Scoring Application - Event: " + EventName);
+		SetupBootOptions();
 		this.setSize(1000, 500);
 
 		JPanel menu_panel = new JPanel();
@@ -165,7 +169,7 @@ public class MainMenu extends JFrame {
 						DefaultMutableTreeNode SelectedMatch = (DefaultMutableTreeNode) MatchList.getLastSelectedPathComponent();
 						MatchListObj leaf = (MatchListObj) SelectedMatch.getUserObject();
 						logger.debug("Rcvd double click in match list on leaf '{}'. Triggering edit fuction!", leaf.matchID);
-						MainMenu.this.EditMatch(leaf.matchID);
+						EditMatch(leaf.matchID);
 					} catch (ClassCastException err) {
 						logger.error("Rcvd double click in match list, but caught a Cast Error. Must not have been a match ref.");
 					} catch (NullPointerException err) {
@@ -204,7 +208,8 @@ public class MainMenu extends JFrame {
 						int TeamID = (Integer)RankTable.getValueAt(rowID, 1);
 						ShowTeamList(TeamID);
 					} catch (Exception err) {
-						logger.error("Error clicking on RankList");
+						logger.error("Error clicking on RankList: "+err.getCause()+" | "+err.getMessage());
+						err.printStackTrace();
 					}
 				}
 			}
@@ -236,6 +241,12 @@ public class MainMenu extends JFrame {
 		RankTableModel.addColumn("TP");
 		RankTableModel.addColumn("WLT");
 		
+		DefaultTableCellRenderer colRenderer = new DefaultTableCellRenderer();
+		colRenderer.setHorizontalAlignment( JLabel.CENTER );
+		for(int i=0; i<RankTableModel.getColumnCount(); i++){
+			RankTable.getColumnModel().getColumn(i).setCellRenderer( colRenderer );
+		}
+		
 		JScrollPane RankScroller = new JScrollPane(RankTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		getContentPane().add(RankScroller, BorderLayout.EAST);
 		
@@ -244,6 +255,11 @@ public class MainMenu extends JFrame {
 		RefreshRanks();
 	}
 
+	private void SetupBootOptions(){
+		EventName = CommHandle.SqlTalk.FetchOption("EVENTNAME");
+		setTitle(AppTitle+ " Event: "+EventName);
+	}
+	
 	private void ShowTeamList(int Team){
 		TeamWindow Twind = new TeamWindow(this, Team);
 		Twind.setLocationRelativeTo(this);
@@ -262,9 +278,11 @@ public class MainMenu extends JFrame {
 	}
 
 	private void EditSysOptions() {
-		EditOptionsWindow opts_wind = new EditOptionsWindow(this);
-		opts_wind.setLocationRelativeTo(this);
-		opts_wind.setVisible(true);
+		if (opts_wind == null) {
+			opts_wind = new EditOptionsWindow(this);
+			opts_wind.setLocationRelativeTo(this);
+			opts_wind.setVisible(true);
+		}
 	}
 
 	private void LoadMatchList() {
@@ -315,17 +333,29 @@ public class MainMenu extends JFrame {
 	public void RecvChildWindowMsg(Object child, String Msg, Object Datagram) {
 		if (child instanceof InputWindow) {
 			switch (Msg) {
-			case "im_closing_modified":
-				RefreshRanks();
-				LoadMatchList();
-				// No break here, we're moving into the next one. :D
-			case "im_closing":
-				logger.info("InputWindow said it's closing. DIE WINDOW DIE!");
-				inputw = null;
-				break;
-			default:
-				logger.info("InputWindow said something we didn't understand? German Perhaps?");
-				break;
+				case "im_closing_modified":
+					RefreshRanks();
+					LoadMatchList();
+					// No break here, we're moving into the next one. :D
+				case "im_closing":
+					logger.info("InputWindow said it's closing. DIE WINDOW DIE!");
+					inputw = null;
+					break;
+				default:
+					logger.info("InputWindow said something we didn't understand? German Perhaps?");
+					break;
+			}
+		}
+		else if(child instanceof EditOptionsWindow){
+			switch (Msg){
+				case "im_closing_modified":
+					SetupBootOptions();
+				case "im_closing":
+					opts_wind = null;
+					break;
+				default:
+					logger.info("OptionsWindow said something we didn't understand? German Perhaps?");
+					break;
 			}
 		} else {
 			logger.info("No child recognized? Hmm...");
