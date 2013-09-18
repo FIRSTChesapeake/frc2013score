@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SqlDB {
@@ -115,6 +116,40 @@ public class SqlDB {
 			s.executeUpdate();
 		} catch (Exception e){
 			// Supress
+		}
+	}
+	
+	public List<SingleMatch> FetchTeamMatches(int Team){
+		List<SingleMatch> Matches = new ArrayList<SingleMatch>();
+		logger.info("Fetching Team {}'s Matches.", Team);
+		try{
+			String qR = "SELECT id FROM MATCHES WHERE ((R1Robot=?) OR (R2Robot=?) OR (R3Robot=?))";
+			String qB = "SELECT id FROM MATCHES WHERE ((B1Robot=?) OR (B2Robot=?) OR (B3Robot=?))";
+			PreparedStatement sR = c.prepareStatement(qR);
+			PreparedStatement sB = c.prepareStatement(qB);
+			sR.setInt(1, Team);
+			sR.setInt(2, Team);
+			sR.setInt(3, Team);
+			sB.setInt(1, Team);
+			sB.setInt(2, Team);
+			sB.setInt(3, Team);
+			ResultSet rsR = sR.executeQuery();
+			ResultSet rsB = sB.executeQuery();
+			while(rsR.next()){
+				String[] clrs = {"R"};
+				List<SingleMatch> m = FetchMatch(rsR.getString("id"), clrs);
+				Matches.add(m.get(0));
+			}
+			while(rsB.next()){
+				String[] clrs = {"B"};
+				List<SingleMatch> m = FetchMatch(rsB.getString("id"), clrs);
+				Matches.add(m.get(0));
+			}
+			Collections.sort(Matches);
+			return Matches;
+		} catch (Exception e){
+			Pops.Exception("FetchteamMatches", e,"There was an issue fetching a team's matches?", false);
+			return null;
 		}
 	}
 	
@@ -256,13 +291,17 @@ public class SqlDB {
 	}
 
 	public List<SingleMatch> FetchMatch(String id) {
-		logger.info("Match Fetch Requested for id {}", id);
+		String[] defaultClrs = {"R", "B"};
+		return FetchMatch(id, defaultClrs);
+	}
+	
+	public List<SingleMatch> FetchMatch(String id, String[] clrs) {
+		logger.debug("Match Fetch Requested for id {}", id);
 		List<SingleMatch> ScoreList = new ArrayList<SingleMatch>();
 		try {
 			PreparedStatement s = c.prepareStatement("SELECT * FROM MATCHES WHERE id = ? LIMIT 1");
 			s.setString(1, id);
 			ResultSet rs = s.executeQuery();
-			String[] clrs = { "R", "B" };
 			while (rs.next()) {
 				for (String clr : clrs) {
 					logger.debug("Gathering {}'s", clr);
@@ -295,6 +334,9 @@ public class SqlDB {
 					Scores.TFoul = rs.getInt(clr + "TFoul");
 
 					Scores.Score = rs.getInt(clr + "Score");
+					
+					//Non-color specific
+					Scores.Played = rs.getBoolean("Saved");
 
 					ScoreList.add(Scores);
 				}
@@ -303,7 +345,7 @@ public class SqlDB {
 		} catch (Exception e) {
 			Pops.Exception("FetchMatch", e, "We were unable to fetch that match?", false);
 		}
-		logger.info("Match Fetched. Here ya go!");
+		logger.debug("Match Fetched. Here ya go!");
 		return ScoreList;
 	}
 

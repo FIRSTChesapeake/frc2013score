@@ -1,6 +1,6 @@
 package FRC_Score_Sys;
 
-public class SingleMatch {
+public class SingleMatch implements Comparable<SingleMatch>{
 	private boolean iHappy = false;
 	private String ID = "";
 	private String alColor = "";
@@ -30,6 +30,7 @@ public class SingleMatch {
 	public int CP = 0;
 	public int TP = 0;
 	public int Score = 0;
+	public boolean Played = false;
 
 	public SingleMatch() {
 	}
@@ -50,5 +51,11 @@ public class SingleMatch {
 
 	public String MatchID() {
 		return ID;
+	}
+
+	@Override
+	public int compareTo(SingleMatch o) {
+		MatchesCompare mc = new MatchesCompare();
+		return mc.compare(this, o);
 	}
 }
