@@ -10,6 +10,7 @@ out/
 .gradle
 
 # Ignore runtime files
+*.log
 logfile.txt
 
 # Ignore Operating System specific files
