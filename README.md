@@ -37,6 +37,15 @@ git clone https://bitbucket.org/crazysane/frc2013score.git
 If you would like to help me with this project, or any other
 application I might be working on for non-profits, please send me a message.
 
+SPECIAL COMPILE NOTE
+----
+I am using Gradle to keep up with Deps. If you want to compile it the app yourself, simplly GIT it (noted above) and then './gradlew build' to get the deps. Or, find them yourself.
+- log4j-1-2-17
+- slf4j-api-1-7-5
+- slf4j-log4j-12-1-7-5
+- sqlite-jdbc-3-7-15-M1
+- Java JRE (java-7-oracle)
+
 TODO
 ----
 - Save modified matches to DB **(complete)**
@@ -44,7 +53,7 @@ TODO
 - Create ranking table. **(complete)**
 - Calculate ranks. **(complete)**
 - Retrieve Timer Clock from FMS, waiting on [MS.](/Shoob189)
-- Come up with option for displays?
+- Come up with option for displays? (In-Progress).
 - Create process for Finals creation (On-the-fly?)
 
 Matt
