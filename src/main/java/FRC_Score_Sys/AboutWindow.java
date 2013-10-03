@@ -17,48 +17,45 @@ public class AboutWindow extends JFrame {
 
 	public AboutWindow() {
 		setTitle("About App");
-		// this.setSize(600, 400);
+		//this.setSize(300, 300);
 
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.NORTH);
-		panel.setLayout(new GridLayout(0, 3, 0, 0));
-
-		JLabel lbl = new JLabel("");
-		lbl.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(lbl);
-
-		lbl = new JLabel("Matt's FRC 2013 Scoring Application");
-		lbl.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(lbl);
-
-		lbl = new JLabel("");
-		lbl.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(lbl);
-
-		lbl = new JLabel("Created by Matt Glennon/FNS Network");
-		lbl.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(lbl);
-
-		lbl = new JLabel("Please report all bugs/feature requests");
-		lbl.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(lbl);
-
-		lbl = new JLabel("Created for VirginiaFIRST");
-		lbl.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(lbl);
+		panel.setLayout(new GridLayout(0, 1, 0, 0));
 
 		try {
-			LinkLabel lnk = new LinkLabel(new URI("https://www.fnsnet.net"), "FNSNetwork");
+
+			JLabel lbl = new JLabel("Matt's FRC 2013 Scoring Application");
+			lbl.setHorizontalAlignment(SwingConstants.CENTER);
+			panel.add(lbl);
+
+			lbl = new JLabel("");
+			lbl.setHorizontalAlignment(SwingConstants.CENTER);
+			panel.add(lbl);
+
+			lbl = new JLabel("Created by Matt Glennon/FNS Network");
+			lbl.setHorizontalAlignment(SwingConstants.CENTER);
+			panel.add(lbl);
+
+			LinkLabel lnk = new LinkLabel(new URI("https://www.fnsnet.net"), "Visit FNSNetwork");
+			lnk.setHorizontalAlignment(SwingConstants.CENTER);
+			lnk.init();
+			panel.add(lnk);
+			
+			lbl = new JLabel("Please report all bugs/feature requests");
+			lbl.setHorizontalAlignment(SwingConstants.CENTER);
+			panel.add(lbl);
+			
+			lnk = new LinkLabel(new URI("https://bitbucket.org/crazysane/frc2013score/issues?sort=status"), "Bug Tracker & Updates");
 			lnk.setHorizontalAlignment(SwingConstants.CENTER);
 			lnk.init();
 			panel.add(lnk);
 
-			lnk = new LinkLabel(new URI("https://bitbucket.org/crazysane/frc2013score/issues"), "Bug Tracker");
-			lnk.setHorizontalAlignment(SwingConstants.CENTER);
-			lnk.init();
-			panel.add(lnk);
-
-			lnk = new LinkLabel(new URI("http://www.virginiafirst.org"), "VirginiaFIRST");
+			lbl = new JLabel("Created for VirginiaFIRST");
+			lbl.setHorizontalAlignment(SwingConstants.CENTER);
+			panel.add(lbl);
+				
+			lnk = new LinkLabel(new URI("http://www.virginiafirst.org"), "Visit VirginiaFIRST");
 			lnk.setHorizontalAlignment(SwingConstants.CENTER);
 			lnk.init();
 			panel.add(lnk);
