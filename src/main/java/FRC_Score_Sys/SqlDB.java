@@ -17,20 +17,25 @@ import java.util.List;
 
 public class SqlDB {
 
-	private String SQLDBVER = "7";
+	private String SQLDBVER = "8";
 
 	private Connection c;
 	private String DBfile = "score_data.db";
 
+	private boolean IwasNew = false;
+	
 	private PopupGenerator Pops = new PopupGenerator();
 	final Logger logger = LoggerFactory.getLogger(SqlDB.class);
 
+	public boolean wasNewDB(){ return IwasNew; }
+	
 	public SqlDB() {
 		logger.info("Starting SQL Server..");
 		File file = new File(DBfile);
 		Boolean doNew = false;
 		if (!file.exists()) {
 			doNew = true;
+			IwasNew = true;
 			logger.info("DB File not found. Will create.");
 		} else {
 			logger.info("DB File found. using existing DB.");
@@ -284,7 +289,8 @@ public class SqlDB {
 	private boolean CreateOptions() {
 		boolean a = CreateEachOption("SQLDBVER", SQLDBVER, false);
 		boolean b = CreateEachOption("EVENTNAME", "Mystery Event", true);
-		if (a && b) {
+		boolean c = CreateEachOption("ALLYCOUNT", "3", true);
+		if (a && b && c) {
 			return true;
 		}
 		return false;

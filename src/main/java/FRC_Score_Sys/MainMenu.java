@@ -253,6 +253,10 @@ public class MainMenu extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		RefreshRanks();
+		if(this.CommHandle.SqlTalk.wasNewDB()){
+			EditSysOptions();
+			
+		}
 	}
 
 	private void SetupBootOptions(){

@@ -23,6 +23,7 @@ public class EditOptionsWindow extends JFrame {
 	final Logger logger = LoggerFactory.getLogger(EditOptionsWindow.class);
 
 	public EditOptionsWindow(MainMenu parent) {
+		this.setTitle("Event Options");
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
