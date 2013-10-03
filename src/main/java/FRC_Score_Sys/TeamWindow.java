@@ -20,6 +20,7 @@ public class TeamWindow extends JFrame {
 	Color color_blue = new Color(30, 144, 255);
 	Color color_yellow = new Color(242, 255, 0);
 	Color color_green = new Color(0, 255, 0);
+	Color color_orange = new Color(255, 166, 0);
 	
 	public TeamWindow(MainMenu parent, int Team){
 		myParent = parent;
@@ -39,7 +40,7 @@ public class TeamWindow extends JFrame {
 			JLabel M = StdLabel(m.MatchNumberOnly(), null);
 			JLabel S = FindSpot(m, Team);
 			JLabel P = BoolLabel(m.Played);
-			JLabel R = Result(m);
+			JLabel R = Result(m, Team);
 			JLabel[] a = {T, M, S, P, R}; 
 			TeamTableModel.addRow(a);
 		}
@@ -77,36 +78,47 @@ public class TeamWindow extends JFrame {
 		return StdLabel(str, null);
 	}
 	
-	private JLabel Result(SingleMatch in){
+	private JLabel Result(SingleMatch in, int id){
 		String txt = "";
+		
+		// find the spot so we can check if they are DQed
+		boolean dq = false;
+		if(in.Robot1 == id) dq = in.Dq1;
+		if(in.Robot2 == id) dq = in.Dq2;
+		if(in.Robot3 == id) dq = in.Dq3;
 		Color clr = null;
 		if(!in.Played){
 			txt = "QUEUE";
 		} else {
-			switch(in.QS){
-				case 2:
-					txt = "WIN";
-					if(in.aColor()=="B"){
-						clr = color_blue;
-					} else {
-						clr = color_red;
-					}
-					break;
-				case 1:
-					txt = "TIE";
-					clr = color_yellow;
-					break;
-				case 0:
-					txt = "LOSS";
-					if(in.aColor()=="B"){
-						clr = color_red;
-					} else {
-						clr = color_blue;
-					}
-					break;
-				default:
-					txt = "WHAT? "+in.QS;
-					clr = null;
+			if(dq){
+				txt = "DQed!";
+				clr = color_orange;
+			} else {
+				switch(in.QS){
+					case 2:
+						txt = "WIN";
+						if(in.aColor()=="B"){
+							clr = color_blue;
+						} else {
+							clr = color_red;
+						}
+						break;
+					case 1:
+						txt = "TIE";
+						clr = color_yellow;
+						break;
+					case 0:
+						txt = "LOSS";
+						if(in.aColor()=="B"){
+							clr = color_red;
+						} else {
+							clr = color_blue;
+						}
+						break;
+					default:
+						txt = "WHAT? "+in.QS;
+						clr = null;
+				}
 			}
 		}
 		return StdLabel(txt, clr);

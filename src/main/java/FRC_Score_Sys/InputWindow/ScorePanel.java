@@ -137,8 +137,8 @@ public class ScorePanel extends JPanel {
 		
 		A.QS = my_QS;
 		
-		A.AP = Low.GetScore(1) + Mid.GetScore(1) + Hig.GetScore(1);
-		A.TP = Low.GetScore(2) + Mid.GetScore(2) + Hig.GetScore(2);
+		A.AP = Low.GetScore(1) + Mid.GetScore(1) + Hig.GetScore(1) + Pyr.GetScore(1);
+		A.TP = Low.GetScore(2) + Mid.GetScore(2) + Hig.GetScore(2) + Pyr.GetScore(2);
 		A.CP = R1.GetClimb() + R2.GetClimb() + R3.GetClimb();
 		
 		A.Score = FinalScore;

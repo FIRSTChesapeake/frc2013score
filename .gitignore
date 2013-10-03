@@ -13,6 +13,8 @@ out/
 *.log
 logfile.txt
 logfile.txt.*
+logfile.log
+logfile.log.*
 
 # Ignore Operating System specific files
 .DS_Store
