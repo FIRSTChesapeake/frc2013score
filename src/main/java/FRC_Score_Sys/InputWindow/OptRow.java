@@ -50,7 +50,6 @@ public class OptRow extends JPanel implements ActionListener {
 		DQ.setHorizontalAlignment(SwingConstants.CENTER);
 		DQ.addActionListener(al);
 		this.add(DQ);
-
 		SetValues(DqVal, ClimbVal);
 	}
 

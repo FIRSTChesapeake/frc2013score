@@ -107,6 +107,7 @@ public class SqlDB {
 				PreparedStatement s = c.prepareStatement(q+table);
 				s.executeUpdate();
 			}
+			UpdateOption("ALLYCOUNT", "N");
 			return 1;
 		} catch (Exception e){
 			Pops.Exception("ScrubDB", e, "Failed to Empty Tables", false);
@@ -227,10 +228,14 @@ public class SqlDB {
 	public int AddMatchToDB(String[] matchInfo) {
 		try {
 			PreparedStatement s;
-			int len = matchInfo[0].split(" ").length;
-			int spots = 0;
-			if(len == 9) spots = -1;
-			String q = "INSERT INTO MATCHES VALUES(?, ?, ?, "+spots+", "+spots+", ?, ?, ?, ?, "+spots+", "+spots+", ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
+			int len = matchInfo.length;
+			String spot1 = "?";
+			String spot2 = "?";
+			if(len == 9){
+				spot1 = "-1";
+				spot2 = "1";
+			}
+			String q = "INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, "+spot1+", "+spot2+", ?, ?, ?, ?, "+spot1+", "+spot2+", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
 			logger.debug("Add Match Q: "+q);
 			s = c.prepareStatement(q);
 			int i = 1;
@@ -295,7 +300,7 @@ public class SqlDB {
 	private boolean CreateOptions() {
 		boolean a = CreateEachOption("SQLDBVER", SQLDBVER, false);
 		boolean b = CreateEachOption("EVENTNAME", "Mystery Event", true);
-		boolean c = CreateEachOption("ALLYCOUNT", "3", true);
+		boolean c = CreateEachOption("ALLYCOUNT", "N", false);
 		if (a && b && c) {
 			return true;
 		}

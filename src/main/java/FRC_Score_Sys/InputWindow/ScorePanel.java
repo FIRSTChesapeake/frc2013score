@@ -80,7 +80,10 @@ public class ScorePanel extends JPanel {
 
 		this.add(R1);
 		this.add(R2);
-		this.add(R3);
+		
+		if(Match.Robot3 != -1){
+			this.add(R3);
+		}
 
 		// Penalties Row
 		// Header 3

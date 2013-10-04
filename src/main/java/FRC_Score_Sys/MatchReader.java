@@ -87,7 +87,6 @@ public class MatchReader {
 	}
 
 	public int DoFileLoad() {
-		//ProgWindow pb = new ProgWindow();
 		JFileChooser fc = new JFileChooser();
 		logger.info("Asking user to find file..");
 		int ret = fc.showOpenDialog(myParent);
@@ -97,13 +96,10 @@ public class MatchReader {
 				logger.info("User choose: {}", file.toString());
 				if(file.exists()){
 					DataLoader DL = new DataLoader(file);
-					//pb.go();
 					DL.run();
 					while (!DL.DoneFlag) {
-						//pb.repaint();
 						Thread.sleep(50);
 					}
-					//pb.pullThePlug();
 					return 0;
 				} else {
 					String msg = "I don't mean to call you a liar or anything - but I really can't find that file. Sorry!";
@@ -111,7 +107,6 @@ public class MatchReader {
 					return -2;
 				}
 			} catch (Exception e) {
-				//pb.pullThePlug();
 				Pops.Exception("FileLoad", e, "Exception handled while trying to load the selected file. Did it exist? Was it Readable?", false);
 				return -2;
 			}

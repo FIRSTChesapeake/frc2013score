@@ -47,6 +47,7 @@ public class MainMenu extends JFrame {
 	
 	final String AppTitle = "2013 FRC Scoring Application";
 	public String EventName = "Unknown";
+	public String AllyCount = "No Match Data";
 	
 	final Logger logger = LoggerFactory.getLogger(MainMenu.class);
 
@@ -111,9 +112,14 @@ public class MainMenu extends JFrame {
 				}
 				switch(perform){
 					case JOptionPane.YES_OPTION:
-						CommHandle.SqlTalk.ScrubDB(); 
+						CommHandle.SqlTalk.ScrubDB();
+						SetupBootOptions();
+						LoadMatchList();
+						RefreshRanks(null);
 					case -1:
 						if(TriggerImportFile()==0){
+							CommHandle.SqlTalk.UpdateOption("ALLYCOUNT", "Y");
+							SetupBootOptions();
 							LoadMatchList();
 							RefreshRanks(null);
 						}
@@ -260,8 +266,25 @@ public class MainMenu extends JFrame {
 	}
 
 	private void SetupBootOptions(){
+		// TODO: Ally Count is not yet being changed when file is loaded. Spoof for now.
 		EventName = CommHandle.SqlTalk.FetchOption("EVENTNAME");
-		setTitle(AppTitle+ " Event: "+EventName);
+		AllyCount = CommHandle.SqlTalk.FetchOption("ALLYCOUNT");
+		String AllyCountStr = "Unk";
+		switch(AllyCount){
+			case "N":
+				AllyCountStr = "No Match Data";
+				break;
+			case "2":
+				AllyCountStr = "2v2 Mode";
+				break;
+			case "3":
+				AllyCountStr = "3v3 Mode";
+				break;
+			case "Y":
+				AllyCountStr = "Match Data Loaded";
+				break;
+		}
+		setTitle(AppTitle+ " Event: "+EventName+" ("+AllyCountStr+")");
 	}
 	
 	private void ShowTeamList(int Team){
