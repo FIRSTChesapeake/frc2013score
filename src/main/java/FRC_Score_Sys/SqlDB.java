@@ -158,9 +158,9 @@ public class SqlDB {
 		}
 	}
 	
-	public void RefreshRanks(){
+	public void RefreshRanks(List<Integer> TeamNumbers){
 		long timeStart = System.nanoTime();
-		List<TeamRankObj> Teams = FetchTeamlist(false);
+		List<TeamRankObj> Teams = FetchTeamlist(false, TeamNumbers);
 		logger.info("Refreshing Rankings.. Please wait..");
 		try{
 			String qR = "SELECT SUM(case RQS when 2 then 1 else 0 end) as wins, SUM(case RQS when 1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(RQS) as QS, SUM(RAP) as AP, SUM(RCP) as CP, SUM(RTP) as TP FROM MATCHES WHERE ((R1Robot=? AND R1Sur=0 AND R1Dq=0) OR (R2Robot=? AND R2Sur=0 AND R2Dq=0) OR (R3Robot=? AND R3Sur=0 AND R3Dq=0)) AND Saved=1";
@@ -358,14 +358,26 @@ public class SqlDB {
 		logger.debug("Match Fetched. Here ya go!");
 		return ScoreList;
 	}
-
-	public List<TeamRankObj> FetchTeamlist(boolean rank){
+	
+	public List<TeamRankObj> FetchTeamlist(boolean rank, List<Integer> TeamNumbers){
 		logger.info("TeamList Fetch Requested");
 		List<TeamRankObj> WholeList = new ArrayList<TeamRankObj>();
 		String rank_order = "ID";
 		if(rank) rank_order = "QS DESC,AP DESC,CP DESC,TP DESC";
 		try {
-			PreparedStatement s = c.prepareStatement("SELECT * FROM TEAMS ORDER BY "+rank_order);
+			String q = "SELECT * FROM TEAMS";
+			if(TeamNumbers != null){
+				q = q + " WHERE ";
+				boolean first = true;
+				for(int Tn : TeamNumbers){
+					if(!first) q = q + " OR ";
+					first = false;
+					q = q + "ID=" + Tn;
+				}
+			}
+			q = q +  " ORDER BY "+rank_order;
+			logger.debug("TeamList Q: "+q);
+			PreparedStatement s = c.prepareStatement(q);
 			ResultSet rs = s.executeQuery();
 			while (rs.next()) {
 				TeamRankObj n = new TeamRankObj();
@@ -416,6 +428,7 @@ public class SqlDB {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			Pops.Exception("FetchMatchList", e, "Match list can not be loaded.",false);
 		}
 		return WholeList;
@@ -662,7 +675,7 @@ public class SqlDB {
 			logger.debug("Performing DB Update..");
 			int ret = s.executeUpdate();
 			if (ret != 1) {
-				logger.info("Update Failed."+s.getWarnings());
+				logger.info("Update Failed. '"+ret+"' "+s.getWarnings());
 				return false;
 			}
 			logger.info("Update Complete!");

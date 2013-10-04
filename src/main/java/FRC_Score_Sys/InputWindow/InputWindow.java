@@ -41,6 +41,8 @@ public class InputWindow extends JFrame {
 	boolean did_save = false;
 	private Logger logger = LoggerFactory.getLogger(InputWindow.class);
 
+	private List<Integer> TeamNumbers;
+	
 	public InputWindow(MainMenu parent, String MatchNumber) {
 		myParent = parent;
 		addWindowListener(new WindowAdapter() {
@@ -50,7 +52,7 @@ public class InputWindow extends JFrame {
 				if (did_save) {
 					msg = "im_closing_modified";
 				}
-				TellParent(msg, null);
+				TellParent(msg, TeamNumbers);
 			}
 		});
 		logger.info("Input Window for Match #{} Starting", MatchNumber);
@@ -63,10 +65,15 @@ public class InputWindow extends JFrame {
 
 		SingleMatch BlueMatch = new SingleMatch();
 		SingleMatch RedMatch = new SingleMatch();
+		
+		TeamNumbers = new ArrayList<Integer>();
 		try {
 			List<SingleMatch> DBScores = myParent.CommHandle.SqlTalk.FetchMatch(MatchNumber);
 			if (DBScores.size() == 2) {
 				for (SingleMatch Match : DBScores) {
+					TeamNumbers.add(Match.Robot1);
+					TeamNumbers.add(Match.Robot2);
+					TeamNumbers.add(Match.Robot3);
 					if (Match.aColor() == "R") {
 						RedMatch = Match;
 					}

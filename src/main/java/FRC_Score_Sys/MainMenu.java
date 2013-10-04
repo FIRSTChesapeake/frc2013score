@@ -76,7 +76,7 @@ public class MainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				LoadMatchList();
-				RefreshRanks();
+				RefreshRanks(null);
 			}
 		});
 		// About Button
@@ -115,7 +115,7 @@ public class MainMenu extends JFrame {
 					case -1:
 						if(TriggerImportFile()==0){
 							LoadMatchList();
-							RefreshRanks();
+							RefreshRanks(null);
 						}
 						break;
 				}
@@ -252,7 +252,7 @@ public class MainMenu extends JFrame {
 		
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		RefreshRanks();
+		RefreshRanks(null);
 		if(this.CommHandle.SqlTalk.wasNewDB()){
 			EditSysOptions();
 			
@@ -310,9 +310,9 @@ public class MainMenu extends JFrame {
 		}));
 	}
 
-	public void RefreshRanks(){
-		CommHandle.SqlTalk.RefreshRanks();
-		List<TeamRankObj> Teams = CommHandle.SqlTalk.FetchTeamlist(true);
+	public void RefreshRanks(List<Integer> TeamNumbers){
+		CommHandle.SqlTalk.RefreshRanks(TeamNumbers);
+		List<TeamRankObj> Teams = CommHandle.SqlTalk.FetchTeamlist(true, null);
 		
 		int rows=RankTableModel.getRowCount();
 		if(rows>0){
@@ -338,7 +338,8 @@ public class MainMenu extends JFrame {
 		if (child instanceof InputWindow) {
 			switch (Msg) {
 				case "im_closing_modified":
-					RefreshRanks();
+					List<Integer> a = (List<Integer>) Datagram;
+					RefreshRanks(a);
 					LoadMatchList();
 					// No break here, we're moving into the next one. :D
 				case "im_closing":
