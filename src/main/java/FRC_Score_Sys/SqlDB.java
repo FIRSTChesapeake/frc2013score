@@ -226,7 +226,13 @@ public class SqlDB {
 	
 	public int AddMatchToDB(String[] matchInfo) {
 		try {
-			PreparedStatement s = c.prepareStatement("INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)");
+			PreparedStatement s;
+			int len = matchInfo[0].split(" ").length;
+			int spots = 0;
+			if(len == 9) spots = -1;
+			String q = "INSERT INTO MATCHES VALUES(?, ?, ?, "+spots+", "+spots+", ?, ?, ?, ?, "+spots+", "+spots+", ?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
+			logger.debug("Add Match Q: "+q);
+			s = c.prepareStatement(q);
 			int i = 1;
 			int first = 0;
 			logger.debug("==== AddingMatchToDB ====");
@@ -428,7 +434,6 @@ public class SqlDB {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			Pops.Exception("FetchMatchList", e, "Match list can not be loaded.",false);
 		}
 		return WholeList;
