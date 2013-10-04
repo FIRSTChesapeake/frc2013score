@@ -57,7 +57,6 @@ public class PenaltyInput extends JPanel {
 	}
 
 	public int GetPenalties() {
-		logger.debug("Penalties Input calculating!");
 		int f = ParseField(fouls);
 		int tf = ParseField(tfouls);
 		return (f * 3) + (tf * 20);

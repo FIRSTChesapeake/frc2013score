@@ -202,39 +202,33 @@ public class InputWindow extends JFrame {
 	}
 
 	private void CheckWinner(int Red, int Blue) {
-		logger.info("CheckWinner Function processing..");
 		if (Red == Blue) {
 			WinnerDisplay.setText("DRAW");
 			WinnerDisplay.setBackground(color_yellow);
 			BluePanel.my_QS = 1;
 			RedPanel.my_QS  = 1;
-			logger.info("  WINNER: DRAW");
 		}
 		if (Red > Blue) {
 			WinnerDisplay.setText("RED WINS");
 			WinnerDisplay.setBackground(color_red);
 			BluePanel.my_QS = 0;
 			RedPanel.my_QS  = 2;
-			logger.info("  WINNER: RED");
 		}
 		if (Blue > Red) {
 			WinnerDisplay.setText("BLUE WINS");
 			WinnerDisplay.setBackground(color_blue);
 			BluePanel.my_QS = 2;
 			RedPanel.my_QS  = 0;
-			logger.info("  WINNER: BLUE");
 		}
 	}
 
 	public void DoCalc() {
 		if (loaded) {
-			logger.info("Starting Calc Routine..");
 			int rPen = RedPanel.GetPenalties();
 			int bPen = BluePanel.GetPenalties();
 			int rFinal = RedPanel.DoRefresh(bPen);
 			int bFinal = BluePanel.DoRefresh(rPen);
 			CheckWinner(rFinal, bFinal);
-			logger.info("FULL CALC REUTINE COMPLETE.");
 		}
 	}
 

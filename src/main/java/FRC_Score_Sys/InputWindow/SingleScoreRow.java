@@ -77,7 +77,6 @@ public class SingleScoreRow extends JPanel {
 	}
 	
 	public int GetScore(int type) {
-		logger.debug("SingleScoreRow received score request. Calculating!");
 		int ret = 0;
 		int a = ParseField(Auto) * (iWorth * 2);
 		int t = ParseField(Tele) * (iWorth);
