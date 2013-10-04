@@ -227,35 +227,42 @@ public class SqlDB {
 	
 	public int AddMatchToDB(String[] matchInfo) {
 		try {
+			logger.debug("==== AddingMatchToDB ====");
 			PreparedStatement s;
 			int len = matchInfo.length;
 			String spot1 = "?";
 			String spot2 = "?";
-			if(len == 9){
+			switch(len){
+			case 9:
 				spot1 = "-1";
 				spot2 = "1";
+				logger.debug("This match is 2v2!");
+				break;
+			case 13:
+				logger.debug("This match is 3v3!");
+				break;
+			default:
+				logger.error("WARNING: Match line not expected length: {}?",len);
 			}
 			String q = "INSERT INTO MATCHES VALUES(?, ?, ?, ?, ?, "+spot1+", "+spot2+", ?, ?, ?, ?, "+spot1+", "+spot2+", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
-			logger.debug("Add Match Q: "+q);
 			s = c.prepareStatement(q);
 			int i = 1;
 			int first = 0;
-			logger.debug("==== AddingMatchToDB ====");
 			for (String item : matchInfo) {
-				logger.debug("Evaluating '{}'.. ", item);
+				logger.debug(" Evaluating '{}'.. ", item);
 				if (first == 0) {
-					logger.debug("Match ID");
+					logger.debug("  Assigned as Match ID");
 					item = PadString(item);
 					s.setString(i, "QQ" + item);
 					first = 1;
 				} else if(first == 1) {
-					logger.debug("TeamNumber");
+					logger.debug("  Assigned as TeamNumber");
 					int Team = Integer.parseInt(item);
 					AddTeamToDB(Team);
 					s.setInt(i, Team);
 					first = 2;
 				} else if(first == 2) {
-					logger.debug("Suro");
+					logger.debug("  Assigned as Sourogate Flag");
 					s.setInt(i, Integer.parseInt(item));
 					first = 1;
 				}
@@ -387,7 +394,6 @@ public class SqlDB {
 				}
 			}
 			q = q +  " ORDER BY "+rank_order;
-			logger.debug("TeamList Q: "+q);
 			PreparedStatement s = c.prepareStatement(q);
 			ResultSet rs = s.executeQuery();
 			while (rs.next()) {
