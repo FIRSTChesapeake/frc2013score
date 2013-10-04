@@ -164,8 +164,8 @@ public class SqlDB {
 		List<TeamRankObj> Teams = FetchTeamlist(false, TeamNumbers);
 		logger.info("Refreshing Rankings.. Please wait..");
 		try{
-			String qR = "SELECT SUM(case RQS when 2 then 1 else 0 end) as wins, SUM(case RQS when 1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(RQS) as QS, SUM(RAP) as AP, SUM(RCP) as CP, SUM(RTP) as TP FROM MATCHES WHERE ((R1Robot=? AND R1Sur=0 AND R1Dq=0) OR (R2Robot=? AND R2Sur=0 AND R2Dq=0) OR (R3Robot=? AND R3Sur=0 AND R3Dq=0)) AND Saved=1";
-			String qB = "SELECT SUM(case BQS when 2 then 1 else 0 end) as wins, SUM(case BQS when 1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(BQS) as QS, SUM(BAP) as AP, SUM(BCP) as CP, SUM(BTP) as TP FROM MATCHES WHERE ((B1Robot=? AND B1Sur=0 AND B1Dq=0) OR (B2Robot=? AND B2Sur=0 AND B2Dq=0) OR (B3Robot=? AND B3Sur=0 AND B3Dq=0)) AND Saved=1";
+			String qR = "SELECT SUM(case RQS when 2 then 1 else 0 end) as wins, SUM(case RQS when 1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(RQS) as QS, SUM(RAP) as AP, SUM(RCP) as CP, SUM(RTP) as TP FROM MATCHES WHERE ((R1Robot=? AND R1Sur=0 AND R1Dq=0) OR (R2Robot=? AND R2Sur=0 AND R2Dq=0) OR (R3Robot=? AND R3Sur=0 AND R3Dq=0)) AND Saved=1 AND ID LIKE 'QQ%'";
+			String qB = "SELECT SUM(case BQS when 2 then 1 else 0 end) as wins, SUM(case BQS when 1 then 1 else 0 end) as ties, COUNT(*) as tot, SUM(BQS) as QS, SUM(BAP) as AP, SUM(BCP) as CP, SUM(BTP) as TP FROM MATCHES WHERE ((B1Robot=? AND B1Sur=0 AND B1Dq=0) OR (B2Robot=? AND B2Sur=0 AND B2Dq=0) OR (B3Robot=? AND B3Sur=0 AND B3Dq=0)) AND Saved=1 AND ID LIKE 'QQ%'";
 			String qT = "UPDATE TEAMS SET QS=?, AP=?, CP=?, TP=?, WINS=?, TIES=?, TOT=? WHERE ID=?";
 			PreparedStatement sR = c.prepareStatement(qR);
 			PreparedStatement sB = c.prepareStatement(qB);
