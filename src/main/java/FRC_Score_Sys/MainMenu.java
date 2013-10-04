@@ -1,5 +1,6 @@
 package FRC_Score_Sys;
 
+import FRC_Score_Sys.AllyCreate.AllyCreateWindow;
 import FRC_Score_Sys.InputWindow.InputWindow;
 
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ public class MainMenu extends JFrame {
 
 	private InputWindow inputw;
 	private EditOptionsWindow opts_wind;
+	private AllyCreateWindow AllyWind;
 
 	private static final long serialVersionUID = 1;
 
@@ -53,8 +55,8 @@ public class MainMenu extends JFrame {
 
 	public MainMenu(SubSysCommHandler CH) {
 		CommHandle = CH;
-		// TODO: Update the event name after options save?
-		setResizable(false);
+		// TODO: See is this command is the cause of the random JAVA crash when SQL is writing.
+		//			Likely the app is closing before SQL is closed nicely?
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -127,6 +129,14 @@ public class MainMenu extends JFrame {
 				}
 			}
 		});
+		// Generate Allys Button
+		JButton btnAllys = new JButton("Generate Alliances");
+		btnAllys.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				GenAllys();
+			}
+		});
 		// Quit Button
 		JButton btnQuit = new JButton("Quit");
 		btnQuit.addActionListener(new ActionListener() {
@@ -140,6 +150,7 @@ public class MainMenu extends JFrame {
 		menu_panel.add(btnReloadMatches);
 		menu_panel.add(btnOpts);
 		menu_panel.add(btnAbout);
+		menu_panel.add(btnAllys);
 		menu_panel.add(btnQuit);
 
 		MatchList = new JTree();
@@ -356,6 +367,11 @@ public class MainMenu extends JFrame {
 		dispatchEvent(wev);
 	}
 
+	public void GenAllys() {
+		AllyWind = new AllyCreateWindow(this);
+		AllyWind.setVisible(true);
+	}
+	
 	// handle como from child windows.
 	public void RecvChildWindowMsg(Object child, String Msg, Object Datagram) {
 		if (child instanceof InputWindow) {
