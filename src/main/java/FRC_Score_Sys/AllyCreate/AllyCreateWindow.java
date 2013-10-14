@@ -2,6 +2,7 @@ package FRC_Score_Sys.AllyCreate;
 
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -85,10 +86,11 @@ public class AllyCreateWindow extends JFrame {
 				}
 			}
 		} else {
-			String msg = "You are about to move into Quarterfinal Mode. Once this is done, you can not move back to Qualifications. Continue?";
+			String msg = "You are about to move into Quarterfinal Mode. Once this is done, you can not move back to Qualifications.\nWarning: If you select 'NO' you're changes will be lost.\n Continue?";
 			String tit = "Save Alliances?";
 			int perform = JOptionPane.showConfirmDialog(null, msg, tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(perform == JOptionPane.YES_OPTION) PerformSave();
+			pullThePlug();
 		}
 	}
 	
@@ -193,5 +195,9 @@ public class AllyCreateWindow extends JFrame {
 			}
 		}
 		return LowTeam;
+	}
+	public void pullThePlug() {
+		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
+		dispatchEvent(wev);
 	}
 }

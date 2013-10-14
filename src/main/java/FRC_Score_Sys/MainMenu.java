@@ -287,6 +287,7 @@ public class MainMenu extends JFrame {
 		// TODO: Ally Count is not yet being changed when file is loaded. Spoof for now.
 		EventName = CommHandle.SqlTalk.FetchOption("EVENTNAME");
 		AllyCount = CommHandle.SqlTalk.FetchOption("ALLYCOUNT");
+		MatchMode = CommHandle.SqlTalk.FetchOption("MATCHMODE");
 		String AllyCountStr = "Unk";
 		switch(AllyCount){
 			case "N":
