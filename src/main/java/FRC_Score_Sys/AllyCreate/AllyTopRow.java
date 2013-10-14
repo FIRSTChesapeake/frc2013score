@@ -37,13 +37,20 @@ public class AllyTopRow extends JPanel {
 	public int Rank(){ return myRank; }
 	
 	public int GetPick(int id){
+		int ret = -1;
+		String val = "";
 		switch(id){
 			case 1:
-				return Integer.parseInt(Pick1.getText());
+				val = Pick1.getText();
+				break;
 			case 2:
-				if(TeamCount == 3) return Integer.parseInt(Pick2.getText());
+				val = Pick2.getText();
+				break;
 		}
-		return -1;
+		if(val.equals("")) return -1;
+		ret = Integer.parseInt(val);
+		if(ret == 0) return -1; 
+		return ret;
 	}
 	
 	public AllyTopRow(AllyCreateWindow parent, int ID, int top, int inTeamCount){

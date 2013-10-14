@@ -9,10 +9,15 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import FRC_Score_Sys.MainMenu;
 import FRC_Score_Sys.TeamRankObj;
 
 public class AllyCreateWindow extends JFrame {
+	
+	final Logger logger = LoggerFactory.getLogger(AllyCreateWindow.class);
 	private static final long	serialVersionUID	= 1L;
 	private MainMenu myParent;
 	
@@ -68,6 +73,8 @@ public class AllyCreateWindow extends JFrame {
 			} else {
 				Complete = true;
 			}
+		} else if(!hasAvailableTeams()){
+			Complete = true;
 		} else if(SelectedAlly == 1 && SelectedPick == 2){
 			Complete = true;
 		}
@@ -211,6 +218,22 @@ public class AllyCreateWindow extends JFrame {
 		}
 		return LowTeam;
 	}
+public boolean hasAvailableTeams(){
+	int available = 0;
+	for (Component c : RPanel.getComponents()) {
+		if (c instanceof AllyAvailRow) { 
+			AllyAvailRow r = ((AllyAvailRow)c);
+			if(r.CanBePicked){
+				available++;
+			}
+		}
+	}
+	logger.info("Found {} teams still available.",available);
+	if(available > 1)
+		return true;
+	else
+		return false;
+}
 	public void pullThePlug() {
 		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 		dispatchEvent(wev);
