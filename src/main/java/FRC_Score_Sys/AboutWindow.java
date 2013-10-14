@@ -46,7 +46,7 @@ public class AboutWindow extends JFrame {
 			lbl.setHorizontalAlignment(SwingConstants.CENTER);
 			panel.add(lbl);
 			
-			lnk = new LinkLabel(new URI("https://bitbucket.org/crazysane/frc2013score/issues?sort=status"), "Bug Tracker & Updates");
+			lnk = new LinkLabel(new URI("https://github.com/VirginiaFIRST/frc2013score/issues?state=open"), "Bug Tracker & Updates");
 			lnk.setHorizontalAlignment(SwingConstants.CENTER);
 			lnk.init();
 			panel.add(lnk);
