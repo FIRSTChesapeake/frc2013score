@@ -2,7 +2,6 @@ package FRC_Score_Sys;
 
 
 import FRC_Score_Sys.AllyCreate.AllyCreateWindow;
-import FRC_Score_Sys.AllyCreate.AllyTopRow;
 import FRC_Score_Sys.InputWindow.InputWindow;
 
 import org.slf4j.Logger;
@@ -137,7 +136,9 @@ public class MainMenu extends JFrame {
 		btnAllys.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(MatchMode.equals("QQ")){
+				if(!AllyCount.equals("Y")){
+					JOptionPane.showMessageDialog(null, "Oops! You can't do that until we have some teams to work with.");
+				} else if(MatchMode.equals("QQ")){
 					GenAllys();
 				} else {
 					JOptionPane.showMessageDialog(null, "Oops! You've already done that! ("+MatchMode+")");

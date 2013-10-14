@@ -144,7 +144,11 @@ public class AllyCreateWindow extends JFrame {
 					String t1 = String.valueOf(r.TeamID());
 					String t2 = String.valueOf(r.GetPick(1));
 					String t3 = String.valueOf(r.GetPick(2));
-					return t1 + " 0 " + t2 + " 0 " + t3 + " 0";
+					if(t3.equals("-1")){
+						return t1 + " 0 " + t2 + " 0";
+					} else {
+						return t1 + " 0 " + t2 + " 0 " + t3 + " 0";
+					}
 				}
 			}
 		}
@@ -158,7 +162,7 @@ public class AllyCreateWindow extends JFrame {
 					r.SetValue(SelectedPick, NewVal);
 					if(isSeed){
 						int LowTeam = GetNextTeam();
-						int t = SelectedAlly;
+						int t = GetRank(NewVal)-1;
 						int LastCapt = GetCapt(8); 
 						SetCapt(8,LowTeam);
 						for(int i=7;i!=t;i--){
@@ -173,6 +177,15 @@ public class AllyCreateWindow extends JFrame {
 			}
 		}
 		return false;
+	}
+	private int GetRank(int Team){
+		for (Component c : LPanel.getComponents()) {
+			if (c instanceof AllyTopRow) { 
+				AllyTopRow r = ((AllyTopRow)c);
+				if(r.TeamID() == Team) return r.Rank(); 
+			}
+		}
+		return 0;
 	}
 	private int GetNextTeam(){
 		int LowRank = 99999;

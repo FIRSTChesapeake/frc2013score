@@ -39,9 +39,9 @@ public class AllyTopRow extends JPanel {
 			case 1:
 				return Integer.parseInt(Pick1.getText());
 			case 2:
-				return Integer.parseInt(Pick2.getText());
+				if(TeamCount == 3) return Integer.parseInt(Pick2.getText());
 		}
-		return 0;
+		return -1;
 	}
 	
 	public AllyTopRow(AllyCreateWindow parent, int ID, int top, int inTeamCount){
