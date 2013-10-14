@@ -160,17 +160,7 @@ public class AllyCreateWindow extends JFrame {
 				AllyTopRow r = ((AllyTopRow)c);
 				if(r.Rank() == SelectedAlly) {
 					r.SetValue(SelectedPick, NewVal);
-					if(isSeed){
-						int LowTeam = GetNextTeam();
-						int t = GetRank(NewVal)-1;
-						int LastCapt = GetCapt(8); 
-						SetCapt(8,LowTeam);
-						for(int i=7;i!=t;i--){
-							int thisCapt = GetCapt(i); 
-							SetCapt(i,LastCapt);
-							LastCapt = thisCapt;
-						}
-					}
+					if(isSeed) MoveTeamsUp(GetRank(NewVal));
 					UpdateSelect();
 					return true;
 				}
@@ -178,6 +168,18 @@ public class AllyCreateWindow extends JFrame {
 		}
 		return false;
 	}
+	
+	public void MoveTeamsUp(int FromRank){
+		int LowTeam = GetNextTeam();
+		int LastCapt = GetCapt(8); 
+		SetCapt(8,LowTeam);
+		for(int i=7;i!=FromRank-1;i--){
+			int thisCapt = GetCapt(i); 
+			SetCapt(i,LastCapt);
+			LastCapt = thisCapt;
+		}
+	}
+	
 	private int GetRank(int Team){
 		for (Component c : LPanel.getComponents()) {
 			if (c instanceof AllyTopRow) { 

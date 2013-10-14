@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -27,6 +28,7 @@ public class AllyTopRow extends JPanel {
 	
 	int myState = 0;
 	
+	JLabel RankLabel;
 	JTextField Team;
 	JTextField Pick1;
 	JTextField Pick2;
@@ -50,7 +52,9 @@ public class AllyTopRow extends JPanel {
 		TeamCount = inTeamCount;
 		myRank = ID;
 		
-		JLabel RankLabel = new JLabel(String.valueOf(ID));
+		RankLabel = new JLabel(String.valueOf(ID));
+		RankLabel.setToolTipText("Double Click Here to DQ Alliance captain.");
+		
 		Team =  new JTextField(String.valueOf(top));
 		Pick1 = new JTextField();
 		Pick2 = new JTextField();
@@ -62,6 +66,40 @@ public class AllyTopRow extends JPanel {
 		Team.setBackground(Color.lightGray);
 		Pick1.setBackground(Color.lightGray);
 		Pick2.setBackground(Color.lightGray);
+		
+		RankLabel.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					try {
+						if(CanBePicked){
+							String msg = "Are you sure you want to DQ/Remove "+String.valueOf(ThisSeed)+" as Ally Captain?";
+							String tit = "DQ Captain?";
+							int perform = JOptionPane.showConfirmDialog(null, msg, tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+							if(perform == JOptionPane.YES_OPTION) myParent.MoveTeamsUp(myRank);
+						}
+					} catch (Exception err) {
+						
+					}
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+		});
 		
 		Team.addMouseListener(new MouseListener() {
 			@Override
