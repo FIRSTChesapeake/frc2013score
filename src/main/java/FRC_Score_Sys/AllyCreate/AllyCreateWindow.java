@@ -114,7 +114,7 @@ public class AllyCreateWindow extends JFrame {
 		String a42 = "42 " + GetMatchString(4) + " " + GetMatchString(5);
 		String a43 = "43 " + GetMatchString(4) + " " + GetMatchString(5);
 		
-		String[] out = {a11,a12,a13, a21,a22,a23, a31,a32,a33, a41,a42,a43};
+		String[] out = {a11,a21,a31,a41, a12,a22,a32,a42, a13,a23,a33,a43};
 		myParent.SwitchToElims(out);
 	}
 	
