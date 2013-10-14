@@ -1,6 +1,7 @@
 package FRC_Score_Sys;
 
-//import FRC_Score_Sys.AllyCreate.AllyCreateWindow;
+
+import FRC_Score_Sys.AllyCreate.AllyCreateWindow;
 import FRC_Score_Sys.InputWindow.InputWindow;
 
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class MainMenu extends JFrame {
 
 	private InputWindow inputw;
 	private EditOptionsWindow opts_wind;
-	//private AllyCreateWindow AllyWind;
+	private AllyCreateWindow AllyWind;
 
 	private static final long serialVersionUID = 1;
 
@@ -134,7 +135,7 @@ public class MainMenu extends JFrame {
 		btnAllys.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//GenAllys();
+				GenAllys();
 			}
 		});
 		// Quit Button
@@ -367,10 +368,11 @@ public class MainMenu extends JFrame {
 		dispatchEvent(wev);
 	}
 
-	//public void GenAllys() {
-	//	AllyWind = new AllyCreateWindow(this);
-	//	AllyWind.setVisible(true);
-//	}
+	public void GenAllys() {
+		AllyWind = new AllyCreateWindow(this);
+		AllyWind.setLocationRelativeTo(this);
+		AllyWind.setVisible(true);
+	}
 	
 	// handle como from child windows.
 	public void RecvChildWindowMsg(Object child, String Msg, Object Datagram) {
