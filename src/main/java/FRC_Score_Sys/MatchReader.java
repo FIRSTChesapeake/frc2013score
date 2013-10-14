@@ -47,7 +47,7 @@ public class MatchReader {
 				logger.info("Importing {} matches.. Please wait..", WholeFile.size());
 				for (String match : WholeFile) {
 					String[] spl = match.split(" ");
-					int ret = myParent.CommHandle.SqlTalk.AddMatchToDB(spl);
+					int ret = myParent.CommHandle.SqlTalk.AddMatchToDB(spl,"QQ");
 					if(ret == -1){
 						String msg = "We encountered an error reading that match file into the DB, so to prevent a million error messages, I'll abort if you like?";
 						int answer = JOptionPane.showConfirmDialog(null, msg, "Import Matches", JOptionPane.YES_NO_OPTION);

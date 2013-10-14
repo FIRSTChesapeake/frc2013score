@@ -17,7 +17,7 @@ import java.util.List;
 
 public class SqlDB {
 
-	private String SQLDBVER = "9";
+	private String SQLDBVER = "10";
 
 	private Connection c;
 	private String DBfile = "score_data.db";
@@ -225,7 +225,7 @@ public class SqlDB {
 		logger.info("Rank Refresh took: "+duration+" seconds.");
 	}
 	
-	public int AddMatchToDB(String[] matchInfo) {
+	public int AddMatchToDB(String[] matchInfo, String type) {
 		try {
 			logger.debug("==== AddingMatchToDB ====");
 			PreparedStatement s;
@@ -253,7 +253,7 @@ public class SqlDB {
 				if (first == 0) {
 					logger.debug("  Assigned as Match ID");
 					item = PadString(item);
-					s.setString(i, "QQ" + item);
+					s.setString(i, type + item);
 					first = 1;
 				} else if(first == 1) {
 					logger.debug("  Assigned as TeamNumber");
@@ -308,7 +308,8 @@ public class SqlDB {
 		boolean a = CreateEachOption("SQLDBVER", SQLDBVER, false);
 		boolean b = CreateEachOption("EVENTNAME", "Mystery Event", true);
 		boolean c = CreateEachOption("ALLYCOUNT", "N", false);
-		if (a && b && c) {
+		boolean d = CreateEachOption("MATCHMODE", "QQ", false);
+		if (a && b && c && d) {
 			return true;
 		}
 		return false;
@@ -505,6 +506,7 @@ public class SqlDB {
 
 		boolean Table1Success = false;
 		boolean Table2Success = false;
+		boolean Table3Success = false;
 
 		String q = "CREATE TABLE MATCHES (";
 		q = FormatSQLBuild(q, "ID", "TEXT", "", "PRIMARY KEY NOT NULL");
@@ -572,6 +574,18 @@ public class SqlDB {
 		} else {
 			logger.info("Options Table Create successful!");
 			if (Table2Success) {
+				Table3Success = true;
+			}
+		}
+		
+		q = "CREATE TABLE ALLYS (ID TEXT PRIMARY KEY NOT NULL, Team1 INT NOT NULL, Team2 INT NOT NULL, Team3 INT NOT NULL)";
+		cre = PerformInternalUpdateQuery(q);
+		if (cre != 0) {
+			logger.info("Finals Ally Table Create failed!");
+			return false;
+		} else {
+			logger.info("Finals Ally Table Create successful!");
+			if (Table3Success) {
 				return true;
 			}
 			return false;

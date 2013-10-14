@@ -34,6 +34,16 @@ public class AllyTopRow extends JPanel {
 	public int TeamID(){ return ThisSeed; }
 	public int Rank(){ return myRank; }
 	
+	public int GetPick(int id){
+		switch(id){
+			case 1:
+				return Integer.parseInt(Pick1.getText());
+			case 2:
+				return Integer.parseInt(Pick2.getText());
+		}
+		return 0;
+	}
+	
 	public AllyTopRow(AllyCreateWindow parent, int ID, int top, int inTeamCount){
 		myParent = parent;
 		ThisSeed = top;

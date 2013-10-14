@@ -2,14 +2,11 @@ package FRC_Score_Sys.AllyCreate;
 
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 import FRC_Score_Sys.MainMenu;
 import FRC_Score_Sys.TeamRankObj;
@@ -88,8 +85,35 @@ public class AllyCreateWindow extends JFrame {
 				}
 			}
 		} else {
-			// TODO: we're done. Move on.
+			String msg = "You are about to move into Quarterfinal Mode. Once this is done, you can not move back to Qualifications. Continue?";
+			String tit = "Save Alliances?";
+			int perform = JOptionPane.showConfirmDialog(null, msg, tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if(perform == JOptionPane.YES_OPTION) PerformSave();
 		}
+	}
+	
+	private void PerformSave(){
+		
+		//TODO: Write to new table, allies
+		
+		String a11 = "11 " + GetMatchString(1) + " " + GetMatchString(8);
+		String a12 = "12 " + GetMatchString(1) + " " + GetMatchString(8);
+		String a13 = "13 " + GetMatchString(1) + " " + GetMatchString(8);
+		
+		String a21 = "21 " + GetMatchString(2) + " " + GetMatchString(7);
+		String a22 = "22 " + GetMatchString(2) + " " + GetMatchString(7);
+		String a23 = "23 " + GetMatchString(2) + " " + GetMatchString(7);
+		
+		String a31 = "31 " + GetMatchString(3) + " " + GetMatchString(6);
+		String a32 = "32 " + GetMatchString(3) + " " + GetMatchString(6);
+		String a33 = "33 " + GetMatchString(3) + " " + GetMatchString(6);
+		
+		String a41 = "41 " + GetMatchString(4) + " " + GetMatchString(5);
+		String a42 = "42 " + GetMatchString(4) + " " + GetMatchString(5);
+		String a43 = "43 " + GetMatchString(4) + " " + GetMatchString(5);
+		
+		String[] out = {a11,a12,a13, a21,a22,a23, a31,a32,a33, a41,a42,a43};
+		myParent.SwitchToElims(out);
 	}
 	
 	public void SetCapt(int Rank, int Team){
@@ -110,6 +134,20 @@ public class AllyCreateWindow extends JFrame {
 		}
 		return 0;
 	}
+	private String GetMatchString(int Rank){
+		for (Component c : LPanel.getComponents()) {
+			if (c instanceof AllyTopRow) { 
+				AllyTopRow r = ((AllyTopRow)c);
+				if(r.Rank() == Rank){
+					String t1 = String.valueOf(r.TeamID());
+					String t2 = String.valueOf(r.GetPick(1));
+					String t3 = String.valueOf(r.GetPick(2));
+					return t1 + " 0 " + t2 + " 0 " + t3 + " 0";
+				}
+			}
+		}
+		return "";
+	}
 	public boolean SetValue(int NewVal, boolean isSeed){
 		for (Component c : LPanel.getComponents()) {
 			if (c instanceof AllyTopRow) { 
@@ -126,8 +164,6 @@ public class AllyCreateWindow extends JFrame {
 							SetCapt(i,LastCapt);
 							LastCapt = thisCapt;
 						}
-					} else {
-						//TODO: Do we do something here?
 					}
 					UpdateSelect();
 					return true;

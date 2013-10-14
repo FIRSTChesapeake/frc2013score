@@ -2,6 +2,7 @@ package FRC_Score_Sys;
 
 
 import FRC_Score_Sys.AllyCreate.AllyCreateWindow;
+import FRC_Score_Sys.AllyCreate.AllyTopRow;
 import FRC_Score_Sys.InputWindow.InputWindow;
 
 import org.slf4j.Logger;
@@ -51,6 +52,7 @@ public class MainMenu extends JFrame {
 	final String AppTitle = "2013 FRC Scoring Application";
 	public String EventName = "Unknown";
 	public String AllyCount = "No Match Data";
+	public String MatchMode = "";
 	
 	final Logger logger = LoggerFactory.getLogger(MainMenu.class);
 
@@ -135,7 +137,11 @@ public class MainMenu extends JFrame {
 		btnAllys.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				GenAllys();
+				if(MatchMode.equals("QQ")){
+					GenAllys();
+				} else {
+					JOptionPane.showMessageDialog(null, "Oops! You've already done that! ("+MatchMode+")");
+				}
 			}
 		});
 		// Quit Button
@@ -330,10 +336,21 @@ public class MainMenu extends JFrame {
 
 			{
 				DefaultMutableTreeNode node;
-				node = new DefaultMutableTreeNode("Qualifications");
-				List<MatchListObj> QualMatches = CommHandle.SqlTalk.FetchMatchList("QQ");
-				if (QualMatches.size() > 0) {
-					for (MatchListObj item : QualMatches) {
+				
+				MatchMode = CommHandle.SqlTalk.FetchOption("MATCHMODE");
+				String ModeString = "Unknown Mode";
+				
+				switch(MatchMode){
+					case "QQ": ModeString = "Qualifications"; break;
+					case "QF": ModeString = "Quarterfinals"; break;
+					case "SF": ModeString = "Semifinals"; break;
+					case "FF": ModeString = "Finals"; break;
+				}
+				
+				node = new DefaultMutableTreeNode(ModeString);
+				List<MatchListObj> Matches = CommHandle.SqlTalk.FetchMatchList(MatchMode);
+				if (Matches.size() > 0) {
+					for (MatchListObj item : Matches) {
 						DefaultMutableTreeNode newMatch = new DefaultMutableTreeNode(item);
 						node.add(newMatch);
 					}
@@ -372,6 +389,17 @@ public class MainMenu extends JFrame {
 		AllyWind = new AllyCreateWindow(this);
 		AllyWind.setLocationRelativeTo(this);
 		AllyWind.setVisible(true);
+	}
+	
+	public void SwitchToElims(String[] matches){
+		CommHandle.SqlTalk.UpdateOption("MATCHMODE", "QF");
+		MatchMode = "QF";
+		for(String s : matches){
+			String[] r = s.split(" ");
+			CommHandle.SqlTalk.AddMatchToDB(r, "QF");
+		}
+		LoadMatchList();
+		//TODO: Change Main Screen
 	}
 	
 	// handle como from child windows.
