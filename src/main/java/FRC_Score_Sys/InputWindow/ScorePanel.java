@@ -78,12 +78,9 @@ public class ScorePanel extends JPanel {
 		R2.setBackground(new_color);
 		R3.setBackground(new_color);
 
-		this.add(R1);
-		this.add(R2);
-		
-		if(Match.Robot3 != -1){
-			this.add(R3);
-		}
+		if(Match.Robot1 != -1) this.add(R1);
+		if(Match.Robot2 != -1) this.add(R2);
+		if(Match.Robot3 != -1) this.add(R3);
 
 		// Penalties Row
 		// Header 3
