@@ -71,9 +71,9 @@ public class ScorePanel extends JPanel {
 		SectionHeader Sect2 = new SectionHeader("Robot Options", heads2);
 		this.add(Sect2);
 
-		R1 = new OptRow(this, String.valueOf(Match.Robot1), Match.Climb1, Match.Dq1);
-		R2 = new OptRow(this, String.valueOf(Match.Robot2), Match.Climb2, Match.Dq2);
-		R3 = new OptRow(this, String.valueOf(Match.Robot3), Match.Climb3, Match.Dq3);
+		R1 = new OptRow(this, String.valueOf(Match.Robot1), Match.Sur1, Match.Climb1, Match.Dq1);
+		R2 = new OptRow(this, String.valueOf(Match.Robot2), Match.Sur2, Match.Climb2, Match.Dq2);
+		R3 = new OptRow(this, String.valueOf(Match.Robot3), Match.Sur3, Match.Climb3, Match.Dq3);
 		R1.setBackground(new_color);
 		R2.setBackground(new_color);
 		R3.setBackground(new_color);

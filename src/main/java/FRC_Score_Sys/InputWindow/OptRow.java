@@ -33,9 +33,10 @@ public class OptRow extends JPanel implements ActionListener {
 	};
 	final Logger logger = LoggerFactory.getLogger(OptRow.class);
 
-	public OptRow(ScorePanel parent, String Title, int ClimbVal, boolean DqVal) {
+	public OptRow(ScorePanel parent, String Title, boolean Surrogate, int ClimbVal, boolean DqVal) {
 		myParent = parent;
 		setLayout(new GridLayout(0, 3, 0, 0));
+		if(Surrogate) Title = Title + "*";
 		JLabel lblTitle = new JLabel(Title);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(lblTitle);
