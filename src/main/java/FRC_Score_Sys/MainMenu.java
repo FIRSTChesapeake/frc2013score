@@ -351,6 +351,8 @@ public class MainMenu extends JFrame {
 				
 				node = new DefaultMutableTreeNode(ModeString);
 				List<MatchListObj> Matches = CommHandle.SqlTalk.FetchMatchList(MatchMode);
+				// Tell the webserver
+				CommHandle.WebSvr.SetMatchData(Matches);
 				if (Matches.size() > 0) {
 					for (MatchListObj item : Matches) {
 						DefaultMutableTreeNode newMatch = new DefaultMutableTreeNode(item);

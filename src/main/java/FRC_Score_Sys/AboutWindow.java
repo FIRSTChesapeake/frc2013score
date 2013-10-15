@@ -59,6 +59,15 @@ public class AboutWindow extends JFrame {
 			lnk.setHorizontalAlignment(SwingConstants.CENTER);
 			lnk.init();
 			panel.add(lnk);
+			
+			lbl = new JLabel("This is Free software!");
+			lbl.setHorizontalAlignment(SwingConstants.CENTER);
+			panel.add(lbl);
+			
+			lnk = new LinkLabel(new URI("https://github.com/VirginiaFIRST/frc2013score/blob/master/LICENSE"), "GNU GENERAL PUBLIC LICENSE - Read More Here");
+			lnk.setHorizontalAlignment(SwingConstants.CENTER);
+			lnk.init();
+			panel.add(lnk);
 		} catch (Exception e) {
 
 		}

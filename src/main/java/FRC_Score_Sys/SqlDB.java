@@ -427,6 +427,15 @@ public class SqlDB {
 				MatchListObj MLO = new MatchListObj(rs.getString("ID"));
 				int BScore = rs.getInt("BScore");
 				int RScore = rs.getInt("RScore");
+				
+				// Added for webserver
+				List<SingleMatch> matchdata = FetchMatch(rs.getString("ID"));
+				for(SingleMatch matchdata_single : matchdata){
+					if(matchdata_single.aColor().equals("B")) MLO.B_score = matchdata_single;
+					if(matchdata_single.aColor().equals("R")) MLO.R_score = matchdata_single;
+				}
+				
+				
 				if (rs.getBoolean("Saved")) {
 					MLO.Played = true;
 					if (BScore == RScore) {
