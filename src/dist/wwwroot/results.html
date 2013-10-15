@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Match Results & Rankings</title>
+	<meta http-equiv="refresh" content="90">
+	<style type="text/css">
+        thead {
+            background-color: rgba(0, 0, 255, 0.4);  /* blue, 40% alpha */
+            color: white;
+            text-align: center;
+			font-weight: bold;
+        }
+		td {
+			text-align: center;
+		}
+        tr:nth-child(even) {
+            background-color: white
+        }
+        tr:nth-child(odd) {
+            background-color: rgba(0, 0, 255, 0.1); /* blue, 10% alpha */
+        }
+    </style>
+</head>
+<body>
+<table align='center'>
+<tr></tr>
+<tr>
+<td><img src="images/FIRSTlogo.jpg"></img></td>
+<td>
+<script>
+xmlhttp=new XMLHttpRequest();
+xmlhttp.open("GET","eventinfo.xml",false);
+xmlhttp.send();
+xmlDoc=xmlhttp.responseXML; 
+
+document.write("<font size=6><center><b>");
+var x=xmlDoc.getElementsByTagName("EVENT");
+for (i=0;i<x.length;i++)
+  { 
+  document.write(x[i].getElementsByTagName("EVENTNAME")[0].childNodes[0].nodeValue);
+  document.write("</b></font><br><font size=4>");
+  document.write(x[i].getElementsByTagName("EVENTVENUE")[0].childNodes[0].nodeValue);
+  document.write("</b></font><br><font size=4>");
+  document.write(x[i].getElementsByTagName("EVENTLOCATION")[0].childNodes[0].nodeValue);
+  }
+</script>
+</b></center></font></td>
+<td><img src="images/FRClogo.jpg"></img></td></tr></table>
+<table align='center' border='0'>
+<tr></tr>
+<tr>
+<td style='vertical-align:top'>
+<table border='1'>
+<thead><tr><td colspan='9'>Match Results</td></tr></thead>
+<thead><tr><td>Match</td><td>Red 1</td><td>Red 2</td><td>Red 3</td><td>Blue 1</td><td>Blue 2</td><td>Blue 3</td><td>Red Score</td><td>Blue Score</td></tr></thead>
+
+<script>
+xmlhttp=new XMLHttpRequest();
+xmlhttp.open("GET","results.xml",false);
+xmlhttp.send();
+xmlDoc=xmlhttp.responseXML; 
+
+var x=xmlDoc.getElementsByTagName("MATCHRESULT");
+for (i=0;i<20;i++)
+  { 
+  document.write("<tr><td>");
+  document.write(x[i].getElementsByTagName("MATCH")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("RED1")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("RED2")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("RED3")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("BLUE1")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("BLUE2")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("BLUE3")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("REDSCORE")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("BLUESCORE")[0].childNodes[0].nodeValue);
+  document.write("</td></tr>");
+  }
+</script>
+</table>
+
+</td>
+<td width=2%></td>
+<td style='vertical-align:top'>
+
+
+<table border='1' width=375px>
+<thead><tr><td colspan='9'>Team Rankings</td></tr></thead>
+<thead><tr><td>Rank</td><td>Team</td><td>QS</td><td>AP</td><td>CP</td><td>TP</td><td>W-L-T</td><td>DQ</td><td>Played</td></tr></thead>
+
+<script>
+xmlhttp=new XMLHttpRequest();
+xmlhttp.open("GET","rankings.xml",false);
+xmlhttp.send();
+xmlDoc=xmlhttp.responseXML; 
+
+var x=xmlDoc.getElementsByTagName("RANK");
+for (i=0;i<10;i++)
+  { 
+  document.write("<tr><td>");
+  document.write(x[i].getElementsByTagName("POSITION")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("TEAM")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("QS")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("AP")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("CP")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("TP")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("WLT")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("DQ")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("PLAYED")[0].childNodes[0].nodeValue);
+  document.write("</td></tr>");
+  }
+</script>
+</table>
+
+<marquee height=260px direction="up" behavior="scroll" scrolldelay="2000" scrollamount="60">
+<table border='1' align='center' width=375px><thead><tr><td>Rank</td><td>Team</td><td>QS</td><td>AP</td><td>CP</td><td>TP</td><td>W-L-T</td><td>DQ</td><td>Played</td></tr></thead>
+<script>
+xmlhttp=new XMLHttpRequest();
+xmlhttp.open("GET","rankings.xml",false);
+xmlhttp.send();
+xmlDoc=xmlhttp.responseXML; 
+
+var x=xmlDoc.getElementsByTagName("RANK");
+for (i=10;i<x.length;i++)
+  { 
+  document.write("<tr><td>");
+  document.write(x[i].getElementsByTagName("POSITION")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("TEAM")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("QS")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("AP")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("CP")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("TP")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("WLT")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("DQ")[0].childNodes[0].nodeValue);
+  document.write("</td><td>");
+  document.write(x[i].getElementsByTagName("PLAYED")[0].childNodes[0].nodeValue);
+  document.write("</td></tr>");
+  }
+</script>
+</table>
+</marquee>
+
+</td></tr></table>
+<center>Last update:  
+<script type="text/javascript">
+<!--
+var currentTime = new Date()
+var month = currentTime.getMonth() + 1
+var day = currentTime.getDate()
+var year = currentTime.getFullYear()
+document.write(month + "/" + day + "/" + year)
+//-->
+</script>
+<script type="text/javascript">
+<!--
+var currentTime = new Date()
+var hours = currentTime.getHours()
+var minutes = currentTime.getMinutes()
+if (minutes < 10){
+minutes = "0" + minutes
+}
+document.write(hours + ":" + minutes + " ")
+if(hours > 11){
+document.write("PM")
+} else {
+document.write("AM")
+}
+//-->
+</script></center>
+</body>
+</html>
