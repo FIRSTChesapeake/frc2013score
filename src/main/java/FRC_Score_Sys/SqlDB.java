@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -414,15 +415,33 @@ public class SqlDB {
 		}
 		return WholeList;
 	}
+	public List<MatchListObj> FetchMatchList(String id) {
+		String s = "SELECT id,Saved,RScore,BScore FROM MATCHES WHERE id LIKE ?";
+		try {
+			PreparedStatement ps = c.prepareStatement(s);
+			ps.setString(1, id+"%");
+			return FetchMatchList(ps);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+		}
+		return null;
+	}
+	public List<MatchListObj> FetchMatchList(int top) {
+		try {
+			PreparedStatement ps = c.prepareStatement("SELECT id,Saved,RScore,BScore FROM MATCHES WHERE Saved=1 ORDER BY id desc LIMIT ?");
+			ps.setString(1, String.valueOf(top));
+			return FetchMatchList(ps);
+		} catch (SQLException e) {
+			logger.error("SQL Error Fetching for Web: {}", e.fillInStackTrace());
+		}
+		return null;
+	}
 	
 	
-	public List<MatchListObj> FetchMatchList(String type) {
-		logger.info("Match List Fetch Requested for type {}", type);
+	private List<MatchListObj> FetchMatchList(PreparedStatement ps) {
 		List<MatchListObj> WholeList = new ArrayList<MatchListObj>();
 		try {
-			PreparedStatement s = c.prepareStatement("SELECT id,Saved,RScore,BScore FROM MATCHES WHERE id LIKE ?");
-			s.setString(1, type + "%");
-			ResultSet rs = s.executeQuery();
+			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				MatchListObj MLO = new MatchListObj(rs.getString("ID"));
 				int BScore = rs.getInt("BScore");

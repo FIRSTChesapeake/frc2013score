@@ -351,11 +351,14 @@ public class MainMenu extends JFrame {
 				}
 				
 				node = new DefaultMutableTreeNode(ModeString);
-				List<MatchListObj> Matches = CommHandle.SqlTalk.FetchMatchList(MatchMode);
+				List<MatchListObj> LMatches = CommHandle.SqlTalk.FetchMatchList(MatchMode);
+				
 				// Tell the webserver
-				CommHandle.WebSvr.SetMatchData(Matches);
-				if (Matches.size() > 0) {
-					for (MatchListObj item : Matches) {
+				List<MatchListObj> WMatches = CommHandle.SqlTalk.FetchMatchList(20);
+				CommHandle.WebSvr.SetMatchData(WMatches);
+				
+				if (LMatches.size() > 0) {
+					for (MatchListObj item : LMatches) {
 						DefaultMutableTreeNode newMatch = new DefaultMutableTreeNode(item);
 						node.add(newMatch);
 					}
