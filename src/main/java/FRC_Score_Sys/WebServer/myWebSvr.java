@@ -327,9 +327,9 @@ public class myWebSvr extends NanoHTTPD {
 							res.addHeader("ETag", etag);
 						}
 					} else {
-						if (etag.equals(header.get("if-none-match")))
-							res = new Response(Response.Status.NOT_MODIFIED, mime, "");
-						else {
+						//if (etag.equals(header.get("if-none-match")))
+						//	res = new Response(Response.Status.NOT_MODIFIED, mime, "");
+						if(true) {
 							FileInputStream fis = new FileInputStream(f);
 							if(f.getName().endsWith("xml")) {
 								// This is a call to XML I have stored in memory. //////////////////////////////////////
