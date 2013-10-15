@@ -408,22 +408,22 @@ public class myWebSvr extends NanoHTTPD {
 
 		@Override
 		public Response serve(String uri, Method method, Map<String, String> header, Map<String, String> parms, Map<String, String> files) {
-			logger.info("{} '{}'", method, uri);
+			logger.debug("{} '{}'", method, uri);
 
 			Iterator<String> e = header.keySet().iterator();
 			while (e.hasNext()) {
 				String value = e.next();
-				logger.info("  HDR: '{}' = '{}'", value, header.get(value));
+				logger.debug("  HDR: '{}' = '{}'", value, header.get(value));
 			}
 			e = parms.keySet().iterator();
 			while (e.hasNext()) {
 				String value = e.next();
-				logger.info("  PRM: '{}' = '{}'", value, parms.get(value));
+				logger.debug("  PRM: '{}' = '{}'", value, parms.get(value));
 			}
 			e = files.keySet().iterator();
 			while (e.hasNext()) {
 				String value = e.next();
-				logger.info("  UPLOADED: '{}' = '{}'", value, files.get(value));
+				logger.debug("  UPLOADED: '{}' = '{}'", value, files.get(value));
 			}
 
 			return serveFile(uri, header, getRootDir());
