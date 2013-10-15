@@ -305,6 +305,7 @@ public class MainMenu extends JFrame {
 				break;
 		}
 		setTitle(AppTitle+ " Event: "+EventName+" ("+AllyCountStr+")");
+		CommHandle.WebSvr.SetEventData(EventName);
 	}
 	
 	private void ShowTeamList(int Team){

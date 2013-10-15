@@ -101,6 +101,36 @@ public class myWebSvr extends NanoHTTPD {
 		}
 	}
 
+	public void SetEventData(String EventName){
+		Document doc = docBuilder.newDocument();
+		Element rootElement = doc.createElement("EVENTINFO");
+		doc.appendChild(rootElement);
+		
+		Element eventnode = doc.createElement("EVENT");
+		rootElement.appendChild(eventnode);
+		
+		Element a = doc.createElement("EVENTNAME");
+		a.appendChild(doc.createTextNode(EventName));
+		eventnode.appendChild(a);
+
+
+		DOMSource domSource = new DOMSource(doc);
+		StringWriter writer = new StringWriter();
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer;
+		try {
+			transformer = tf.newTransformer();
+			transformer.transform(domSource, result);
+			EventXML = writer.toString();
+			logger.info("Event XML Updated to: {}", EventXML);
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+		}
+	}
+	
 	/**
 	 * Hashtable mapping (String)FILENAME_EXTENSION -> (String)MIME_TYPE
 	 */
