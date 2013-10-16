@@ -25,7 +25,7 @@ public class Main {
 		
 		SqlTalk = new SqlDB();
 		
-		web = new myWebSvr("127.0.0.1",8080,webRoot);
+		web = new myWebSvr(null,8080,webRoot);
 		
 		try{
 			web.start();
