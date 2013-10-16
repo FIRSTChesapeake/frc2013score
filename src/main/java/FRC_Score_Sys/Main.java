@@ -21,7 +21,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		logger.info("You've started Matt's 2013 FRC Scoring App Version: 1.2.3");
-		logger.info("Report Issues at: https://bitbucket.org/crazysane/frc2013score/issues");
+		logger.info("Report Issues at: https://github.com/VirginiaFIRST/frc2013score/issues");
 		
 		SqlTalk = new SqlDB();
 		
