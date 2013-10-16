@@ -53,6 +53,8 @@ public class MainMenu extends JFrame {
 	public String AllyCount = "No Match Data";
 	public String MatchMode = "";
 	
+	private boolean FirstLoad = false; 
+	
 	final Logger logger = LoggerFactory.getLogger(MainMenu.class);
 
 	public MainMenu(SubSysCommHandler CH) {
@@ -282,6 +284,7 @@ public class MainMenu extends JFrame {
 			EditSysOptions();
 			
 		}
+		FirstLoad = true;
 	}
 
 	private void SetupBootOptions(){
@@ -360,8 +363,19 @@ public class MainMenu extends JFrame {
 				List<MatchListObj> LMatches = CommHandle.SqlTalk.FetchMatchList(MatchMode);
 				
 				// Tell the webserver
-				List<MatchListObj> WMatches = CommHandle.SqlTalk.FetchMatchList(20);
-				CommHandle.WebSvr.SetMatchData(WMatches);
+				boolean postResult = true;
+				if(!MatchMode.equals("QQ") && FirstLoad){
+					String post_msg = "Looks like you're about to post a match in the elimination rounds\n"
+							+ "We can wait right here until the MC is ready, then click 'Yes' to post\n"
+							+ "If you would rather postpone the update until next time, click 'No'";
+					String post_tit = "Post Score to WebServer?";
+					int perform = JOptionPane.showConfirmDialog(null, post_msg, post_tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					if(perform == JOptionPane.NO_OPTION) postResult = false;
+				}
+				if(postResult){
+					List<MatchListObj> WMatches = CommHandle.SqlTalk.FetchMatchList(MatchMode, 20);
+					CommHandle.WebSvr.SetMatchData(WMatches);
+				}
 				
 				if (LMatches.size() > 0) {
 					for (MatchListObj item : LMatches) {

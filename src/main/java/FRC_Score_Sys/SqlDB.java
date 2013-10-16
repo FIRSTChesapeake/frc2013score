@@ -421,21 +421,22 @@ public class SqlDB {
 		}
 		return WholeList;
 	}
-	public List<MatchListObj> FetchMatchList(String id) {
+	public List<MatchListObj> FetchMatchList(String type) {
 		String s = "SELECT id,Saved,RScore,BScore FROM MATCHES WHERE id LIKE ?";
 		try {
 			PreparedStatement ps = c.prepareStatement(s);
-			ps.setString(1, id+"%");
+			ps.setString(1, type+"%");
 			return FetchMatchList(ps);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 		}
 		return null;
 	}
-	public List<MatchListObj> FetchMatchList(int top) {
+	public List<MatchListObj> FetchMatchList(String type, int top) {
 		try {
-			PreparedStatement ps = c.prepareStatement("SELECT id,Saved,RScore,BScore FROM MATCHES WHERE Saved=1 ORDER BY id desc LIMIT ?");
-			ps.setString(1, String.valueOf(top));
+			PreparedStatement ps = c.prepareStatement("SELECT id,Saved,RScore,BScore FROM MATCHES WHERE id LIKE ? AND Saved=1 ORDER BY id desc LIMIT ?");
+			ps.setString(1, type+"%");
+			ps.setString(2, String.valueOf(top));
 			return FetchMatchList(ps);
 		} catch (SQLException e) {
 			logger.error("SQL Error Fetching for Web: {}", e.fillInStackTrace());
