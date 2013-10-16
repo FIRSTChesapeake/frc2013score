@@ -181,7 +181,7 @@ public class InputWindow extends JFrame {
 		}
 		JLabel Filler1 = new JLabel(DispMatchType);
 		Filler1.setHorizontalAlignment(SwingConstants.CENTER);
-		JLabel Filler2 = new JLabel(myParent.EventName);
+		JLabel Filler2 = new JLabel(myParent.ei.EventName);
 		Filler2.setHorizontalAlignment(SwingConstants.CENTER);
 
 		BtnsPanel.add(RefBtn);

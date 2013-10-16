@@ -1,5 +1,6 @@
 package FRC_Score_Sys.WebServer;
 
+import FRC_Score_Sys.EventInfo;
 import FRC_Score_Sys.MatchListObj;
 import FRC_Score_Sys.TeamRankObj;
 
@@ -102,7 +103,7 @@ public class myWebSvr extends NanoHTTPD {
 		}
 	}
 
-	public void SetEventData(String EventName){
+	public void SetEventData(EventInfo EventData){
 		Document doc = docBuilder.newDocument();
 		Element rootElement = doc.createElement("EVENTINFO");
 		doc.appendChild(rootElement);
@@ -111,7 +112,15 @@ public class myWebSvr extends NanoHTTPD {
 		rootElement.appendChild(eventnode);
 		
 		Element a = doc.createElement("EVENTNAME");
-		a.appendChild(doc.createTextNode(EventName));
+		a.appendChild(doc.createTextNode(EventData.EventName));
+		eventnode.appendChild(a);
+		
+		a = doc.createElement("EVENTVENUE");
+		a.appendChild(doc.createTextNode(EventData.EventVenue));
+		eventnode.appendChild(a);
+		
+		a = doc.createElement("EVENTLOCATION");
+		a.appendChild(doc.createTextNode(EventData.EventLocation));
 		eventnode.appendChild(a);
 
 

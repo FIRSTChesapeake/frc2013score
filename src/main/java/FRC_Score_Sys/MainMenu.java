@@ -49,7 +49,7 @@ public class MainMenu extends JFrame {
 	JTable RankTable = new JTable(RankTableModel);
 	
 	final String AppTitle = "2013 FRC Scoring Application";
-	public String EventName = "Unknown";
+	public EventInfo ei = new EventInfo();
 	public String AllyCount = "No Match Data";
 	public String MatchMode = "";
 	
@@ -286,7 +286,14 @@ public class MainMenu extends JFrame {
 
 	private void SetupBootOptions(){
 		// TODO: Ally Count is not yet being changed when file is loaded. Spoof for now.
-		EventName = CommHandle.SqlTalk.FetchOption("EVENTNAME");
+		
+		ei.EventName = CommHandle.SqlTalk.FetchOption("EVENTNAME");
+		ei.EventVenue = CommHandle.SqlTalk.FetchOption("EVENTVENUE");
+		ei.EventLocation = CommHandle.SqlTalk.FetchOption("EVENTLOCATION");
+		
+		// Let the webserver know
+		CommHandle.WebSvr.SetEventData(ei);
+		
 		AllyCount = CommHandle.SqlTalk.FetchOption("ALLYCOUNT");
 		MatchMode = CommHandle.SqlTalk.FetchOption("MATCHMODE");
 		String AllyCountStr = "Unk";
@@ -304,8 +311,7 @@ public class MainMenu extends JFrame {
 				AllyCountStr = "Match Data Loaded";
 				break;
 		}
-		setTitle(AppTitle+ " Event: "+EventName+" ("+AllyCountStr+")");
-		CommHandle.WebSvr.SetEventData(EventName);
+		setTitle(AppTitle+ " Event: "+ei.EventName+" ("+AllyCountStr+")");
 	}
 	
 	private void ShowTeamList(int Team){

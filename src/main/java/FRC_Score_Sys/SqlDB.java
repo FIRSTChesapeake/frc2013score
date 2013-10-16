@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SqlDB {
 
-	private String SQLDBVER = "10";
+	private String SQLDBVER = "11";
 
 	private Connection c;
 	private String DBfile = "score_data.db";
@@ -291,7 +291,7 @@ public class SqlDB {
 		}
 	}
 
-	private boolean CreateEachOption(String Name, String Value, boolean Public) {
+	private boolean CreateEachOption(String Name, String Value, boolean Public) throws Exception {
 		int Pub = 0;
 		if (Public) {
 			Pub = 1;
@@ -306,14 +306,20 @@ public class SqlDB {
 	}
 
 	private boolean CreateOptions() {
-		boolean a = CreateEachOption("SQLDBVER", SQLDBVER, false);
-		boolean b = CreateEachOption("EVENTNAME", "Mystery Event", true);
-		boolean c = CreateEachOption("ALLYCOUNT", "N", false);
-		boolean d = CreateEachOption("MATCHMODE", "QQ", false);
-		if (a && b && c && d) {
+		try{
+			CreateEachOption("EVENTNAME", "Mystery Event", true);
+			CreateEachOption("EVENTVENUE", "The Acme Center", true);
+			CreateEachOption("EVENTLOCATION", "Nowhere, AZ", true);
+			
+			CreateEachOption("SQLDBVER", SQLDBVER, false);
+			CreateEachOption("ALLYCOUNT", "N", false);
+			CreateEachOption("MATCHMODE", "QQ", false);
+			
 			return true;
+		} catch (Exception e){
+			return false;
 		}
-		return false;
+		
 	}
 
 	public List<SingleMatch> FetchMatch(String id) {
