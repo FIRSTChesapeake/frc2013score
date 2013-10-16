@@ -45,12 +45,11 @@ Dependencies
 
 TODO
 ----
-- Save modified matches to DB **(complete)**
-- Design the Edit Options window to formulate event options. **(complete)**
-- Create ranking table. **(complete)**
-- Calculate ranks. **(complete)**
-- Retrieve Timer Clock from FMS, waiting on [MS.](/Shoob189)
-- Come up with option for displays? (In-Progress).
-- Create process for Finals creation (On-the-fly?)
-
-Matt
+- ~~Save modified matches to DB~~
+- ~~Design the Edit Options window to formulate event options.~~
+- ~~Create ranking table.~~
+- ~~Calculate ranks.~~
+- ~~Create Display System.~~
+- ~~Create Alliance Selection System.~~
+- Generate Higher Levels of Elims.
+- Retrieve Timer Clock from FMS. (Postponed)
