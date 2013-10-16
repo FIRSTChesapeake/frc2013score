@@ -66,7 +66,7 @@ public class myWebSvr extends NanoHTTPD {
 			transformer = tf.newTransformer();
 			transformer.transform(domSource, result);
 			RankXML = writer.toString();
-			logger.info("Rank XML Updated to: {}", RankXML);
+			logger.debug("Rank XML Updated to: {}", RankXML);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 		} catch (TransformerException e) {
@@ -95,7 +95,7 @@ public class myWebSvr extends NanoHTTPD {
 			transformer = tf.newTransformer();
 			transformer.transform(domSource, result);
 			MatchXML = writer.toString();
-			logger.info("Match XML Updated to: {}", MatchXML);
+			logger.debug("Match XML Updated to: {}", MatchXML);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 		} catch (TransformerException e) {
@@ -133,7 +133,7 @@ public class myWebSvr extends NanoHTTPD {
 			transformer = tf.newTransformer();
 			transformer.transform(domSource, result);
 			EventXML = writer.toString();
-			logger.info("Event XML Updated to: {}", EventXML);
+			logger.debug("Event XML Updated to: {}", EventXML);
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 		} catch (TransformerException e) {

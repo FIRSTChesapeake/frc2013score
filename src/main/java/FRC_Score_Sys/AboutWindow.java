@@ -41,6 +41,26 @@ public class AboutWindow extends JFrame {
 			lnk.setHorizontalAlignment(SwingConstants.CENTER);
 			lnk.init();
 			panel.add(lnk);
+
+			lbl = new JLabel("Web Templates by:");
+			lbl.setHorizontalAlignment(SwingConstants.CENTER);
+			panel.add(lbl);
+			
+			lnk = new LinkLabel(new URI("https://github.com/nukemknight"), "Kyle Johnson");
+			lnk.setHorizontalAlignment(SwingConstants.CENTER);
+			lnk.init();
+			panel.add(lnk);
+			
+			lbl = new JLabel("Special Thanks to:");
+			lbl.setHorizontalAlignment(SwingConstants.CENTER);
+			panel.add(lbl);
+
+			lnk = new LinkLabel(new URI("https://github.com/cattywampus"), "Keith Walters");
+			lnk.setHorizontalAlignment(SwingConstants.CENTER);
+			lnk.init();
+			panel.add(lnk);
+			
+			
 			
 			lbl = new JLabel("Please report all bugs/feature requests");
 			lbl.setHorizontalAlignment(SwingConstants.CENTER);
