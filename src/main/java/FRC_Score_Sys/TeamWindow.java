@@ -64,11 +64,11 @@ public class TeamWindow extends JFrame {
 		}
 		if(in.Robot2 == id) {
 			str = in.aColor()+"2";
-			if(in.Sur1) str = str + "*";
+			if(in.Sur2) str = str + "*";
 		}
 		if(in.Robot3 == id){
 			str = in.aColor()+"3";
-			if(in.Sur1) str = str + "*";
+			if(in.Sur3) str = str + "*";
 		}
 		if(in.aColor()=="R") clr = color_red;
 		if(in.aColor()=="B") clr = color_blue;

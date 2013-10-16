@@ -39,29 +39,42 @@ public class MatchListObj {
 		Element a = doc.createElement("MATCH");
 		a.appendChild(doc.createTextNode(String.valueOf(matchID)));
 		matchnode.appendChild(a);
-
+		
+		
 		a = doc.createElement("RED1");
-		a.appendChild(doc.createTextNode(String.valueOf(R_score.Robot1)));
+		String sur = "";
+		if(R_score.Sur1) sur = " *";
+		a.appendChild(doc.createTextNode(String.valueOf(R_score.Robot1)+sur));
 		matchnode.appendChild(a);
 
 		a = doc.createElement("RED2");
-		a.appendChild(doc.createTextNode(String.valueOf(R_score.Robot2)));
+		sur = "";
+		if(R_score.Sur2) sur = " *";
+		a.appendChild(doc.createTextNode(String.valueOf(R_score.Robot2)+sur));
 		matchnode.appendChild(a);
 
 		a = doc.createElement("RED3");
-		a.appendChild(doc.createTextNode(String.valueOf(R_score.Robot3)));
+		sur = "";
+		if(R_score.Sur3) sur = " *";
+		a.appendChild(doc.createTextNode(String.valueOf(R_score.Robot3)+sur));
 		matchnode.appendChild(a);
 
 		a = doc.createElement("BLUE1");
-		a.appendChild(doc.createTextNode(String.valueOf(B_score.Robot1)));
+		sur = "";
+		if(B_score.Sur1) sur = " *";
+		a.appendChild(doc.createTextNode(String.valueOf(B_score.Robot1)+sur));
 		matchnode.appendChild(a);
 
 		a = doc.createElement("BLUE2");
-		a.appendChild(doc.createTextNode(String.valueOf(B_score.Robot2)));
+		sur = "";
+		if(B_score.Sur2) sur = " *";
+		a.appendChild(doc.createTextNode(String.valueOf(B_score.Robot2)+sur));
 		matchnode.appendChild(a);
 
 		a = doc.createElement("BLUE3");
-		a.appendChild(doc.createTextNode(String.valueOf(B_score.Robot3)));
+		sur = "";
+		if(B_score.Sur3) sur = " *";
+		a.appendChild(doc.createTextNode(String.valueOf(B_score.Robot3)+sur));
 		matchnode.appendChild(a);		
 		
 		a = doc.createElement("REDSCORE");
