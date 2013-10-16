@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Match Results & Rankings</title>
+	<meta charset="utf-8" />
+	<title>Match Results & Rankings</title>
 	<meta http-equiv="refresh" content="30">
 	<style type="text/css">
         thead {
@@ -24,8 +25,8 @@
 <body>
 <table align='center'>
 <tr></tr>
-<tr>
-<td><img src="images/FIRSTlogo.jpg"></img></td>
+<tr><td><img src="images/FIRSTlogo.jpg" alt="FIRST"></td>
+<td width=15px></td>
 <td>
 <script>
 xmlhttp=new XMLHttpRequest();
@@ -42,11 +43,13 @@ for (i=0;i<x.length;i++)
   document.write(x[i].getElementsByTagName("EVENTVENUE")[0].childNodes[0].nodeValue);
   document.write("</b></font><br><font size=4>");
   document.write(x[i].getElementsByTagName("EVENTLOCATION")[0].childNodes[0].nodeValue);
+  document.write("</b></center></font></td>");
   }
 </script>
-</b></center></font></td>
-<td><img src="images/FRClogo.jpg"></img></td></tr></table>
-<table align='center' border='0'>
+<td width=15px></td>
+<td><img src="images/FRClogo.jpg" alt="FRC"></td></tr></table>
+
+<table align='center'>
 <tr></tr>
 <tr>
 <td style='vertical-align:top'>
@@ -90,7 +93,6 @@ for (i=0;i<20;i++)
 <td width=2%></td>
 <td style='vertical-align:top'>
 
-
 <table border='1' width=375px>
 <thead><tr><td colspan='9'>Team Rankings</td></tr></thead>
 <thead><tr><td>Rank</td><td>Team</td><td>QS</td><td>AP</td><td>CP</td><td>TP</td><td>W-L-T</td><td>DQ</td><td>Played</td></tr></thead>
@@ -100,7 +102,6 @@ xmlhttp=new XMLHttpRequest();
 xmlhttp.open("GET","rankings.xml",false);
 xmlhttp.send();
 xmlDoc=xmlhttp.responseXML; 
-
 var x=xmlDoc.getElementsByTagName("RANK");
 for (i=0;i<10;i++)
   { 
@@ -133,11 +134,11 @@ for (i=0;i<10;i++)
 xmlhttp=new XMLHttpRequest();
 xmlhttp.open("GET","rankings.xml",false);
 xmlhttp.send();
-xmlDoc=xmlhttp.responseXML; 
+xmlDoc=xmlhttp.responseXML;
 
 var x=xmlDoc.getElementsByTagName("RANK");
 for (i=10;i<x.length;i++)
-  { 
+  {
   document.write("<tr><td>");
   document.write(x[i].getElementsByTagName("POSITION")[0].childNodes[0].nodeValue);
   document.write("</td><td>");
@@ -161,33 +162,23 @@ for (i=10;i<x.length;i++)
 </script>
 </table>
 </marquee>
-
 </td></tr></table>
+
 <center>Last update:  
 <script type="text/javascript">
-<!--
 var currentTime = new Date()
 var month = currentTime.getMonth() + 1
 var day = currentTime.getDate()
 var year = currentTime.getFullYear()
 document.write(month + "/" + day + "/" + year)
-//-->
 </script>
 <script type="text/javascript">
-<!--
 var currentTime = new Date()
 var hours = currentTime.getHours()
 var minutes = currentTime.getMinutes()
-if (minutes < 10){
+if (minutes < 10)
 minutes = "0" + minutes
-}
-document.write(hours + ":" + minutes + " ")
-if(hours > 11){
-document.write("PM")
-} else {
-document.write("AM")
-}
-//-->
+document.write(hours + ":" + minutes)
 </script></center>
 </body>
 </html>
