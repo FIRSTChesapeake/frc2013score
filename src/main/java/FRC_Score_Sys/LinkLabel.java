@@ -1,21 +1,15 @@
 package FRC_Score_Sys;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.net.URI;
-
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
@@ -27,56 +21,7 @@ public class LinkLabel extends JTextField implements MouseListener, FocusListene
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static void main(String[] args) throws Exception {
-		JPanel p = new JPanel(new GridLayout(0, 1));
-		File f = new File(".", "LinkLabel.java");
-
-		/*
-		 * Filename must be constructed with a canonical path in order to
-		 * successfully use Desktop.browse(URI)!
-		 */
-		f = new File(f.getCanonicalPath());
-
-		URI uriFile = f.toURI();
-
-		LinkLabel linkLabelFile = new LinkLabel(uriFile);
-		linkLabelFile.init();
-		p.add(linkLabelFile);
-
-		LinkLabel linkLabelWeb = new LinkLabel(new URI("http://pscode.org/sscce.html"), "SSCCE");
-		linkLabelWeb.setStandardColor(new Color(0, 128, 0));
-		linkLabelWeb.setHoverColor(new Color(222, 128, 0));
-		linkLabelWeb.init();
-
-		/*
-		 * This shows a quirk of the LinkLabel class, the size of the text field
-		 * needs to be constrained to get the underline to appear properly.
-		 */
-		p.add(linkLabelWeb);
-
-		LinkLabel linkLabelConstrain = new LinkLabel(new URI("http://sdnshare.sun.com/"), "SDN Share");
-		linkLabelConstrain.init();
-		/*
-		 * ..and this shows one way to constrain the size (appropriate for this
-		 * layout). Similar tricks can be used to ensure the underline does not
-		 * drop too far *below* the link (think BorderLayout NORTH/SOUTH). The
-		 * same technique can also be nested further to produce a NORTH+EAST
-		 * packing (for example).
-		 */
-		JPanel labelConstrain = new JPanel(new BorderLayout());
-		labelConstrain.add(linkLabelConstrain, BorderLayout.EAST);
-		p.add(labelConstrain);
-
-		LinkLabel linkLabelNoUnderline = new LinkLabel(new URI("http://java.net/"), "java.net");
-		// another way to deal with the underline is to remove it
-		linkLabelNoUnderline.setUnderlineVisible(false);
-		// we can use the methods inherited from JTextField
-		linkLabelNoUnderline.setHorizontalAlignment(JTextField.CENTER);
-		linkLabelNoUnderline.init();
-		p.add(linkLabelNoUnderline);
-
-		JOptionPane.showMessageDialog(null, p);
-	}
+	
 
 	/** The target or href of this link. */
 	private URI target;
