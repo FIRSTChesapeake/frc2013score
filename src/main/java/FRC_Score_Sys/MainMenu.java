@@ -58,18 +58,24 @@ public class MainMenu extends JFrame {
 	
 	private boolean FirstLoad = false; 
 	
+	private boolean ConfirmedQuit = false;
+	
 	final Logger logger = LoggerFactory.getLogger(MainMenu.class);
 
 	public MainMenu(SubSysCommHandler CH) {
 		CommHandle = CH;
 		// TODO: See is this command is the cause of the random JAVA crash when SQL is writing.
 		//			Likely the app is closing before SQL is closed nicely?
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				logger.info("Main Window is closing. Let's tell the Comm Handler to close everything out.");
-				CommHandle.RequestAppQuit();
+				if(ConfirmedQuit){
+					logger.info("Closing Main Window!");
+				} else {
+					logger.info("Main Window is Asking to close!");
+					pullThePlug();
+				}
 			}
 		});
 		SetupBootOptions();
@@ -412,8 +418,22 @@ public class MainMenu extends JFrame {
 	}
 	
 	public void pullThePlug() {
-		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
-		dispatchEvent(wev);
+		String msg = "You're about to quit! Are you sure?";
+		String tit = "Quitting!";
+		int perform = JOptionPane.showConfirmDialog(null, msg, tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if(perform == JOptionPane.YES_OPTION){
+			msg = "Alright.. so we're  quitting.\n Do you want to DELETE ALL DATA FIRST?";
+			perform = JOptionPane.showConfirmDialog(null, msg, tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if(perform == JOptionPane.YES_OPTION){
+				CommHandle.SqlTalk.DeleteDBFile();
+			}
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			ConfirmedQuit = true;
+			CommHandle.RequestAppQuit();
+			WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
+			dispatchEvent(wev);
+		}
+		
 	}
 
 	public void GenAllys() {

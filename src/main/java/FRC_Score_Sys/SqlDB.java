@@ -70,9 +70,7 @@ public class SqlDB {
 					String tit = "Database Out of Date";
 					int perform = JOptionPane.showConfirmDialog(null, msg, tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 					if(perform == JOptionPane.YES_OPTION){
-						this.close();
-						File f = new File(DBfile);
-						if(f.delete()){
+						if(DeleteDBFile()){
 							JOptionPane.showMessageDialog(null, "Alright!\nNow restart the application and we'll be good to go.");
 							System.exit(0);
 						} else {
@@ -85,6 +83,12 @@ public class SqlDB {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Alright!\nNow restart the application and we'll be good to go.");
 		}
+	}
+	public boolean DeleteDBFile(){
+		logger.info("Dleteing DB File!");
+		this.close();
+		File f = new File(DBfile);
+		return f.delete();
 	}
 	public int CountRows(String table){
 		int cnt = 0;
