@@ -52,7 +52,11 @@ public class AllyTopRow extends JPanel {
 		if(ret == 0) return -1; 
 		return ret;
 	}
-	
+	public AllyTopRow(int id, int capt, int Team1, int Team2){
+		SetCapt(capt);
+		SetValue(1, Team1);
+		SetValue(2, Team2);
+	}
 	public AllyTopRow(AllyCreateWindow parent, int ID, int top, int inTeamCount){
 		myParent = parent;
 		ThisSeed = top;

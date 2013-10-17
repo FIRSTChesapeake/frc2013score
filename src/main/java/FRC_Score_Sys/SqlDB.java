@@ -3,6 +3,8 @@ package FRC_Score_Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import FRC_Score_Sys.AllyCreate.AllyTopRow;
+
 import javax.swing.JOptionPane;
 
 import java.io.File;
@@ -15,10 +17,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Arrays;
 
 public class SqlDB {
 
-	private String SQLDBVER = "11";
+	private String SQLDBVER = "12";
 
 	private Connection c;
 	private String DBfile = "score_data.db";
@@ -126,6 +129,20 @@ public class SqlDB {
 		}
 	}
 	
+	public void AddAllyToDB(AllyTopRow row){
+		try{
+			logger.info("Adding Alliance {}", row.Rank());
+			PreparedStatement s = c.prepareStatement("INSERT INTO ALLYS VALUES(?, ?, ?, ?, 0, 0, 0)");
+			s.setInt(1, row.Rank());
+			s.setInt(2, row.TeamID());
+			s.setInt(3, row.GetPick(1));
+			s.setInt(4, row.GetPick(2));
+			s.executeUpdate();
+		} catch (Exception e){
+			Pops.Exception("Adding Alliance to DB", e, "We failed to add an alliance to the DB!", true);
+		}
+	}
+	
 	public List<SingleMatch> FetchTeamMatches(int Team){
 		List<SingleMatch> Matches = new ArrayList<SingleMatch>();
 		logger.info("Fetching Team {}'s Matches.", Team);
@@ -225,7 +242,174 @@ public class SqlDB {
 		long duration = ((timeStop - timeStart)/1000000000);
 		logger.info("Rank Refresh took: "+duration+" seconds.");
 	}
+	public void DoElims(String MatchMode) throws Exception{
+		logger.info("SQL DB Performing Mode Switch to {}..", MatchMode);
+		int[] teams_qf1 = {1, 8};
+		int[] teams_qf2 = {2, 7};
+		int[] teams_qf3 = {3, 6};
+		int[] teams_qf4 = {4, 5};
+
+		int[] teams_sf1 = {1, 2, 7, 8};
+		int[] teams_sf2 = {3, 4, 5, 6};
+		switch (MatchMode){
+			case "QF":
+				AddElimMatch(teams_qf1, "QF", 1);
+				AddElimMatch(teams_qf2, "QF", 2);
+				AddElimMatch(teams_qf3, "QF", 3);
+				AddElimMatch(teams_qf4, "QF", 4);
+			break;
+			case "SF":
+				try {
+					int qf1_winner = FetchWinningAlliance(teams_qf1, "QF");
+					logger.info("Found QF1 Winner {}", qf1_winner);
+					int qf2_winner = FetchWinningAlliance(teams_qf2, "QF");
+					logger.info("Found QF2 Winner {}", qf2_winner);
+					int qf3_winner = FetchWinningAlliance(teams_qf3, "QF");
+					logger.info("Found QF3 Winner {}", qf3_winner);
+					int qf4_winner = FetchWinningAlliance(teams_qf4, "QF");
+					logger.info("Found QF4 Winner {}", qf4_winner);
+					int[] sf1_players = {qf1_winner, qf2_winner};
+					int[] sf2_players = {qf3_winner, qf4_winner};
+					AddElimMatch(sf1_players, "SF", 1);
+					AddElimMatch(sf2_players, "SF", 2);
+					
+				} catch (Exception e){
+					logger.error("Not all QF's were complete. Failed: {}",e.getMessage());
+					throw new Exception("Not complete");
+				}
+			break;
+			case "FF":
+				try{
+					int sf1_winner = FetchWinningAlliance(teams_sf1, "SF");
+					logger.info("Found SF1 Winner {}", sf1_winner);
+					int sf2_winner = FetchWinningAlliance(teams_sf2, "SF");
+					logger.info("Found SF2 Winner {}", sf2_winner);
+					int[] ff_players = {sf1_winner, sf2_winner};
+					AddElimMatch(ff_players, "FF", 1);
+				} catch (Exception e){
+					logger.info("Not all SF's were compelte. Failed.");
+					throw new Exception ("Not Complete");
+				}
+			break;
+		}
+		UpdateOption("MATCHMODE", MatchMode);
+	}
 	
+	private void AddElimMatch(int[] allys, String type, int MatchID){
+		PreparedStatement ps;
+		try {
+			ps = c.prepareStatement("SELECT * FROM ALLYS WHERE id=? OR id =?");
+			int ally1 = allys[0];
+			int ally2 = allys[1];
+			ps.setInt(1, ally1);
+			ps.setInt(2, ally2);
+			ResultSet rs = ps.executeQuery();
+			String m = "";
+			boolean first = true;
+			while(rs.next()){
+				if(!first) m = m + " ";
+				String T1 = String.valueOf(rs.getInt("Team1"));
+				String T2 = String.valueOf(rs.getInt("Team2"));
+				String T3 = String.valueOf(rs.getInt("Team3"));
+				m = m + T1 + " 0 " + T2 + " 0";
+				if(!T3.equals("-1")) m = m + " " + T3 + " 0";
+				first = false;
+			}
+			
+			String M1 = (MatchID+"1 "+m);
+			String M2 = (MatchID+"2 "+m);
+			String M3 = (MatchID+"3 "+m);
+			AddMatchToDB(M1.split(" "), type);
+			AddMatchToDB(M2.split(" "), type);
+			AddMatchToDB(M3.split(" "), type);
+		} catch (SQLException e) {
+			Pops.Exception("Adding Elim Match", e, "We ran into a problem adding an elim match to the DB", false);
+		}
+	}
+	
+	public boolean RefreshAllyWins(List<Integer> TeamCapts, String MatchMode){
+		if(TeamCapts == null){
+			try {
+				TeamCapts = new ArrayList<Integer>();
+				String q = "SELECT Team1 FROM ALLYS";
+				PreparedStatement ps = c.prepareStatement(q);
+				ResultSet rs = ps.executeQuery();
+				while(rs.next()){
+					TeamCapts.add(rs.getInt("Team1"));
+				}
+			} catch (SQLException e) {
+				Pops.Exception("Refreshing All Allys", e, "We tried a full refresh on the Ally table, and it failed!",  false);
+			}
+			
+		}
+		for(int team : TeamCapts){
+			if(!UpdateAllyWins(team, MatchMode)) return false;
+		}
+		return true;
+	}
+	
+	private boolean UpdateAllyWins(int TeamCapt, String MatchMode){
+		try {
+			logger.info("Updating Alliance team captain {}", TeamCapt);
+			String qR = "SELECT SUM(case RQS when 2 then 1 else 0 end) as wins FROM MATCHES WHERE R1Robot=? AND Saved=1 AND ID LIKE ?";
+			String qB = "SELECT SUM(case BQS when 2 then 1 else 0 end) as wins FROM MATCHES WHERE B1Robot=? AND Saved=1 AND ID LIKE ?";
+			String qT = "UPDATE ALLYS SET "+MatchMode+"=? WHERE Team1=?";
+			PreparedStatement sR = c.prepareStatement(qR);
+			PreparedStatement sB = c.prepareStatement(qB);
+			PreparedStatement sT = c.prepareStatement(qT);
+		
+			sR.setInt(1, TeamCapt);
+			sB.setInt(1, TeamCapt);
+			
+			sR.setString(2, MatchMode+"%");
+			sB.setString(2, MatchMode+"%");
+			
+			ResultSet rsR = sR.executeQuery();
+			ResultSet rsB = sB.executeQuery();
+			
+			int sumR = 0, sumB = 0;
+			while(rsR.next()) {
+				int cnt = rsR.getInt("wins");
+				sumR = sumR + cnt;
+			}
+			while(rsB.next()) {
+				int cnt = rsB.getInt("wins");
+				sumB = sumB + cnt;
+			}
+			
+			int tot = sumR + sumB;
+			
+			logger.info("Found {} total wins in current mode", tot);
+			
+			sT.setInt(1, tot);
+			sT.setInt(2, TeamCapt);
+			
+			int ret = sT.executeUpdate();
+			if(ret==1) return true;
+			return false;
+		} catch (SQLException e) {
+			Pops.Exception("AwardAllyWin", e, "Encountered an issue awarding an Alliance a win for eliminations.", false);
+			return false;
+		}
+	}
+	
+	public int FetchWinningAlliance(int[] ids, String MatchMode) throws Exception{
+		String where_string = "SELECT ID FROM ALLYS WHERE (";
+		boolean first = true;
+		for(int id : ids){
+			if(!first) where_string = where_string + " OR ";
+			where_string = where_string + "ID=" + id;
+			first = false;
+		}
+		where_string = where_string + ") AND " + MatchMode + "=2";
+		PreparedStatement ps = c.prepareStatement(where_string);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			int id = rs.getInt("ID");
+			return id;
+		}
+		throw new Exception("Winning Alliance not found! Stmt: "+where_string);
+	}
 	public int AddMatchToDB(String[] matchInfo, String type) {
 		try {
 			logger.debug("==== AddingMatchToDB ====");
@@ -613,7 +797,7 @@ public class SqlDB {
 			}
 		}
 		
-		q = "CREATE TABLE ALLYS (ID TEXT PRIMARY KEY NOT NULL, Team1 INT NOT NULL, Team2 INT NOT NULL, Team3 INT NOT NULL)";
+		q = "CREATE TABLE ALLYS (ID TEXT PRIMARY KEY NOT NULL, Team1 INT NOT NULL, Team2 INT NOT NULL, Team3 INT NOT NULL, QF INT NOT NULL, SF INT NOT NULL, FF INT NOT NULL)";
 		cre = PerformInternalUpdateQuery(q);
 		if (cre != 0) {
 			logger.info("Finals Ally Table Create failed!");

@@ -72,8 +72,11 @@ public class InputWindow extends JFrame {
 			if (DBScores.size() == 2) {
 				for (SingleMatch Match : DBScores) {
 					TeamNumbers.add(Match.Robot1);
-					TeamNumbers.add(Match.Robot2);
-					TeamNumbers.add(Match.Robot3);
+					// in the elims all we care about is the captain
+					if(MatchNumber.startsWith("QQ")){
+						TeamNumbers.add(Match.Robot2);
+						TeamNumbers.add(Match.Robot3);
+					}
 					if (Match.aColor() == "R") {
 						RedMatch = Match;
 					}
@@ -233,6 +236,7 @@ public class InputWindow extends JFrame {
 	}
 
 	public void pullThePlug() {
+		this.setVisible(false);
 		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 		dispatchEvent(wev);
 	}

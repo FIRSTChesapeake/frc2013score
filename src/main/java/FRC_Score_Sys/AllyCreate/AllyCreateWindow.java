@@ -102,27 +102,14 @@ public class AllyCreateWindow extends JFrame {
 	}
 	
 	private void PerformSave(){
-		
-		//TODO: Write to new table, allies
-		
-		String a11 = "11 " + GetMatchString(1) + " " + GetMatchString(8);
-		String a12 = "12 " + GetMatchString(1) + " " + GetMatchString(8);
-		String a13 = "13 " + GetMatchString(1) + " " + GetMatchString(8);
-		
-		String a21 = "21 " + GetMatchString(2) + " " + GetMatchString(7);
-		String a22 = "22 " + GetMatchString(2) + " " + GetMatchString(7);
-		String a23 = "23 " + GetMatchString(2) + " " + GetMatchString(7);
-		
-		String a31 = "31 " + GetMatchString(3) + " " + GetMatchString(6);
-		String a32 = "32 " + GetMatchString(3) + " " + GetMatchString(6);
-		String a33 = "33 " + GetMatchString(3) + " " + GetMatchString(6);
-		
-		String a41 = "41 " + GetMatchString(4) + " " + GetMatchString(5);
-		String a42 = "42 " + GetMatchString(4) + " " + GetMatchString(5);
-		String a43 = "43 " + GetMatchString(4) + " " + GetMatchString(5);
-		
-		String[] out = {a11,a21,a31,a41, a12,a22,a32,a42, a13,a23,a33,a43};
-		myParent.SwitchToElims(out);
+		logger.info("AllyCreate Adding Alliances..");
+		for (Component c : LPanel.getComponents()) {
+			if (c instanceof AllyTopRow) { 
+				AllyTopRow r = ((AllyTopRow)c);
+				myParent.CommHandle.SqlTalk.AddAllyToDB(r);
+			}
+		}
+		myParent.SwitchElims("QF");
 	}
 	
 	public void SetCapt(int Rank, int Team){
@@ -142,24 +129,6 @@ public class AllyCreateWindow extends JFrame {
 			}
 		}
 		return 0;
-	}
-	private String GetMatchString(int Rank){
-		for (Component c : LPanel.getComponents()) {
-			if (c instanceof AllyTopRow) { 
-				AllyTopRow r = ((AllyTopRow)c);
-				if(r.Rank() == Rank){
-					String t1 = String.valueOf(r.TeamID());
-					String t2 = String.valueOf(r.GetPick(1));
-					String t3 = String.valueOf(r.GetPick(2));
-					if(t3.equals("-1")){
-						return t1 + " 0 " + t2 + " 0";
-					} else {
-						return t1 + " 0 " + t2 + " 0 " + t3 + " 0";
-					}
-				}
-			}
-		}
-		return "";
 	}
 	public boolean SetValue(int NewVal, boolean isSeed){
 		for (Component c : LPanel.getComponents()) {

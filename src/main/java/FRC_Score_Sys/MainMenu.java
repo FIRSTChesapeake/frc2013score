@@ -2,6 +2,7 @@ package FRC_Score_Sys;
 
 
 import FRC_Score_Sys.AllyCreate.AllyCreateWindow;
+import FRC_Score_Sys.AllyCreate.AllyTopRow;
 import FRC_Score_Sys.InputWindow.InputWindow;
 
 import org.slf4j.Logger;
@@ -44,6 +45,8 @@ public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 1;
 
 	private JTree MatchList;
+	
+	private JButton btnAllys;
 	
 	customTableModel RankTableModel = new customTableModel();
 	JTable RankTable = new JTable(RankTableModel);
@@ -134,17 +137,12 @@ public class MainMenu extends JFrame {
 			}
 		});
 		// Generate Allys Button
-		JButton btnAllys = new JButton("Generate Alliances");
+		btnAllys = new JButton("Wait..");
+		SetAllyButtonTitle();
 		btnAllys.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(!AllyCount.equals("Y")){
-					JOptionPane.showMessageDialog(null, "Oops! You can't do that until we have some teams to work with.");
-				} else if(MatchMode.equals("QQ")){
-					GenAllys();
-				} else {
-					JOptionPane.showMessageDialog(null, "Oops! You've already done that! ("+MatchMode+")");
-				}
+				GenAllys();
 			}
 		});
 		// Quit Button
@@ -391,21 +389,26 @@ public class MainMenu extends JFrame {
 	}
 
 	public void RefreshRanks(List<Integer> TeamNumbers){
-		CommHandle.SqlTalk.RefreshRanks(TeamNumbers);
-		List<TeamRankObj> Teams = CommHandle.SqlTalk.FetchTeamlist(true, null);
-		
-		int rows=RankTableModel.getRowCount();
-		if(rows>0){
-			for(int i = rows - 1; i >=0; i--){
-			   RankTableModel.removeRow(i); 
+		if(MatchMode.equals("QQ")){
+			CommHandle.SqlTalk.RefreshRanks(TeamNumbers);
+			List<TeamRankObj> Teams = CommHandle.SqlTalk.FetchTeamlist(true, null);
+
+			int rows=RankTableModel.getRowCount();
+			if(rows>0){
+				for(int i = rows - 1; i >=0; i--){
+					RankTableModel.removeRow(i); 
+				}
 			}
+			int rnk =0;
+			for(TeamRankObj team : Teams){
+				rnk++;
+				RankTableModel.addRow(new Object[]{rnk,team.ID,team.QS,team.AP,team.CP,team.TP,team.WLT()});
+			}
+			CommHandle.WebSvr.SetRankData(Teams);
+		} else {
+			// We're in Elims now - do ally tally
+			CommHandle.SqlTalk.RefreshAllyWins(TeamNumbers, MatchMode);
 		}
-		int rnk =0;
-		for(TeamRankObj team : Teams){
-			rnk++;
-			RankTableModel.addRow(new Object[]{rnk,team.ID,team.QS,team.AP,team.CP,team.TP,team.WLT()});
-		}
-		CommHandle.WebSvr.SetRankData(Teams);
 	}
 	
 	public void pullThePlug() {
@@ -414,20 +417,65 @@ public class MainMenu extends JFrame {
 	}
 
 	public void GenAllys() {
-		AllyWind = new AllyCreateWindow(this);
-		AllyWind.setLocationRelativeTo(this);
-		AllyWind.setVisible(true);
+		String OldMsg = "", NewMsg = "", newMode = "";
+		switch(MatchMode) {
+			case "QQ":
+				if(!AllyCount.equals("Y")){
+					JOptionPane.showMessageDialog(null, "Oops! You can't do that until we have some teams to work with.");
+				} else {
+					AllyWind = new AllyCreateWindow(this);
+					AllyWind.setLocationRelativeTo(this);
+					AllyWind.setVisible(true);
+				}
+			break;
+			case "QF":
+				OldMsg = "QuarterFinals";
+				NewMsg = "Semifinals";
+				newMode = "SF";
+				break;
+			case "SF":
+				OldMsg = "Semifinals";
+				NewMsg = "Finals";
+				newMode = "FF";
+			break;
+		}
+		if(!newMode.equals("")){
+			String msg = "You are about to move into "+NewMsg+" Mode. Once this is done, you can not move back to "+OldMsg+".";
+			String tit = "Progress through Finals.";
+			int perform = JOptionPane.showConfirmDialog(null, msg, tit, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if(perform == JOptionPane.YES_OPTION) SwitchElims(newMode);
+		}
 	}
 	
-	public void SwitchToElims(String[] matches){
-		CommHandle.SqlTalk.UpdateOption("MATCHMODE", "QF");
-		MatchMode = "QF";
-		for(String s : matches){
-			String[] r = s.split(" ");
-			CommHandle.SqlTalk.AddMatchToDB(r, "QF");
+	public void SwitchElims(String newMode){
+		MatchMode = newMode;
+		try {
+			logger.info("MainMenu requesting mode switch to {}", newMode);
+			CommHandle.SqlTalk.DoElims(newMode);
+			LoadMatchList();
+			SetAllyButtonTitle();
+		} catch (Exception e){
+			logger.info("Mode switch Failed");
+			JOptionPane.showMessageDialog(null, "Oops we had a problem moving on. Likely the current matches arent finished!");
 		}
-		LoadMatchList();
-		//TODO: Change Main Screen
+	}
+	
+	private void SetAllyButtonTitle(){
+		switch(MatchMode){
+			case "QQ":
+				btnAllys.setText("Move to Quarter Finals");
+				break;
+			case "QF":
+				btnAllys.setText("Move to Semi Finals");
+				break;
+			case "SF":
+				btnAllys.setText("Move to Finals");
+				break;
+			case "FF":
+				btnAllys.setText("Nothing to see here");
+				btnAllys.setEnabled(false);
+				break;
+		}
 	}
 	
 	// handle como from child windows.
