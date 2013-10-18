@@ -377,8 +377,10 @@ public class MainMenu extends JFrame {
 					if(perform == JOptionPane.NO_OPTION) postResult = false;
 				}
 				if(postResult){
-					List<MatchListObj> WMatches = CommHandle.SqlTalk.FetchMatchList(MatchMode, 20);
-					CommHandle.WebSvr.SetMatchData(WMatches);
+					List<MatchListObj> PMatches = CommHandle.SqlTalk.FetchMatchList(MatchMode, 20);
+					CommHandle.WebSvr.SetMatchData(PMatches, "p");
+					List<MatchListObj> AMatches = CommHandle.SqlTalk.FetchMatchList(MatchMode);
+					CommHandle.WebSvr.SetMatchData(AMatches, "a");
 				}
 				
 				if (LMatches.size() > 0) {

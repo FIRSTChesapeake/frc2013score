@@ -39,7 +39,8 @@ public class myWebSvr extends NanoHTTPD {
 	private Logger logger = LoggerFactory.getLogger(myWebSvr.class);
 
 	private String RankXML = "";
-	private String MatchXML = "";
+	private String PMatchXML = "";
+	private String AMatchXML = "";
 	private String EventXML = "";
 
 	DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -74,7 +75,7 @@ public class myWebSvr extends NanoHTTPD {
 		}
 	}
 
-	public void SetMatchData(List<MatchListObj> Matches){
+	public void SetMatchData(List<MatchListObj> Matches, String which){
 		Document doc = docBuilder.newDocument();
 		Element rootElement = doc.createElement("RANKINGS");
 		doc.appendChild(rootElement);
@@ -94,8 +95,13 @@ public class myWebSvr extends NanoHTTPD {
 		try {
 			transformer = tf.newTransformer();
 			transformer.transform(domSource, result);
-			MatchXML = writer.toString();
-			logger.debug("Match XML Updated to: {}", MatchXML);
+			if(which.equals("p")){
+				PMatchXML = writer.toString();
+				logger.debug("PlayedMatch XML Updated to: {}", PMatchXML);
+			} else {
+				AMatchXML = writer.toString();
+				logger.debug("AllMatch XML Updated to: {}", AMatchXML);
+			}
 		} catch (TransformerConfigurationException e) {
 			// TODO Auto-generated catch block
 		} catch (TransformerException e) {
@@ -380,7 +386,10 @@ public class myWebSvr extends NanoHTTPD {
 										data = RankXML;
 										break;
 									case "results.xml":
-										data = MatchXML;
+										data = PMatchXML;
+										break;
+									case "matches.xml":
+										data = AMatchXML;
 										break;
 									case "eventinfo.xml":
 										data = EventXML;
