@@ -407,7 +407,7 @@ public class myWebSvr extends NanoHTTPD {
 									fileContent.append(new String(buffer));
 								}            		
 								String result = String.valueOf(fileContent);
-								result = FilterHTML(result);
+								//result = FilterHTML(result);
 								InputStream is = new ByteArrayInputStream(result.getBytes());
 								res = new Response(Response.Status.OK, mime, is);
 							} else {
