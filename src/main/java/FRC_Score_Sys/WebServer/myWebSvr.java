@@ -77,7 +77,9 @@ public class myWebSvr extends NanoHTTPD {
 
 	public void SetMatchData(List<MatchListObj> Matches, String which){
 		Document doc = docBuilder.newDocument();
-		Element rootElement = doc.createElement("RANKINGS");
+		String head = "RANKINGS";
+		if(which.equals("a")) head = "SCHEDULE";
+		Element rootElement = doc.createElement(head);
 		doc.appendChild(rootElement);
 		int i = 0;
 		for(MatchListObj mlo : Matches){
